@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.mapper.finance.BasicSalaryMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.finance.BasicSalary">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="depid" jdbcType="INTEGER" property="depid" />
+		<result column="empname" jdbcType="VARCHAR" property="empname" />
+		<result column="basicSalary" jdbcType="REAL" property="basicsalary" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<association property="dep" javaType="com.ht.popj.dailyWork.Dep"
+			column="depid" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey"></association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, depid, empname, basicSalary, create_time, update_time, status
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from basicsalary
+		where id = #{id,jdbcType=INTEGER} and status=1
+	</select>
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update set basicsalary status=0
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<insert id="insert" parameterType="com.ht.popj.finance.BasicSalary"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into basicsalary (id, depid, empname,
+		basicSalary, create_time, update_time,
+		status)
+		values (#{id,jdbcType=INTEGER}, #{depid,jdbcType=INTEGER},
+		#{empname,jdbcType=VARCHAR},
+		#{basicsalary,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ht.popj.finance.BasicSalary">
+		insert into basicsalary
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="depid != null">
+				depid,
+			</if>
+			<if test="empname != null">
+				empname,
+			</if>
+			<if test="basicsalary != null">
+				basicSalary,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="depid != null">
+				#{depid,jdbcType=INTEGER},
+			</if>
+			<if test="empname != null">
+				#{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="basicsalary != null">
+				#{basicsalary,jdbcType=REAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.BasicSalary">
+		update basicsalary
+		<set>
+			<if test="depid != null">
+				depid = #{depid,jdbcType=INTEGER},
+			</if>
+			<if test="empname != null">
+				empname = #{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="basicsalary != null">
+				basicSalary = #{basicsalary,jdbcType=REAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.BasicSalary">
+		update basicsalary
+		set depid = #{depid,jdbcType=INTEGER},
+		empname = #{empname,jdbcType=VARCHAR},
+		basicSalary = #{basicsalary,jdbcType=REAL},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByDynamic" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.finance.BasicSalary">
+		SELECT * from basicsalary
+		<where>
+			<if test="empname != null and !empname.isEmpty()">
+				and empname=#{empname,jdbcType=VARCHAR}
+			</if>
+			<if test="depid != null and depid >0">
+				and depid=#{depid,jdbcType=INTEGER}
+			</if>
+			and status &lt;&gt;0
+		</where>
+	</select>
+</mapper>

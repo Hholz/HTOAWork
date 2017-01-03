@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentAttenceMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentAttence" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="cls_id" property="clsId" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="forenoon" property="forenoon" jdbcType="VARCHAR" />
+    <result column="morning" property="morning" jdbcType="VARCHAR" />
+    <result column="afternoon" property="afternoon" jdbcType="VARCHAR" />
+    <result column="night" property="night" jdbcType="VARCHAR" />
+    <result column="descs" property="descs" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="stu" javaType="com.ht.popj.student.Student" column="stu_id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+	</association>
+	<association property="cls" javaType="com.ht.popj.student.StudentClass" column="cls_id" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	</association>
+	<association property="clsName" javaType="com.ht.popj.student.StudentClass" column="cls_id" select="com.ht.mapper.student.StudentClassMapper.findNameById">
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_id, cls_id, forenoon, morning, afternoon, night, descs, create_time, update_time, 
+    status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_attence
+    where id = #{id,jdbcType=INTEGER} and status = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_attence
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentAttence" >
+    insert into student_attence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="clsId != null" >
+        cls_id,
+      </if>
+      <if test="forenoon != null" >
+        forenoon,
+      </if>
+      <if test="morning != null" >
+        morning,
+      </if>
+      <if test="afternoon != null" >
+        afternoon,
+      </if>
+      <if test="night != null" >
+        night,
+      </if>
+      <if test="descs != null" >
+        descs,
+      </if>
+      <if test="createTime != null and !createTime.isEmpty()" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="clsId != null" >
+        #{clsId,jdbcType=INTEGER},
+      </if>
+      <if test="forenoon != null" >
+        #{forenoon,jdbcType=VARCHAR},
+      </if>
+      <if test="morning != null" >
+        #{morning,jdbcType=VARCHAR},
+      </if>
+      <if test="afternoon != null" >
+        #{afternoon,jdbcType=VARCHAR},
+      </if>
+      <if test="night != null" >
+        #{night,jdbcType=VARCHAR},
+      </if>
+      <if test="descs != null" >
+        #{descs,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and !createTime.isEmpty()" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentAttence" >
+    update student_attence
+    <set >
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="clsId != null" >
+        cls_id = #{clsId,jdbcType=INTEGER},
+      </if>
+      <if test="forenoon != null" >
+        forenoon = #{forenoon,jdbcType=VARCHAR},
+      </if>
+      <if test="morning != null" >
+        morning = #{morning,jdbcType=VARCHAR},
+      </if>
+      <if test="afternoon != null" >
+        afternoon = #{afternoon,jdbcType=VARCHAR},
+      </if>
+      <if test="night != null" >
+        night = #{night,jdbcType=VARCHAR},
+      </if>
+      <if test="descs != null" >
+        descs = #{descs,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and !createTime.isEmpty()" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from student_attence where status = 1
+  </select>
+  <select id="selectBystuId" resultMap="BaseResultMap" parameterType="int">
+      select * from student_attence where status = 1 and stu_id = #{id}
+  </select>
+  <select id="selectByclsId" resultMap="BaseResultMap" parameterType="int">
+      select * from student_attence where status = 1 and cls_id = #{id}
+  </select>
+  <select id="selectAllByPJ" resultMap="BaseResultMap" parameterType="com.ht.popj.student.StudentAttence">
+      select * from student_attence
+      <where>
+	      <if test="id != null" >
+		      id = #{id}
+	      </if>
+	      <if test="stuId != null" >
+	          and stu_id = #{stuId}
+	      </if>
+	      <if test="clsId != null" >
+	          and cls_id = #{clsId}
+	      </if>
+		  <if test="createTime != null and !createTime.isEmpty()" >
+	          and create_time like '%${createTime}%'
+	      </if>
+	      and status = 1
+	  </where>
+  </select>
+  <select id="isExistTheDate" resultType="int" parameterType="map">
+      SELECT COUNT(*) FROM student_attence WHERE cls_id = #{clsId} AND create_time LIKE '%${createTime}%'
+  </select>
+  <select id="sumByStuIdTime" resultType="int" parameterType="map">
+      SELECT SUM(a) FROM (
+        SELECT  COUNT(*) a  FROM student_attence  WHERE  stu_id = #{stuId} AND morning = #{state} and create_time like '%${createTime}%'
+		UNION ALL
+		SELECT  COUNT(*) a FROM student_attence  WHERE  stu_id = #{stuId} AND forenoon = #{state} and create_time like '%${createTime}%'
+		UNION ALL
+		SELECT  COUNT(*) a FROM student_attence  WHERE  stu_id = #{stuId} AND afternoon = #{state} and create_time like '%${createTime}%'
+		UNION ALL
+		SELECT  COUNT(*) a FROM student_attence  WHERE  stu_id = #{stuId} AND night = #{state} and create_time like '%${createTime}%'
+		) tab_a
+  </select>
+  <select id="selectMonthBystuId" resultMap="BaseResultMap" parameterType="map">
+      SELECT * FROM student_attence  WHERE stu_id = #{stuId} AND create_time LIKE '%${createTime}%' and STATUS = 1   ORDER BY create_time 
+  </select>
+</mapper>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowSupplementDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowSupplementDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sumentid" property="sumentid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="returnMap" type="com.ht.popj.flow.FlowSupplementDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sumentid" property="sumentid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="empname" property="empname" />
+		</collection>
+		<collection property="flowSupplement" ofType="com.ht.popj.flow.FlowSupplement">
+			<result column="empid" property="empid" jdbcType="VARCHAR" />
+			<result column="sutime" property="sutime" jdbcType="TIMESTAMP" />
+			<result column="suremark" property="suremark" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+			<result column="status" property="status" jdbcType="INTEGER" />
+			<result column="approvalstatus" property="approvalstatus"
+				jdbcType="INTEGER" />
+			<result column="flowmodeltypeid" property="flowmodeltypeid"
+				jdbcType="INTEGER" />
+			<result column="remark" property="remark" jdbcType="VARCHAR" />
+			<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="flowModel" ofType="com.ht.popj.flow.FlowsModel">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="flowModelName" property="flowmodelname" />
+		</collection>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, sumentid, flowModelid, empid, remark, status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_supplement_detail
+		where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from flow_supplement_detail
+	</select>
+
+	<select id="selectBySulementId" resultMap="returnMap"
+		parameterType="java.lang.Integer">
+		SELECT fsd.*,fm.*,e.*,fs.*
+		FROM flow_supplement_detail
+		fsd,`flow_supplement` fs,emp e,flow_model fm
+		WHERE fsd.`empid`=e.`id` AND
+		fsd.`sumentid` = fs.`id`
+		AND
+		fm.`id`=fsd.`flowModelid`
+		AND fsd.sumentid=#{value}
+	</select>
+
+	<select id="selectSupplementList" resultMap="returnMap"
+		parameterType="java.lang.String">
+		SELECT *FROM
+		`flow_supplement_detail`,`flow_supplement`,emp
+		WHERE
+		flow_supplement.`id`=flow_supplement_detail.`sumentid`
+		AND
+		flow_supplement_detail.`status`=2
+		AND
+		flow_supplement_detail.`empid`=emp.`id`
+		AND
+		flow_supplement_detail.`empid`=#{value}
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_supplement_detail
+		<where>
+			<if test="sumentid != null">
+				sumentid = #{sumentid,jdbcType=INTEGER}
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER}
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_supplement_detail set status=0 where id = #{value}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowSupplementDetail">
+		insert into flow_supplement_detail
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sumentid != null">
+				sumentid,
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="sumentid != null">
+				#{sumentid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				#{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowSupplementDetail">
+		update flow_supplement_detail
+		<set>
+			<if test="sumentid != null">
+				sumentid = #{sumentid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

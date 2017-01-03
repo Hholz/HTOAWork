@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowModelselMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowModelsel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="modelName" property="modelname" jdbcType="VARCHAR" />
+		<result column="modelSelName" property="modelselname" jdbcType="VARCHAR" />
+		<result column="flowType" property="flowType" jdbcType="INTEGER" />
+		<result column="invalid" property="invalid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, modelName, modelSelName, flowType, invalid, create_time,
+		update_time, status,
+		remark
+	</sql>
+	
+	<!-- 查询所有的流程字典 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_modelsel where id =
+		#{id,jdbcType=INTEGER} and status=1
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT f.* FROM (SELECT * FROM flow_modelsel 
+		WHERE STATUS=1 ORDER BY invalid DESC)f 
+		ORDER BY f.create_time DESC
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_modelsel
+		<where>
+		    status=1 ORDER BY create_time DESC
+			<if test="modelname != null">
+				modelName,
+			</if>
+			<if test="modelselname != null">
+				modelSelName,
+			</if>
+			<if test="invalid != null">
+				invalid,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_modelsel set status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowModelsel">
+		insert into flow_modelsel
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="modelname != null">
+				modelName,
+			</if>
+			<if test="modelselname != null">
+				modelSelName,
+			</if>
+			<if test="flowType != null">
+				flowType,
+			</if>
+			<if test="invalid != null">
+				invalid,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="modelname != null">
+				#{modelname,jdbcType=VARCHAR},
+			</if>
+			<if test="modelselname != null">
+				#{modelselname,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				#{flowType,jdbcType=INTEGER},
+			</if>
+			<if test="invalid != null">
+				#{invalid,jdbcType=INTEGER},
+			</if>
+			now(),
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowModelsel">
+		update flow_modelsel
+		<set>
+			<if test="modelname != null">
+				modelName = #{modelname,jdbcType=VARCHAR},
+			</if>
+			<if test="modelselname != null">
+				modelSelName = #{modelselname,jdbcType=VARCHAR},
+			</if>
+			<if test="flowType != null">
+				flowType = #{flowType,jdbcType=INTEGER},
+			</if>
+			<if test="invalid != null">
+				invalid = #{invalid,jdbcType=INTEGER},
+			</if>
+			update_time = now(),
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

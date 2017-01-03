@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowComputerApplyMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowComputerApply">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="computerApply" property="computerapply"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowComputerApply">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="computerApply" property="computerapply"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		
+		<collection property="student" ofType="com.ht.popj.student.Student">
+		    <id column="id" property="id"/>
+		    <result column="stuname" property="stuname"/>
+		    
+		    <collection property="classInfo" ofType="com.ht.popj.student.StudentClass">
+			    <id column="id" property="id"/>
+			    <result column="classname" property="classname"/>
+			    
+			    <collection property="studentfall" ofType="com.ht.popj.student.StudentFall">
+				    <id column="id" property="id"/>
+				    <result column="level" property="level"/>
+				</collection>
+			</collection>
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, studid, create_time, update_time, computerApply, status, empid,
+		remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from flow_computer_apply
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAllComputerApply" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowComputerApply">
+		SELECT * FROM (SELECT
+		flow_computer_apply.*,student.`id` AS stuid,student.`stuname`,
+		student_class.`id` AS
+		classid,student_class.`classname`,student_fall.`id` AS
+		fallid,student_fall.`level`
+		FROM
+		flow_computer_apply,student,student_class,student_fall 
+		<where>
+		flow_computer_apply.`studid`=student.`id`
+		AND student.`classid`=student_class.`id` AND
+		student_class.`Level_id`=student_fall.`id`
+		<if test="studid != '' and studid != null">
+		    AND flow_computer_apply.`studid`=#{studid}
+		</if>
+		<if test="classid != '' and classid != null">
+		    AND student_class.`id`=#{classid}
+		</if>
+		<if test="fallid != '' and fallid != null">
+		    AND student_fall.`id`=#{fallid}
+		</if>
+		<if test="status != '' and status != null">
+		    AND flow_computer_apply.`status`=#{status}
+		</if>
+		ORDER BY flow_computer_apply.`create_time` DESC
+		</where>) a
+		ORDER BY a.status
+	</select>
+
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowComputerApply">
+		insert into flow_computer_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="studid != null">
+				studid,
+			</if>
+			create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="computerapply != null">
+				computerApply,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="studid != null">
+				#{studid,jdbcType=INTEGER},
+			</if>
+			now(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="computerapply != null">
+				#{computerapply,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowComputerApply">
+		update flow_computer_apply
+		<set>
+			<if test="studid != null">
+				studid = #{studid,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = now(),
+			<if test="computerapply != null">
+				computerApply = #{computerapply,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceFeedbackdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceFeedbackdetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="feedbacksetid" property="feedbacksetid" jdbcType="INTEGER" />
+    <result column="detailname" property="detailname" jdbcType="VARCHAR" />
+    <result column="detailscore" property="detailscore" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="DATE" />
+    <result column="updatetime" property="updatetime" jdbcType="DATE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, feedbacksetid, detailname, detailscore, status, createtime, updatetime, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_feedbackdetail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_feedbackdetail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.finance.FinanceFeedbackdetail" >
+    insert into finance_feedbackdetail (feedbacksetid, detailname, 
+      detailscore, createtime)
+    values (#{feedbacksetid,jdbcType=INTEGER}, #{detailname,jdbcType=VARCHAR}, 
+      #{detailscore,jdbcType=INTEGER},now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceFeedbackdetail" >
+    insert into finance_feedbackdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="feedbacksetid != null" >
+        feedbacksetid,
+      </if>
+      <if test="detailname != null" >
+        detailname,
+      </if>
+      <if test="detailscore != null" >
+        detailscore,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="feedbacksetid != null" >
+        #{feedbacksetid,jdbcType=INTEGER},
+      </if>
+      <if test="detailname != null" >
+        #{detailname,jdbcType=VARCHAR},
+      </if>
+      <if test="detailscore != null" >
+        #{detailscore,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceFeedbackdetail" >
+    update finance_feedbackdetail
+    <set >
+      <if test="feedbacksetid != null" >
+        feedbacksetid = #{feedbacksetid,jdbcType=INTEGER},
+      </if>
+      <if test="detailname != null" >
+        detailname = #{detailname,jdbcType=VARCHAR},
+      </if>
+      <if test="detailscore != null" >
+        detailscore = #{detailscore,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.FinanceFeedbackdetail" >
+    update finance_feedbackdetail
+    set feedbacksetid = #{feedbacksetid,jdbcType=INTEGER},
+      detailname = #{detailname,jdbcType=VARCHAR},
+      detailscore = #{detailscore,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=DATE},
+      updatetime = #{updatetime,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap type="com.ht.popj.finance.FinanceFeedbackdetail" id="baseMap" extends="BaseResultMap">
+  	<association property="finaceFeedbackset" javaType="int" column="feedbacksetid" select="com.ht.mapper.finance.FinaceFeedbacksetMapper.selectByPrimaryKey">
+  	</association>
+  </resultMap>
+  <select id="selectAll" resultMap="baseMap">
+  	select * from finance_feedbackdetail
+  	<where>
+  	  <if test="feedbacksetid != null" >
+       and feedbacksetid = #{feedbacksetid,jdbcType=INTEGER}
+      </if>
+      <if test="detailname != null" >
+       and detailname = #{detailname,jdbcType=VARCHAR}
+      </if>
+      <if test="detailscore != null" >
+       and detailscore = #{detailscore,jdbcType=INTEGER}
+      </if>
+      <if test="status != null" >
+       and status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="createtime != null" >
+       and createtime = #{createtime,jdbcType=DATE}
+      </if>
+      <if test="updatetime != null" >
+       and updatetime = #{updatetime,jdbcType=DATE}
+      </if>
+      <if test="remark != null" >
+       and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+  	</where>
+  </select>
+  <select id="selectDynamic" resultMap="baseMap">
+  	select * from finance_feedbackdetail
+  	<where>
+  	  <if test="feedbacksetid != null" >
+       and feedbacksetid = #{feedbacksetid,jdbcType=INTEGER}
+      </if>
+      <if test="detailname != null" >
+       and detailname = #{detailname,jdbcType=VARCHAR}
+      </if>
+      <if test="detailscore != null" >
+       and detailscore = #{detailscore,jdbcType=INTEGER}
+      </if>
+      <if test="status != null" >
+       and status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="createtime != null" >
+       and createtime = #{createtime,jdbcType=DATE}
+      </if>
+      <if test="updatetime != null" >
+       and updatetime = #{updatetime,jdbcType=DATE}
+      </if>
+      <if test="remark != null" >
+       and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+  	</where>
+  </select>
+  
+  <select id="countScoreByfeedbackId" parameterType="int" resultType="int">
+  	SELECT SUM(detailscore) FROM finance_feedbackdetail WHERE feedbacksetid = #{id} GROUP BY feedbacksetid
+  </select>
+</mapper>

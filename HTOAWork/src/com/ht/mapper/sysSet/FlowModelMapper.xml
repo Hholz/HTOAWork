@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.sysSet.FlowModelMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.sysSet.FlowModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeId" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="flowModelName" property="flowmodelname"
+			jdbcType="VARCHAR" />
+		<result column="primaryStep" property="primarystep" jdbcType="VARCHAR" />
+		<result column="planDay" property="planday" jdbcType="INTEGER" />
+		<result column="invalid" property="invalid" jdbcType="INTEGER" />
+		<result column="seq" property="seq" jdbcType="INTEGER" />
+		<result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="Status" property="status" jdbcType="INTEGER" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowModelTypeId, flowModelName, primaryStep, planDay, invalid, seq,
+		Create_time,
+		Update_time, Status, Remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from flowmodel
+		where id = #{id,jdbcType=INTEGER} and Status=1
+	</select>
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.FlowModel">
+		SELECT f.*,t.flowModelType as typename FROM flowmodel
+		f,flowmodeltype t
+		<where>
+			f.Status=1 AND f.`flowModelTypeId` = t.`id`
+			<if test="flowmodeltypeid !=null and flowmodeltypeid !=''">
+				AND f.flowModelTypeId = #{flowmodeltypeid}
+			</if>
+			<if test="flowmodelname !=null and flowmodelname !=''">
+				AND f.flowModelName LIKE '%${flowmodelname}%'
+			</if>
+			<if test="invalid !=null">
+				AND f.invalid = #{invalid}
+			</if>
+		</where>
+	</select>
+	<select id="selectList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from flowmodel
+		where Status=1
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flowmodel set Status = 0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.sysSet.FlowModel">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into flowmodel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeId,
+			</if>
+			<if test="flowmodelname != null">
+				flowModelName,
+			</if>
+			<if test="primarystep != null">
+				primaryStep,
+			</if>
+			<if test="planday != null">
+				planDay,
+			</if>
+			<if test="invalid != null">
+				invalid,
+			</if>
+			<if test="seq != null">
+				seq,
+			</if>
+			Create_time,
+			<if test="updateTime != null">
+				Update_time,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="remark != null">
+				Remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelname != null">
+				#{flowmodelname,jdbcType=VARCHAR},
+			</if>
+			<if test="primarystep != null">
+				#{primarystep,jdbcType=VARCHAR},
+			</if>
+			<if test="planday != null">
+				#{planday,jdbcType=INTEGER},
+			</if>
+			<if test="invalid != null">
+				#{invalid,jdbcType=INTEGER},
+			</if>
+			<if test="seq != null">
+				#{seq,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.sysSet.FlowModel">
+		update flowmodel
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeId = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelname != null">
+				flowModelName = #{flowmodelname,jdbcType=VARCHAR},
+			</if>
+			<if test="primarystep != null">
+				primaryStep = #{primarystep,jdbcType=VARCHAR},
+			</if>
+			<if test="planday != null">
+				planDay = #{planday,jdbcType=INTEGER},
+			</if>
+			<if test="invalid != null">
+				invalid = #{invalid,jdbcType=INTEGER},
+			</if>
+			<if test="seq != null">
+				seq = #{seq,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				Create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			Update_time = NOW(),
+			<if test="status != null">
+				Status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				Remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

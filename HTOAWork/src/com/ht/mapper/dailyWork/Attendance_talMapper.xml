@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.Attendance_talMapper">
+
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Attendance_tal">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="fingerprint" property="fingerprint" jdbcType="INTEGER" />
+		<result column="empname" property="empname" jdbcType="VARCHAR" />
+		<result column="depid" property="depid" jdbcType="INTEGER" />
+		<result column="workdate" property="workday" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="late" property="late" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.dailyWork.Attendance_tal">
+	    <id column="id" property="id"/>
+		<result column="fingerprint" property="fingerprint" jdbcType="INTEGER" />
+		<result column="empname" property="empname" jdbcType="VARCHAR" />
+		<result column="num" property="num" />
+	</resultMap>
+	
+	<insert id="addattendance" parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		INSERT into
+		attendance_tal(fingerprint,empname,depid,workday,status,late,type)
+		VALUES
+		(#{fingerprint},#{empname},#{depid},#{workday},#{status},#{late},#{type})
+	</insert>
+	<select id="attendancelist" resultMap="attenselect"
+		parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		SELECT * FROM attendance_tal s
+		<where>
+			<if test="workday!=null">
+				s.workday like "%${workday}%"
+			</if>
+			<if test="workday==null">
+				PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+				workday,'%Y%m' ) ) =1
+			</if>
+			<if test="fingerprint !=0">
+				and s.fingerprint = #{fingerprint}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCount" resultMap="BaseResultMap1">
+		SELECT b.fingerprint as fingerprint,b.empname as empname,count(b.empname) as
+		num FROM (SELECT a.fingerprint,a.empname,a.depid,a.status FROM
+		(SELECT id,fingerprint,empname,depid,date_format(workday,'%Y-%c-%d')
+		as workdate,`status`,late from attendance_tal WHERE`status` =4 and
+		PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+		workday,'%Y%m' ) ) =1
+		ORDER BY fingerprint,workdate ASC) a GROUP BY a.fingerprint,a.workdate
+		having COUNT(fingerprint)=2) b GROUP BY empname ORDER BY num
+	</select>
+	
+	<select id="selectMouthCount" resultType="java.lang.Integer">
+	    select count(*) FROM sys_holiday WHERE 
+		PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( holidaytime,'%Y%m' ) ) =1
+	</select>
+
+	<update id="insertInreStud" parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		update
+		`attendance_tal` set fingerprint=#{fingerprint},empname=#{empname},
+		depid=#{depid},workday=#{workday},status=#{status},
+		late=#{late},type=#{type} where id=#{id}
+	</update>
+	<select id="findAttendance" parameterType="com.ht.popj.dailyWork.Attendance_tal"
+		resultType="com.ht.popj.dailyWork.Attendance_tal">
+		select min(id) as id,fingerprint,empname,depid,type,status
+		from attendance_tal where fingerprint=#{fingerprint} and type=#{type}
+		and workday like "%"#{workday}"%"
+	</select>
+	<select id="fAttendance" parameterType="com.ht.popj.dailyWork.Attendance_tal"
+		resultType="com.ht.popj.dailyWork.Attendance_tal">
+		select * from attendance_tal where
+		fingerprint=#{fingerprint} and workday=#{workday}
+	</select>
+	<select id="attendancefind" parameterType="com.ht.popj.dailyWork.Attendance_tal"
+		resultType="com.ht.popj.dailyWork.Attendance_tal">
+		select * from attendance_tal where
+		fingerprint=#{fingerprint} and workday like "%"#{workday}"%" and type='a' and status=4
+	</select>
+	<select id="findidAttendance" parameterType="com.ht.popj.dailyWork.Attendance_tal"
+		resultType="com.ht.popj.dailyWork.Attendance_tal">
+		select * from attendance_tal where PERIOD_DIFF(
+		date_format( now( ) , '%Y%m' ) , date_format( workday,'%Y%m' ) ) =1
+		AND status=#{status} GROUP BY fingerprint,workday ASC
+	</select>
+
+	<delete id="deleteAttendance" parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		DELETE from
+		attendance_tal where PERIOD_DIFF(
+		date_format( now( ) , '%Y%m' ) , date_format( workday,'%Y%m' ) ) =1
+	</delete>
+	<!-- -->
+	<resultMap id="attenselect" type="com.ht.popj.dailyWork.Attendance_tal"
+		extends="BaseResultMap">
+		<association property="dep" javaType="com.ht.popj.dailyWork.Dep"
+			column="depid" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+	<!-- 正常 -->
+	<select id="normalAttendance" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		SELECT
+		a.id,a.fingerprint,a.empname,a.depid,a.workdate,a.status,a.late FROM
+		(SELECT id,fingerprint,empname,depid,date_format(workday,'%Y-%c-%d')
+		as workdate,`status`,late from attendance_tal WHERE`status` =4 and
+		PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+		workday,'%Y%m' ) ) =1 ORDER BY fingerprint,workdate ASC) a GROUP BY
+		a.fingerprint,a.workdate having COUNT(fingerprint)=2
+	</select>
+	<!-- 异常 -->
+	<select id="abnormalAttendance" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		SELECT
+		a.id,a.fingerprint,a.empname,a.depid,a.workdate,a.status,a.late FROM
+		(SELECT id,fingerprint,empname,depid,date_format(workday,'%Y-%c-%d')
+		as workdate,`status`,late from attendance_tal WHERE`status` =3 and
+		PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+		workday,'%Y%m' ) ) =1 ORDER BY fingerprint,workdate ASC) a GROUP BY
+		a.fingerprint,a.workdate having COUNT(fingerprint)>=1
+	</select>
+	<!-- 旷工 -->
+	<select id="absenteeism" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		SELECT
+		a.id,a.fingerprint,a.empname,a.depid,a.workdate,a.status,a.late FROM
+		(SELECT id,fingerprint,empname,depid,date_format(workday,'%Y-%c-%d')
+		as workdate,`status`,late from attendance_tal WHERE`status` =1 and
+		PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+		workday,'%Y%m' ) ) =1 ORDER BY fingerprint,workdate ASC) a GROUP BY
+		a.fingerprint,a.workdate having COUNT(fingerprint)=2
+	</select>
+	<!-- 迟到 -->
+	<select id="lateAttendance" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Attendance_tal">
+		SELECT
+		a.id,a.fingerprint,a.empname,a.depid,a.workdate,a.`status`,a.late,a.type
+		FROM(SELECT
+		id,fingerprint,depid,empname,date_format(workday,'%Y-%c-%d') as
+		workdate,`status`,late,type FROM attendance_tal WHERE `status` IN
+		(2,4) and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(
+		workday,'%Y%m' ) ) =1 ORDER BY fingerprint,workdate,type ASC) a GROUP
+		BY a.fingerprint,a.workdate HAVING COUNT(a.fingerprint)>= 2 and STATUS
+		= 2
+	</select>
+</mapper>

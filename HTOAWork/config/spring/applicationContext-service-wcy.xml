@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="   
+           http://www.springframework.org/schema/beans   
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+           http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+           http://www.springframework.org/schema/mvc   
+           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+           
+         <!-- service -->        
+		 <bean id="studentInfoService" class="com.ht.serviceImpl.student.StudentInfoServiceImpl"></bean>
+		 
+		 <bean id="studentsayh" class="com.ht.serviceImpl.student.StudentSayhServiceImpl"></bean>
+		 
+		 <bean id="studentrewService" class="com.ht.serviceImpl.student.StudentrewardServiceImpl"></bean>
+		 
+		 <bean id="finanattenservice" class="com.ht.serviceImpl.sysSet.FinanattenServiceImpl"></bean>
+		 
+		 <bean id="finattenRewardService" class="com.ht.serviceImpl.sysSet.FinattenRewardServiceImpl"></bean>
+		 
+		 <bean id="computerManageService" class="com.ht.serviceImpl.student.ComputerManageServiceImpl"></bean>
+		 
+		 <bean id="studentComputerService" class="com.ht.serviceImpl.student.StudentComputerServiceImpl"></bean>
+
+		<bean id="stuAttencondService" class="com.ht.serviceImpl.student.StudentAttencondServiceImpl"></bean>
+		
+		<bean id="attendanceService" class="com.ht.serviceImpl.dailyWork.AttendanceServiceImpl"></bean>
+		
+		<bean id="setholidayService" class="com.ht.serviceImpl.sysSet.SetholidayServiceImpl"></bean>
+		
+		<bean id="attendance_talServiceImpl" class="com.ht.serviceImpl.dailyWork.Attendance_talServiceImpl"></bean>
+				
+		<bean id="attenstatisService" class="com.ht.serviceImpl.dailyWork.AttenstatisServiceImpl"></bean>
+		
+		<bean id="attentojiService" class="com.ht.serviceImpl.dailyWork.AttentojiServiceImpl"></bean>
+</beans>           

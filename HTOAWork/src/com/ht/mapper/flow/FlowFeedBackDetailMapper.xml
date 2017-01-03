@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowFeedBackDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowFeedBackDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="feedBackId" property="feedbackid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowFeedBackDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="feedBackId" property="feedbackid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+
+		<collection property="flowModel" ofType="com.ht.popj.flow.FlowsModel">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="flowModelName" property="flowmodelname" />
+		</collection>
+
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="empname" property="empname" />
+		</collection>
+		
+		<collection property="feedBack" ofType="com.ht.popj.flow.FlowFeedBack">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="studid" property="studentid" jdbcType="INTEGER" />
+			<result column="money" property="money" jdbcType="DECIMAL" />
+			<result column="applyMan" property="applyMan" jdbcType="VARCHAR" />
+			<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+			<result column="remarks" property="remark" jdbcType="VARCHAR" />
+			
+			<collection property="student" ofType="com.ht.popj.student.Student">
+				<id column="id" property="id" jdbcType="INTEGER" />
+				<result column="stuname" property="stuname" />
+				
+				<collection property="classInfo" ofType="com.ht.popj.student.StudentClass">
+				    <id column="id" property="id"/>
+				    <result column="classname" property="classname"/>
+			    
+				    <collection property="studentfall" ofType="com.ht.popj.student.StudentFall">
+					    <id column="id" property="id"/>
+					    <result column="level" property="level"/>
+					</collection>
+					
+				</collection>
+				
+			</collection>
+			
+		</collection>
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, feedBackId, flowModelid, empid, status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_feed_back_detail where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectFeedBackDetail" resultMap="BaseResultMap1"
+		parameterType="java.lang.String">
+		SELECT
+		flow_feed_back_detail.*,flow_feed_back.`id`,flow_feed_back.`studid`,
+		flow_feed_back.`applyMan`,flow_feed_back.`create_time`,flow_feed_back.`money`,
+		flow_feed_back.`remark` as remarks,student.`id`,student.`stuname`,
+		student_fall.`id`,student_fall.`level`,student_class.`id`,student_class.`classname`
+		FROM flow_feed_back_detail,
+		flow_feed_back,student,student_fall,student_class WHERE
+		flow_feed_back.`studid`=student.`id`
+		AND flow_feed_back_detail.`feedBackId`=flow_feed_back.`id`
+		AND student.`classid`=student_class.`id` AND
+		student_class.`Level_id`=student_fall.`id`
+		AND flow_feed_back_detail.`empid`=#{value}
+		AND flow_feed_back_detail.`status`=2
+	</select>
+
+	<select id="selectByFeedBackId" resultMap="BaseResultMap1"
+		parameterType="java.lang.Integer">
+		SELECT
+		flow_feed_back_detail.*,flow_model.`id`,flow_model.`flowModelName`,emp.`id`,emp.`empname`
+		FROM flow_feed_back_detail,flow_model,emp WHERE
+		flow_feed_back_detail.`feedBackId`=#{value} AND
+		flow_feed_back_detail.`empid`=emp.`id` AND
+		flow_feed_back_detail.`flowModelid`=flow_model.`id`
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT * FROM flow_feed_back_detail WHERE
+		flow_feed_back_detail.`feedBackId`=#{value}
+		AND flow_feed_back_detail.`status`=0
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_feed_back_detail
+		<where>
+			status=1 ORDER BY id DESC
+			<if test="feedbackid != null">
+				AND feedBackId = #{feedbackid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				AND flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_feed_back_detail set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowFeedBackDetail">
+		insert into flow_feed_back_detail
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="feedbackid != null">
+				feedBackId,
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="feedbackid != null">
+				#{feedbackid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				#{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowFeedBackDetail">
+		update flow_feed_back_detail
+		<set>
+			<if test="feedbackid != null">
+				feedBackId = #{feedbackid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

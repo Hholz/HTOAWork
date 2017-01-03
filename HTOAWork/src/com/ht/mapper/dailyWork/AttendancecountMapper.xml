@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.AttendancecountMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Attendancecount">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="scikcount" property="scikcount" jdbcType="INTEGER" />
+		<result column="casualcount" property="casualcount" jdbcType="INTEGER" />
+		<result column="dutycount" property="dutycount" jdbcType="INTEGER" />
+		<result column="missworkcount" property="missworkcount"
+			jdbcType="INTEGER" />
+		<result column="overworkcount" property="overworkcount"
+			jdbcType="INTEGER" />
+		<result column="latecount" property="latecount" jdbcType="INTEGER" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empid, scikcount, casualcount, dutycount,
+		missworkcount,
+		overworkcount, latecount,
+		createtime, updatetime, status,
+		remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from attendancecount
+		where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		select ac.*,e.empname as empname from attendancecount ac,emp e
+		<where>
+			and ac.status = 1 and ac.empid =e.id
+			<if test="empid !=null and empid !=''">
+				AND ac.empid = #{empid}
+			</if>
+			<if test="time !=null and time !=''">
+				AND ac.time = #{time}
+			</if>
+		</where>
+	</select>
+	<select id="selecthickcount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM holiday h
+		<where>
+			h.holidayTypeid=5 AND h.STATUS=1 AND
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' ) and h.ApprovalStatus=5
+			<if test="empid !=null and empid !=''">
+				AND h.empid = #{empid}
+			</if>
+		</where>
+	</select>
+	<select id="selectthingcount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM holiday h
+		<where>
+			h.holidayTypeid=1 or h.holidayTypeid=2 AND h.STATUS=1 AND
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' ) and h.ApprovalStatus=3
+			<if test="empid !=null and empid !=''">
+				AND h.empid = #{empid}
+			</if>
+		</where>
+	</select>
+	<select id="selecttovercount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM holiday h
+		<where>
+			h.holidayTypeid=3  AND h.STATUS=1 AND
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' ) and h.ApprovalStatus=3
+			<if test="empid !=null and empid !=''">
+				AND h.empid = #{empid}
+			</if>
+		</where>
+	</select>
+	<select id="selecttlatecount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM attendances h
+		<where>
+			h.flag='早退' OR h.flag='迟到' AND
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' )
+			<if test="empid !=null and empid !=''">
+				AND h.empid = #{empid}
+			</if>
+		</where>
+	</select>
+	<select id="selecttmissworkcount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM attendances h
+		<where>
+			h.flag='旷工' AND
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' )
+			<if test="empid !=null and empid !=''">
+				AND h.empid = #{empid}
+			</if>
+		</where>
+	</select>
+	<select id="selecttdutycount" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Attendancecount">
+		SELECT COUNT(*) FROM duty h
+		<where>
+			DATE_FORMAT( h.Create_time, '%Y%m' ) = DATE_FORMAT( CURDATE(
+			) , '%Y%m' ) and h.dutystatus=1
+			<if test="empid !=null and empid !=''">
+				AND h.dutyid = #{empid}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		attendancecount set status =0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Attendancecount">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into attendancecount
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="scikcount != null">
+				scikcount,
+			</if>
+			<if test="casualcount != null">
+				casualcount,
+			</if>
+			<if test="dutycount != null">
+				dutycount,
+			</if>
+			<if test="missworkcount != null">
+				missworkcount,
+			</if>
+			<if test="overworkcount != null">
+				overworkcount,
+			</if>
+			<if test="latecount != null">
+				latecount,
+			</if>
+			createtime,
+			<if test="updatetime != null">
+				updatetime,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="scikcount != null">
+				#{scikcount,jdbcType=INTEGER},
+			</if>
+			<if test="casualcount != null">
+				#{casualcount,jdbcType=INTEGER},
+			</if>
+			<if test="dutycount != null">
+				#{dutycount,jdbcType=INTEGER},
+			</if>
+			<if test="missworkcount != null">
+				#{missworkcount,jdbcType=INTEGER},
+			</if>
+			<if test="overworkcount != null">
+				#{overworkcount,jdbcType=INTEGER},
+			</if>
+			<if test="latecount != null">
+				#{latecount,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Attendancecount">
+		update attendancecount
+		<set>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="scikcount != null">
+				scikcount = #{scikcount,jdbcType=INTEGER},
+			</if>
+			<if test="casualcount != null">
+				casualcount = #{casualcount,jdbcType=INTEGER},
+			</if>
+			<if test="dutycount != null">
+				dutycount = #{dutycount,jdbcType=INTEGER},
+			</if>
+			<if test="missworkcount != null">
+				missworkcount = #{missworkcount,jdbcType=INTEGER},
+			</if>
+			<if test="overworkcount != null">
+				overworkcount = #{overworkcount,jdbcType=INTEGER},
+			</if>
+			<if test="latecount != null">
+				latecount = #{latecount,jdbcType=INTEGER},
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			updatetime = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

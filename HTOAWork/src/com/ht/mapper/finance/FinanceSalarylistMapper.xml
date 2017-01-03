@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceSalarylistMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceSalarylist">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="jbmoney" property="jbmoney" jdbcType="REAL" />
+		<result column="gwmoney" property="gwmoney" jdbcType="REAL" />
+		<result column="sbmoney" property="sbmoney" jdbcType="REAL" />
+		<result column="ybmoney" property="ybmoney" jdbcType="REAL" />
+		<result column="cbmoney" property="cbmoney" jdbcType="REAL" />
+		<result column="zfmoney" property="zfmoney" jdbcType="REAL" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, jbmoney, gwmoney, sbmoney, ybmoney, cbmoney,
+		zfmoney,status,empid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from finance_salarylist where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from finance_salarylist ORDER BY id DESC
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceSalarylist">
+		select f.*,e.empname as empname from finance_salarylist f,emp e 
+		<where>
+			e.id=f.empid and f.status=1
+			<if test="jbmoney != null">
+				AND f.jbmoney = #{jbmoney,jdbcType=REAL}
+			</if>
+			<if test="gwmoney != null">
+				AND f.gwmoney = #{gwmoney,jdbcType=REAL}
+			</if>
+			<if test="sbmoney != null">
+				AND f.sbmoney = #{sbmoney,jdbcType=REAL}
+			</if>
+			<if test="ybmoney != null">
+				AND f.ybmoney = #{ybmoney,jdbcType=REAL}
+			</if>
+			<if test="cbmoney != null">
+				AND f.cbmoney = #{cbmoney,jdbcType=REAL}
+			</if>
+			<if test="zfmoney != null">
+				AND f.zfmoney = #{zfmoney,jdbcType=REAL}
+			</if>
+			<if test="empid != null and empid != '' ">
+				AND f.empid = #{empid,jdbcType=VARCHAR}
+			</if>
+		</where>
+		 ORDER BY f.id DESC
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		finance_salarylist set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceSalarylist">
+		insert into finance_salarylist
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jbmoney != null">
+				jbmoney,
+			</if>
+			<if test="gwmoney != null">
+				gwmoney,
+			</if>
+			<if test="sbmoney != null">
+				sbmoney,
+			</if>
+			<if test="ybmoney != null">
+				ybmoney,
+			</if>
+			<if test="cbmoney != null">
+				cbmoney,
+			</if>
+			<if test="zfmoney != null">
+				zfmoney,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jbmoney != null">
+				#{jbmoney,jdbcType=REAL},
+			</if>
+			<if test="gwmoney != null">
+				#{gwmoney,jdbcType=REAL},
+			</if>
+			<if test="sbmoney != null">
+				#{sbmoney,jdbcType=REAL},
+			</if>
+			<if test="ybmoney != null">
+				#{ybmoney,jdbcType=REAL},
+			</if>
+			<if test="cbmoney != null">
+				#{cbmoney,jdbcType=REAL},
+			</if>
+			<if test="zfmoney != null">
+				#{zfmoney,jdbcType=REAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceSalarylist">
+		update finance_salarylist
+		<set>
+			<if test="jbmoney != null">
+				jbmoney = #{jbmoney,jdbcType=REAL},
+			</if>
+			<if test="gwmoney != null">
+				gwmoney = #{gwmoney,jdbcType=REAL},
+			</if>
+			<if test="sbmoney != null">
+				sbmoney = #{sbmoney,jdbcType=REAL},
+			</if>
+			<if test="ybmoney != null">
+				ybmoney = #{ybmoney,jdbcType=REAL},
+			</if>
+			<if test="cbmoney != null">
+				cbmoney = #{cbmoney,jdbcType=REAL},
+			</if>
+			<if test="zfmoney != null">
+				zfmoney = #{zfmoney,jdbcType=REAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

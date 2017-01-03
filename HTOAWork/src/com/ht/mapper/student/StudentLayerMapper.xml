@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentLayerMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentLayer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="layerName" property="layername" jdbcType="VARCHAR" />
+    <result column="floorId" property="floorid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="studentFloor" javaType="com.ht.popj.student.StudentFloor" column="floorId" select="com.ht.mapper.student.StudentFloorMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, layerName, floorId, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_layer
+    where id = #{id,jdbcType=INTEGER} and status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_layer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentLayer" >
+    insert into student_layer (layerName, floorId,create_time)
+    values(#{layername,jdbcType=VARCHAR}, #{floorid,jdbcType=INTEGER},now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentLayer" >
+    insert into student_layer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="layername != null" >
+        layerName,
+      </if>
+      <if test="floorid != null" >
+        floorId,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="layername != null" >
+        #{layername,jdbcType=VARCHAR},
+      </if>
+      <if test="floorid != null" >
+        #{floorid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{now,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentLayer" >
+    update student_layer
+    <set >
+      <if test="layername != null" >
+        layerName = #{layername,jdbcType=VARCHAR},
+      </if>
+      <if test="floorid != null" >
+        floorId = #{floorid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentLayer" >
+    update student_layer
+    set layerName = #{layername,jdbcType=VARCHAR},
+      floorId = #{floorid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 查询所有的楼层信息 -->
+  <select id="selectStudentLayerAll" resultMap="BaseResultMap">
+  	SELECT l.*,f.floorName FROM student_layer l,student_floor f WHERE l.floorid = f.id and l.status=1
+  </select>
+  <select id="selectStudentLayerNameAll" resultMap="BaseResultMap">
+  	select distinct layername from student_layer where status=1
+  </select>
+  <!--  
+  <resultMap id="selectAllresult" type="com.ht.popj.student.studentLayer">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="layerName" property="layername" jdbcType="VARCHAR" />
+    <result column="floorId" property="floorid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <collection property="studentFloorList" ofType="com.ht.popj.student.StudentFloor">
+      	<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="floorName" property="floorname" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="status" property="floorStatus" jdbcType="INTEGER" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="floor_admin" property="floorAdmin" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  -->
+  
+  	<update id="updateLayerStatusPrimaryKey" parameterType="java.lang.Integer">
+  	 	update student_layer set status = 0 where id = #{id,jdbcType=INTEGER}
+  	</update>
+  	
+  	<select id="selectDynamic" resultMap="BaseResultMap">
+  		select * from student_layer
+  		<where>
+  			  <if test="id != null" >
+		        #{id,jdbcType=INTEGER},
+		      </if>
+  			  <if test="layername != null" >
+        		and	layerName = #{layername,jdbcType=VARCHAR}
+		      </if>
+		      <if test="floorid != null" >
+		       and floorId = #{floorid,jdbcType=INTEGER}
+		      </if>
+		      <if test="createTime != null" >
+		       and create_time = #{createTime,jdbcType=TIMESTAMP}
+		      </if>
+		      <if test="updateTime != null" >
+		       and update_time = #{updateTime,jdbcType=TIMESTAMP}
+		      </if>
+		      <if test="remark != null" >
+		       and remark = #{remark,jdbcType=VARCHAR}
+		      </if>
+		       and status = 1
+  		</where>
+  	</select>
+  	<select id="countLayer" resultType="int" parameterType="int">
+  		SELECT count(layername) FROM student_layer WHERE floorId = #{id}
+  	</select>
+</mapper>

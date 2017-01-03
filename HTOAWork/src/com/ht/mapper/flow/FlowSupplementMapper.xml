@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowSupplementMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowSupplement">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="sutime" property="sutime" jdbcType="TIMESTAMP" />
+		<result column="suremark" property="suremark" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="approvalstatus" property="approvalstatus"
+			jdbcType="INTEGER" />
+		<result column="flowmodeltypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empid, sutime, suremark, createtime, updatetime,
+		status,approvalstatus,flowmodeltypeid, remark,applyman
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_supplement
+		where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from flow_supplement
+	</select>
+
+	<select id="selectMySupplement" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.FlowSupplement">
+		SELECT flow_supplement.*,emp.`id`,emp.`empname` FROM
+		`flow_supplement`,emp WHERE flow_supplement.`empid`=emp.`id` AND
+		flow_supplement.`approvalstatus`=#{approvalstatus}
+		AND flow_supplement.`status`=1
+		AND
+		flow_supplement.`empid`=#{empid} ORDER
+		BY flow_supplement.`sutime` DESC
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.FlowSupplement">
+		select * from flow_supplement
+		<where>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="sutime != null">
+				AND sutime = #{sutime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="suremark != null">
+				AND suremark = #{suremark,jdbcType=VARCHAR}
+			</if>
+			<if test="createtime != null">
+				AND createtime = #{createtime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="approvalstatus != null">
+				AND approvalstatus = #{approvalstatus,jdbcType=INTEGER}
+			</if>
+			<if test="flowmodeltypeid != null">
+				AND flowmodeltypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="applyman != null">
+				AND applyman = #{applyman,jdbcType=VARCHAR}
+			</if>
+
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_supplement set status=0 where id = #{value}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowSupplement">
+		insert into flow_supplement
+
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="sutime != null">
+				sutime,
+			</if>
+			<if test="suremark != null">
+				suremark,
+			</if>
+			createtime,
+			<if test="updatetime != null">
+				updatetime,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="approvalstatus != null">
+				approvalstatus,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowmodeltypeid,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="applyman != null">
+				applyman,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="sutime != null">
+				#{sutime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="suremark != null">
+				#{suremark,jdbcType=VARCHAR},
+			</if>
+			NOW(),
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="approvalstatus != null">
+				#{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="applyman != null">
+				#{applyman,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowSupplement">
+		update flow_supplement
+		<set>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="sutime != null">
+				sutime = #{sutime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="suremark != null">
+				suremark = #{suremark,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			updatetime = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="approvalstatus != null">
+				approvalstatus = #{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowmodeltypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.DutymodelMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Dutymodel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="modelname" property="modelname" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <if test="id != null">
+        id = #{id}
+    </if>
+  </sql>
+  
+  <sql id="Base_Column_List2" >
+    id, modelname, create_time, update_time, status, remark
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List2" />
+    from dutymodel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findDutymodelList1" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Dutymodel" >
+    select * from dutymodel
+    <where>
+       <include refid="Base_Column_List" />
+       and status > 0
+    </where>
+  </select>
+  
+  <select id="findDutymodelList2" resultType="com.ht.popj.dailyWork.Dutymodel">
+      select * from dutymodel where status  > 0
+  </select>
+  
+  <delete id="deleteDutymodel" parameterType="java.lang.Integer" >
+    update dutymodel set status = 0 where id = #{id}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Dutymodel" >
+    insert into dutymodel (id, modelname, create_time, 
+      update_time, status, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{modelname,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="addDutymodel" parameterType="com.ht.popj.dailyWork.Dutymodel" >
+    insert into dutymodel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="modelname != null" >
+        modelname,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="modelname != null" >
+        #{modelname,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateDutymodel" parameterType="com.ht.popj.dailyWork.Dutymodel" >
+    update dutymodel
+    <set >
+      <if test="modelname != null" >
+        modelname = #{modelname,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Dutymodel" >
+    update dutymodel
+    set modelname = #{modelname,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="usingById" parameterType="int">
+    update dutymodel set status = 1 where id = #{id} 
+  </update>
+  <update id="disableById" parameterType="int">
+    UPDATE dutymodel SET STATUS =2 WHERE id != #{id}  AND STATUS =1
+  </update>
+  <select id="selectIdIsUsing" resultType="int">
+      select id from dutymodel where status  = 1
+  </select>
+  <select id="selectIsUsing" resultType="com.ht.popj.dailyWork.Dutymodel">
+      select * from dutymodel where status  = 1
+  </select>
+</mapper>

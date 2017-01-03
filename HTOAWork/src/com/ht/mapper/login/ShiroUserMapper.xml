@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.login.ShiroUserMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.login.ShiroUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="pwd" property="pwd" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectShiroByUserInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT shiro_user.`id` FROM shiro_user,shiro_user_info WHERE shiro_user.`id`
+		= shiro_user_info.`user_id` AND shiro_user_info.`emp_id`=#{value}
+	</select>
+
+	<sql id="Base_Column_List">
+		id, name, phone, pwd, user_type, create_time, update_time, status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from shiro_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from shiro_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.login.ShiroUser">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into shiro_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="pwd != null">
+				pwd,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="pwd != null">
+				#{pwd,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.login.ShiroUser">
+		update shiro_user
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="pwd != null">
+				pwd = #{pwd,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="delByUpdate" parameterType="int">
+		update shiro_user set status = 0 where id = #{id}
+	</update>
+	<resultMap type="com.ht.popj.login.ShiroUser" id="UserWithRoleRM2"
+		extends="BaseResultMap">
+		<collection property="roleList" column="id"
+			ofType="com.ht.popj.login.ShiroRole" select="com.ht.mapper.login.ShiroRoleMapper.selectListByUserId">
+		</collection>
+	</resultMap>
+	<select id="selectAll" resultMap="UserWithRoleRM2">
+		select * from shiro_user
+	</select>
+	<resultMap type="com.ht.popj.login.ShiroUser" id="UserWithRoleRM"
+		extends="BaseResultMap">
+		<collection property="roleList" ofType="com.ht.popj.login.ShiroRole">
+			<id column="r_id" property="id" />
+			<result column="r_name" property="name" />
+			<collection property="authList" ofType="com.ht.popj.login.ShiroAuth">
+				<id column="a_id" property="id" />
+				<result column="a_name" property="name" />
+			</collection>
+		</collection>
+	</resultMap>
+	<select id="selectById" resultMap="UserWithRoleRM"
+		parameterType="int">
+		SELECT u.*,
+		r.id AS r_id,r.name AS r_name,
+		a.id AS a_id,a.name AS a_name
+
+		FROM shiro_user u,shiro_role r,shiro_user_role ur,shiro_auth
+		a,shiro_role_auth ra
+
+		WHERE u.id = ur.user_id AND ur.role_id = r.id
+		AND r.id = ra.role_id AND ra.auth_id = a.id
+
+		AND u.id = #{id}
+	</select>
+	<select id="selectByNamePwd" resultMap="UserWithRoleRM"
+		parameterType="com.ht.popj.login.ShiroUser">
+		SELECT u.*,
+		r.id AS r_id,r.name AS r_name,
+		a.id AS a_id,a.name AS a_name
+
+		FROM shiro_user u,shiro_role r,shiro_user_role ur,shiro_auth
+		a,shiro_role_auth ra
+
+		WHERE u.id = ur.user_id AND ur.role_id = r.id
+		AND r.id = ra.role_id AND ra.auth_id = a.id
+
+		AND u.name = #{name} and u.pwd = #{pwd}
+	</select>
+	<select id="selectByPhonePwd" resultMap="UserWithRoleRM"
+		parameterType="com.ht.popj.login.ShiroUser">
+		SELECT u.*,
+		r.id AS r_id,r.name AS r_name,
+		a.id AS a_id,a.name AS a_name
+
+		FROM shiro_user u,shiro_role r,shiro_user_role ur,shiro_auth
+		a,shiro_role_auth ra
+
+		WHERE u.id = ur.user_id AND ur.role_id = r.id
+		AND r.id = ra.role_id AND ra.auth_id = a.id
+
+		AND u.phone = #{phone} and u.pwd = #{pwd}
+	</select>
+	<select id="selectByIdPwd" resultMap="UserWithRoleRM"
+		parameterType="com.ht.popj.login.ShiroUser">
+		SELECT u.*,
+		r.id AS r_id,r.name AS r_name,
+		a.id AS a_id,a.name AS a_name
+
+		FROM shiro_user u,shiro_role r,shiro_user_role ur,shiro_auth
+		a,shiro_role_auth ra
+
+		WHERE u.id = ur.user_id AND ur.role_id = r.id
+		AND r.id = ra.role_id AND ra.auth_id = a.id
+
+		AND u.id = #{id} and u.pwd = #{pwd}
+	</select>
+	<select id="selectByName" resultMap="UserWithRoleRM"
+		parameterType="com.ht.popj.login.ShiroUser">
+		SELECT u.*,
+		r.id AS r_id,r.name AS r_name,
+		a.id AS a_id,a.name AS a_name
+
+		FROM shiro_user u,shiro_role r,shiro_user_role ur,shiro_auth
+		a,shiro_role_auth ra
+
+		WHERE u.id = ur.user_id AND ur.role_id = r.id
+		AND r.id = ra.role_id AND ra.auth_id = a.id
+
+		AND u.name = #{name}
+	</select>
+	<update id="upNameByName" parameterType="map">
+		update shiro_user set name = #{newStuno} where name = #{oldStuno} and status = 1
+	</update>
+</mapper>

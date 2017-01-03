@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowHolidaydetailMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowHolidaydetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="holidayid" property="holidayid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowHolidaydetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="holidayid" property="holidayid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+
+		<collection property="flowHoliday" ofType="com.ht.popj.flow.FlowHoliday">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="studid" property="studid" jdbcType="INTEGER" />
+			<result column="stratTime" property="strattime" />
+			<result column="create_time" property="createTime" />
+			<result column="endTime" property="endtime" />
+			<result column="remarks" property="remark" jdbcType="VARCHAR" />
+			<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+			<collection property="student" ofType="com.ht.popj.student.Student">
+				<id column="id" property="id" jdbcType="INTEGER" />
+				<result column="stuname" property="stuname" />
+			</collection>
+		</collection>
+		
+		<collection property="flowModel" ofType="com.ht.popj.flow.FlowsModel">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="flowModelName" property="flowmodelname" />
+		</collection>
+
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="empname" property="empname" />
+		</collection>
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, holidayid, flowModelid, empid, status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap1"
+		parameterType="java.lang.String">
+		SELECT
+		flow_holidaydetail.*,
+		flow_holiday.`id`,
+		flow_holiday.`empid`,
+		flow_holiday.`stratTime`,
+		flow_holiday.`create_time`,
+		flow_holiday.`endTime`,
+		flow_holiday.`remark` as remarks,
+		student.`id`,
+		student.`stuname`,
+		emp.`id`,
+		emp.`empname`
+		FROM
+		flow_holidaydetail,flow_holiday,student,emp
+		WHERE
+		flow_holiday.`id`=flow_holidaydetail.`holidayid`
+		AND flow_holidaydetail.`status`=2
+		AND flow_holiday.`studid`=student.`id`
+		AND flow_holidaydetail.`empid`=emp.`id`
+		AND flow_holidaydetail.`empid`=#{value}
+	</select>
+	
+	<select id="selectEmpHolidayList" resultMap="BaseResultMap1"
+		parameterType="java.lang.String">
+		SELECT flow_holidaydetail.*,flow_holiday.*,flow_holiday.remark as applyremark,emp.*
+		FROM
+		flow_holidaydetail,flow_holiday,emp
+		WHERE
+		flow_holiday.`id`=flow_holidaydetail.`holidayid`
+		AND flow_holidaydetail.`status`=2
+		AND flow_holidaydetail.`empid`=emp.`id`
+		AND flow_holiday.`empid` &lt;&gt; ''
+		AND flow_holidaydetail.`empid`=#{value}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT * FROM flow_holidaydetail WHERE
+		flow_holidaydetail.`holidayid`=#{value} AND
+		flow_holidaydetail.`status`=0
+	</select>
+
+	<select id="selectByHolidayid" resultMap="BaseResultMap1"
+		parameterType="java.lang.Integer">
+		SELECT
+		flow_holidaydetail.*,flow_model.`id`,flow_model.`flowModelName`,emp.`id`,emp.`empname`
+		FROM flow_holidaydetail,flow_model,emp WHERE
+		flow_holidaydetail.`holidayid`=#{value} AND
+		flow_holidaydetail.`empid`=emp.`id` AND
+		flow_holidaydetail.`flowModelid`=flow_model.`id`
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_holidaydetail
+		<where>
+			status=1 ORDER BY id DESC
+			<if test="holidayid != null">
+				AND holidayid = #{holidayid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				AND flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_holidaydetail set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowHolidaydetail">
+		insert into flow_holidaydetail
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="holidayid != null">
+				holidayid,
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="holidayid != null">
+				#{holidayid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				#{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowHolidaydetail">
+		update flow_holidaydetail
+		<set>
+			<if test="holidayid != null">
+				holidayid = #{holidayid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

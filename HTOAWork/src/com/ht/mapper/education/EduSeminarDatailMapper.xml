@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduSeminarDatailMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.education.EduSeminarDatail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="seminar_id" property="seminarId" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_names" property="empNames" jdbcType="VARCHAR" />
+    <result column="detail_remark" property="detailRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, seminar_id, emp_id, emp_names, detail_remark, create_time, update_time, status, 
+    remark
+  </sql>
+ <!--  <select id="getSeminarDatail2" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from edu_seminar_datail
+    where id = #{id,jdbcType=INTEGER}
+  </select> -->
+  <select id="getSeminarDatail" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from edu_seminar_datail
+    where seminar_id = #{seminarId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteSeminarDatail" parameterType="java.lang.Integer" >
+    delete from edu_seminar_datail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.education.EduSeminarDatail" >
+    insert into edu_seminar_datail (id, seminar_id, emp_id, 
+      emp_names, detail_remark, create_time, 
+      update_time, status, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{seminarId,jdbcType=INTEGER}, #{empId,jdbcType=VARCHAR}, 
+      #{empNames,jdbcType=VARCHAR}, #{detailRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="addSeminarDatail" parameterType="com.ht.popj.education.EduSeminarDatail" >
+    insert into edu_seminar_datail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="seminarId != null" >
+        seminar_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="empNames != null" >
+        emp_names,
+      </if>
+      <if test="detailRemark != null" >
+        detail_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="seminarId != null" >
+        #{seminarId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="empNames != null" >
+        #{empNames,jdbcType=VARCHAR},
+      </if>
+      <if test="detailRemark != null" >
+        #{detailRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSeminarDatail" parameterType="com.ht.popj.education.EduSeminarDatail" >
+    update edu_seminar_datail
+    <set >
+      <if test="seminarId != null" >
+        seminar_id = #{seminarId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="empNames != null" >
+        emp_names = #{empNames,jdbcType=VARCHAR},
+      </if>
+      <if test="detailRemark != null" >
+        detail_remark = #{detailRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.education.EduSeminarDatail" >
+    update edu_seminar_datail
+    set seminar_id = #{seminarId,jdbcType=INTEGER},
+      emp_id = #{empId,jdbcType=VARCHAR},
+      emp_names = #{empNames,jdbcType=VARCHAR},
+      detail_remark = #{detailRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getSomeSiminarDetail" resultMap="BaseResultMap" parameterType="com.ht.popj.education.EduSeminarDatail">
+      select * from edu_seminar_datail e
+		<where>
+			<if test="id != null">
+				e.id = #{id}
+			</if>
+			<if test="ids != null">
+				<foreach collection="ids" open="AND  seminar_id IN(" close=")" item="seminar_id" separator=",">
+					#{seminar_id}
+				</foreach>
+			</if>
+			and status=1
+		</where>
+  </select>
+</mapper>

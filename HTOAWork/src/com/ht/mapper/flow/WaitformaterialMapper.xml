@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.WaitformaterialMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.Waitformaterial">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="materialid" property="materialid" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="applystatus" property="applystatus" jdbcType="INTEGER" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+		<result column="applymaterialid" property="applymaterialid"
+			jdbcType="INTEGER" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, materialid, count, applystatus, applyman,
+		applymaterialid,
+		createtime, updatetime,
+		status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from waitformaterial
+		where id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from waitformaterial
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.Waitformaterial">
+		select w.*,m.materialname as materialname,e.empname as empname from waitformaterial w,emp e,material m
+		<where>
+		    e.id = w.applyman and m.id=w.materialid
+		    <if test="materialid != null">
+				AND w.materialid = #{materialid,jdbcType=INTEGER}
+			</if>
+			<if test="count != null">
+				AND w.count = #{count,jdbcType=INTEGER}
+			</if>
+			<if test="applystatus != null">
+				AND w.applystatus = #{applystatus,jdbcType=INTEGER}
+			</if>
+			<if test="applyman != null">
+				AND w.applyman = #{applyman,jdbcType=VARCHAR}
+			</if>
+			<if test="applymaterialid != null">
+				AND w.applymaterialid = #{applymaterialid,jdbcType=INTEGER}
+			</if>
+			<if test="createtime != null">
+				AND w.createtime = #{createtime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND w.status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND w.remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		waitformaterial set status = 0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.Waitformaterial">
+		insert into waitformaterial
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="materialid != null">
+				materialid,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="applystatus != null">
+				applystatus,
+			</if>
+			<if test="applyman != null">
+				applyman,
+			</if>
+			<if test="applymaterialid != null">
+				applymaterialid,
+			</if>
+			createtime,
+			<if test="updatetime != null">
+				updatetime,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="materialid != null">
+				#{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="applystatus != null">
+				#{applystatus,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				#{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="applymaterialid != null">
+				#{applymaterialid,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.Waitformaterial">
+		update waitformaterial
+		<set>
+			<if test="materialid != null">
+				materialid = #{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="applystatus != null">
+				applystatus = #{applystatus,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				applyman = #{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="applymaterialid != null">
+				applymaterialid = #{applymaterialid,jdbcType=INTEGER},
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			updatetime = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

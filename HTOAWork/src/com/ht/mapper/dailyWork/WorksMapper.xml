@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.WorksMapper" >
+  <resultMap id="ResultMap" type="com.ht.popj.dailyWork.Works" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="empid" property="empid" jdbcType="VARCHAR" />
+    <result column="companyName" property="companyname" jdbcType="VARCHAR" />
+    <result column="degree" property="degree" jdbcType="VARCHAR" />
+    <result column="startDate" property="startdate" jdbcType="TIMESTAMP" />
+    <result column="endDate" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="works_remark" property="worksRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Works" extends="ResultMap">
+    <collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="emp_id" property="id"/>
+			<result column="emp_name" property="empname"/>
+		</collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, empid, companyName, degree, startDate, endDate, reason, works_remark, create_time, 
+    update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from works
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  	<select id="selectWorks" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Works">
+		select `works`.*,e.empname as emp_name from works,emp as e 
+		<where>
+			AND `works`.status=1
+			AND `works`.empid=e.id
+			<if test="empid !=null and empid !=''">
+				AND `works`.empid = #{empid}
+			</if>
+			<if test="companyname != null and companyname !=''" >
+				AND `works`.companyName LIKE '%${companyname}%'
+			</if>
+			<if test="degree != null and degree !=''" >
+				AND `works`.degree LIKE '%${degree}%'
+			</if>
+			<if test="startdate != null and startdate !=''" >
+				AND `works`.startDate = #{startdate}
+			</if>
+			<if test="enddate != null and enddate !=''" >
+				AND `works`.endDate = #{enddate}
+			</if>
+			<if test="reason != null and reason !=''" >
+				AND `works`.reason LIKE '%${reason}%'
+			</if>
+			<if test="worksRemark != null and worksRemark !=''" >
+				AND `works`.works_remark LIKE '%${worksRemark}%'
+			</if>
+		</where>
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update works set status = 0
+	where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Works" >
+    insert into works
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="empid != null" >
+        empid,
+      </if>
+      <if test="companyname != null" >
+        companyName,
+      </if>
+      <if test="degree != null" >
+        degree,
+      </if>
+      <if test="startdate != null" >
+        startDate,
+      </if>
+      <if test="enddate != null" >
+        endDate,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="worksRemark != null" >
+        works_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        #{degree,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="worksRemark != null" >
+        #{worksRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Works" >
+    update works
+    <set >
+      <if test="empid != null" >
+        empid = #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        companyName = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        degree = #{degree,jdbcType=VARCHAR},
+      </if>
+      <if test="startdate != null" >
+        startDate = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null" >
+        endDate = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="worksRemark != null" >
+        works_remark = #{worksRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

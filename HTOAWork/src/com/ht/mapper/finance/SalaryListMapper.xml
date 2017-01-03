@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.mapper.finance.SalaryListMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.finance.SalaryList">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="empname" jdbcType="VARCHAR" property="empname" />
+		<result column="depid" jdbcType="INTEGER" property="depid" />
+		<result column="basic_id" jdbcType="INTEGER" property="basicid" />
+		<result column="jobSalary" jdbcType="REAL" property="jobsalary" />
+		<result column="deductMoney" jdbcType="REAL" property="deductmoney" />
+		<result column="prizeMoney" jdbcType="REAL" property="prizemoney" />
+		<result column="shouldSalary" jdbcType="REAL" property="shouldsalary" />
+		<result column="factSalary" jdbcType="REAL" property="factsalary" />
+		<result column="taxSalary" jdbcType="REAL" property="taxsalary" />
+		<result column="salary_Remark" jdbcType="VARCHAR" property="salaryRemark" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+
+		<association property="dep" javaType="com.ht.popj.dailyWork.Dep"
+			column="depid" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey"></association>
+		<association property="basic" javaType="com.ht.popj.finance.BasicSalary"
+			column="basic_id" select="com.ht.mapper.finance.BasicSalaryMapper.selectByPrimaryKey"></association>
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empname, depid, basic_id, jobSalary, deductMoney,
+		prizeMoney,
+		shouldSalary,
+		factSalary, taxSalary, salary_Remark,
+		create_time, update_time, status
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from salarylist
+		where id = #{id,jdbcType=INTEGER} and status=1
+	</select>
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update salarylist
+		set status=0
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<insert id="insert" parameterType="com.ht.popj.finance.SalaryList"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into salarylist (id,
+		empname, depid,
+		basic_id, jobSalary, deductMoney,
+		prizeMoney,
+		shouldSalary, factSalary,
+		taxSalary, salary_Remark, create_time,
+		update_time, status)
+		values (#{id,jdbcType=INTEGER},
+		#{empname,jdbcType=VARCHAR},
+		#{depid,jdbcType=INTEGER},
+		#{basicid,jdbcType=INTEGER}, #{jobsalary,jdbcType=REAL},
+		#{deductmoney,jdbcType=REAL},
+		#{prizemoney,jdbcType=REAL},
+		#{shouldsalary,jdbcType=REAL},
+		#{factsalary,jdbcType=REAL},
+		#{taxsalary,jdbcType=REAL}, #{salaryRemark,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ht.popj.finance.SalaryList">
+		insert into salarylist
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="empname != null">
+				empname,
+			</if>
+			<if test="depid != null">
+				depid,
+			</if>
+			<if test="basicid != null">
+				basicid,
+			</if>
+			<if test="jobsalary != null">
+				jobSalary,
+			</if>
+			<if test="deductmoney != null">
+				deductMoney,
+			</if>
+			<if test="prizemoney != null">
+				prizeMoney,
+			</if>
+			<if test="shouldsalary != null">
+				shouldSalary,
+			</if>
+			<if test="factsalary != null">
+				factSalary,
+			</if>
+			<if test="taxsalary != null">
+				taxSalary,
+			</if>
+			<if test="salaryRemark != null">
+				salary_Remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empname != null">
+				#{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="depid != null">
+				#{depid,jdbcType=INTEGER},
+			</if>
+			<if test="basicid != null">
+				#{basicid,jdbcType=INTEGER},
+			</if>
+			<if test="jobsalary != null">
+				#{jobsalary,jdbcType=REAL},
+			</if>
+			<if test="deductmoney != null">
+				#{deductmoney,jdbcType=REAL},
+			</if>
+			<if test="prizemoney != null">
+				#{prizemoney,jdbcType=REAL},
+			</if>
+			<if test="shouldsalary != null">
+				#{shouldsalary,jdbcType=REAL},
+			</if>
+			<if test="factsalary != null">
+				#{factsalary,jdbcType=REAL},
+			</if>
+			<if test="taxsalary != null">
+				#{taxsalary,jdbcType=REAL},
+			</if>
+			<if test="salaryRemark != null">
+				#{salaryRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.SalaryList">
+		update salarylist
+		<set>
+			<if test="empname != null">
+				empname = #{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="depid != null">
+				depid = #{depid,jdbcType=INTEGER},
+			</if>
+			<if test="basicid != null">
+				basicid = #{basicid,jdbcType=INTEGER},
+			</if>
+			<if test="jobsalary != null">
+				jobSalary = #{jobsalary,jdbcType=REAL},
+			</if>
+			<if test="deductmoney != null">
+				deductMoney = #{deductmoney,jdbcType=REAL},
+			</if>
+			<if test="prizemoney != null">
+				prizeMoney = #{prizemoney,jdbcType=REAL},
+			</if>
+			<if test="shouldsalary != null">
+				shouldSalary = #{shouldsalary,jdbcType=REAL},
+			</if>
+			<if test="factsalary != null">
+				factSalary = #{factsalary,jdbcType=REAL},
+			</if>
+			<if test="taxsalary != null">
+				taxSalary = #{taxsalary,jdbcType=REAL},
+			</if>
+			<if test="salaryRemark != null">
+				salary_Remark = #{salaryRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.SalaryList">
+		update salarylist
+		set empname = #{empname,jdbcType=VARCHAR},
+		depid =
+		#{depid,jdbcType=INTEGER},
+		basic_id = #{basicid,jdbcType=INTEGER},
+		jobSalary = #{jobsalary,jdbcType=REAL},
+		deductMoney =
+		#{deductmoney,jdbcType=REAL},
+		prizeMoney = #{prizemoney,jdbcType=REAL},
+		shouldSalary = #{shouldsalary,jdbcType=REAL},
+		factSalary =
+		#{factsalary,jdbcType=REAL},
+		taxSalary = #{taxsalary,jdbcType=REAL},
+		salary_Remark = #{salaryRemark,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByDynamic" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.finance.SalaryList">
+		SELECT * from salarylist
+		<where>
+			<if test="empname != null and !empname.isEmpty()">
+				and empname=#{empname,jdbcType=VARCHAR}
+			</if>
+			<if test="depid != null and depid>0">
+				and depid=#{depid,jdbcType=INTEGER}
+			</if>
+			and status &lt;&gt;0
+		</where>
+	</select>
+
+	<!-- 批量新增 -->
+	<insert id="insertMuch" parameterType="java.util.List">
+		insert into salarylist (id, empname, depid,
+		basic_id, jobSalary,
+		deductMoney,
+		prizeMoney, shouldSalary, factSalary,
+		taxSalary,
+		salary_Remark, create_time,
+		update_time, status
+		)values
+		<foreach collection="list" item="sal" index="index"
+			separator=",">
+			(#{sal.id,jdbcType=INTEGER}, #{sal.empname,jdbcType=VARCHAR},
+			#{sal.depid,jdbcType=INTEGER},
+			#{sal.basicid,jdbcType=INTEGER}, #{sal.jobsalary,jdbcType=REAL}, #{sal.deductmoney,jdbcType=REAL},
+			#{sal.prizemoney,jdbcType=REAL}, #{sal.shouldsalary,jdbcType=REAL},
+			#{sal.factsalary,jdbcType=REAL},
+			#{sal.taxsalary,jdbcType=REAL}, #{sal.salaryRemark,jdbcType=VARCHAR}, #{sal.createTime,jdbcType=TIMESTAMP},
+			#{sal.updateTime,jdbcType=TIMESTAMP}, #{sal.status,jdbcType=INTEGER})
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.EducationMapper">
+	<resultMap id="ResultMap" type="com.ht.popj.dailyWork.Education">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="collegeName" property="collegename" jdbcType="VARCHAR" />
+		<result column="degree" property="degree" jdbcType="VARCHAR" />
+		<result column="startDate" property="startdate" jdbcType="TIMESTAMP" />
+		<result column="endDate" property="enddate" jdbcType="TIMESTAMP" />
+		<result column="edu_remark" property="eduRemark" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Education" extends="ResultMap">
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="emp_id" property="id"/>
+			<result column="emp_name" property="empname"/>
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empid, collegeName, degree, startDate, endDate, edu_remark,
+		create_time, update_time,
+		status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from education
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectEducation" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Education">
+		select `education`.*,e.empname as emp_name from education,emp as e
+		<where>
+			AND `education`.status=1
+			AND `education`.empid=e.id
+			<if test="empid !=null and empid !=''">
+				AND `education`.empid LIKE '%${empid}'
+			</if>
+			<if test="collegename != null and collegename !=''">
+				AND `education`.collegeName LIKE '%${collegename}%'
+			</if>
+			<if test="degree != null and degree !=''">
+				AND `education`.degree = #{degree}
+			</if>
+			<if test="startdate != null and startdate !=''">
+				AND `education`.startDate = #{startdate}
+			</if>
+			<if test="enddate != null and enddate !=''">
+				AND `education`.endDate = #{enddate}
+			</if>
+			<if test="eduRemark != null and eduRemark !=''">
+				AND `education`.edu_remark = #{eduRemark}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update education set status = 0
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.dailyWork.Education">
+		insert into education
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="collegename != null">
+				collegeName,
+			</if>
+			<if test="degree != null">
+				degree,
+			</if>
+			<if test="startdate != null">
+				startDate,
+			</if>
+			<if test="enddate != null">
+				endDate,
+			</if>
+			<if test="eduRemark != null">
+				edu_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="collegename != null">
+				#{collegename,jdbcType=VARCHAR},
+			</if>
+			<if test="degree != null">
+				#{degree,jdbcType=VARCHAR},
+			</if>
+			<if test="startdate != null">
+				#{startdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enddate != null">
+				#{enddate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="eduRemark != null">
+				#{eduRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Education">
+		update education
+		<set>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="collegename != null">
+				collegeName = #{collegename,jdbcType=VARCHAR},
+			</if>
+			<if test="degree != null">
+				degree = #{degree,jdbcType=VARCHAR},
+			</if>
+			<if test="startdate != null">
+				startDate = #{startdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="enddate != null">
+				endDate = #{enddate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="eduRemark != null">
+				edu_remark = #{eduRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

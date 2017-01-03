@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduFeedbackMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.education.EduFeedback">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="stu_id" property="stuId" jdbcType="INTEGER" />
+		<result column="emp_id" property="empId" jdbcType="VARCHAR" />
+		<result column="feedback_time" property="feedbackTime"
+			jdbcType="TIMESTAMP" />
+		<result column="feedback_remark" property="feedbackRemark"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, stu_id, emp_id, feedback_time, feedback_remark,
+		create_time,
+		update_time, status,
+		remark
+	</sql>
+	<select id="getFeedback" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from edu_feedback
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteFeedback" parameterType="java.lang.Integer">
+		delete from
+		edu_feedback
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.education.EduFeedback">
+		insert into edu_feedback (id,
+		stu_id, emp_id,
+		feedback_time, feedback_remark, create_time,
+		update_time, status, remark
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{stuId,jdbcType=INTEGER},
+		#{empId,jdbcType=VARCHAR},
+		#{feedbackTime,jdbcType=TIMESTAMP},
+		#{feedbackRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
+		#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="addFeedback" parameterType="com.ht.popj.education.EduFeedback">
+		<selectKey order="AFTER" resultType="java.lang.Integer"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into edu_feedback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="stuId != null">
+				stu_id,
+			</if>
+			<if test="empId != null">
+				emp_id,
+			</if>
+			<if test="feedbackTime != null">
+				feedback_time,
+			</if>
+			<if test="feedbackRemark != null">
+				feedback_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="stuId != null">
+				#{stuId,jdbcType=INTEGER},
+			</if>
+			<if test="empId != null">
+				#{empId,jdbcType=VARCHAR},
+			</if>
+			<if test="feedbackTime != null">
+				#{feedbackTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="feedbackRemark != null">
+				#{feedbackRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateFeedback" parameterType="com.ht.popj.education.EduFeedback">
+		update edu_feedback
+		<set>
+			<if test="stuId != null">
+				stu_id = #{stuId,jdbcType=INTEGER},
+			</if>
+			<if test="empId != null">
+				emp_id = #{empId,jdbcType=VARCHAR},
+			</if>
+			<if test="feedbackTime != null">
+				feedback_time = #{feedbackTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="feedbackRemark != null">
+				feedback_remark = #{feedbackRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.education.EduFeedback">
+		update
+		edu_feedback
+		set stu_id = #{stuId,jdbcType=INTEGER},
+		emp_id =
+		#{empId,jdbcType=VARCHAR},
+		feedback_time =
+		#{feedbackTime,jdbcType=TIMESTAMP},
+		feedback_remark =
+		#{feedbackRemark,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="getAllFeedback" resultMap="BaseResultMap">
+		select * from edu_feedback
+	</select>
+	<resultMap type="com.ht.popj.education.EduFeedback" id="getbackrelative"
+		extends="BaseResultMap">
+		<association property="emp" javaType="com.ht.popj.dailyWork.Emp"
+			column="emp_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+		</association>
+		<association property="student" javaType="com.ht.popj.student.Student"
+			column="stu_id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+		</association>
+		<association property="scoresum" javaType="java.lang.Integer"
+			column="id"
+			select="com.ht.mapper.education.EduFeedbackDetailMapper.getSumByFeedBackId">
+		</association>
+	</resultMap>
+	<resultMap type="com.ht.popj.education.EduFeedback" id="getnostudent"
+		extends="BaseResultMap">
+		<association property="emp" javaType="com.ht.popj.dailyWork.Emp"
+			column="emp_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+		</association>
+		<association property="scoresum" javaType="java.lang.Integer"
+			column="id"
+			select="com.ht.mapper.education.EduFeedbackDetailMapper.getSumByFeedBackId">
+		</association>
+	</resultMap>
+	<select id="getSomeFeedBack" resultMap="getbackrelative"
+		parameterType="com.ht.popj.education.EduFeedback">
+		select * from edu_feedback e
+		<where>
+			<if test="id != null">
+				e.id = #{id}
+			</if>
+			<if test="empId != null  and !empId.isEmpty()">
+				and e.emp_Id = #{empId}
+			</if>
+			<if test="stuId != null">
+				and e.stu_Id = #{stuId}
+			</if>
+			and status=1 order by feedback_time desc
+		</where>
+	</select>
+	<select id="getNoStudentFeedBack" resultMap="getnostudent"
+		parameterType="com.ht.popj.education.EduFeedback">
+		select * from edu_feedback e
+		<where>
+			<if test="id != null">
+				e.id = #{id}
+			</if>
+			<if test="empId != null  and !empId.isEmpty()">
+				and e.emp_Id = #{empId}
+			</if>
+			<if test="stuId != null">
+				and e.stu_Id = #{stuId}
+			</if>
+			and status=1 order by feedback_time desc
+		</where>
+	</select>
+</mapper>

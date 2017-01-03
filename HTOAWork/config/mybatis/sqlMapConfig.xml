@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 全局setting配置 -->
+	<!-- 根据情况配置 -->
+
+	<!-- 配置别名 -->
+	<typeAliases>
+		<!-- 批量扫描 -->
+		<package name="com.ht.popj" />
+	</typeAliases>
+	<!-- 配置<mappers> 由于我们使用spring和mybatis的整合包进行mapper扫描，所以不需要配置了 怎么加载Java文件呢？ 
+		必须规则：mapper.xml和mapper.java同名且在同一个目录。 </mappers> -->
+	
+	<plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->        
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+</configuration>

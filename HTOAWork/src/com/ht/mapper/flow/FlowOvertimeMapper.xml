@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowOvertimeMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowOvertime">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="INTEGER" />
+		<result column="holidayDay" property="holidayday" jdbcType="DECIMAL" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowModelTypeid, empid, holidayDay, create_time, update_time, remark,
+		status,
+		upset
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime where status=1 and id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime where status=1 ORDER BY CreateTime DESC
+	</select>
+	
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime 
+		<where>
+		    status=1 ORDER BY CreateTime DESC
+		    <if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=INTEGER},
+			</if>
+			<if test="holidayday != null">
+				AND holidayDay = #{holidayday,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</where>
+	</select>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_overtime set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowOvertime">
+		insert into flow_overtime
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="holidayday != null">
+				holidayDay,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=INTEGER},
+			</if>
+			<if test="holidayday != null">
+				#{holidayday,jdbcType=DECIMAL},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowOvertime">
+		update flow_overtime
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=INTEGER},
+			</if>
+			<if test="holidayday != null">
+				holidayDay = #{holidayday,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = NOW(),
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

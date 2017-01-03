@@ -1,0 +1,18 @@
+/* CSS Document */
+
+body{background-color:#fff;}
+li{list-style-type:none;}
+.fl{float:left;}
+.fr{float:right;}
+.eoffice_right_bg{background:#f7f7f7; height:33px; line-height:33px; padding-left:10px; border-bottom:1px solid #d9d9d9;}
+.user_list_main{height:265px; border-bottom:3px solid #d9d9d9;}
+.user_list_main ul{margin:0;}
+.user_list_main ul li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; font-size:12px}
+.user_list_main ul li:hover{background:#36A9E1; color:#fff;}
+.selected_tip{color:#36A9E1;}
+.selected_tip.hover{color:#fff;}
+.selected_user{height:200px; margin-left:5px;}
+.selected_user li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; border:1px solid transparent;}
+.selected_user li:hover{border:1px solid #36A9E1;}
+.selected_user li i {margin-left:5px;}
+.selected_user li .shanchu{color:#36A9E1;}

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.DutyMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Duty" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dutyid" property="dutyid" jdbcType="VARCHAR" />
+    <result column="weeks" property="weeks" jdbcType="VARCHAR" />
+    <result column="weekends" property="weekends" jdbcType="VARCHAR" />
+    <result column="dutytime" property="dutytime" jdbcType="TIMESTAMP" />
+    <result column="dutystatus" property="dutystatus" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    
+    <!-- 关联员工表 -->
+    <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="dutyid" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        
+    </association>
+    
+    <!-- 关联员工表 -->
+    <association property="emp1" javaType="com.ht.popj.dailyWork.Emp" column="empid" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <if test="id != null">
+        id = #{id}
+    </if>
+    <if test="weeks !=null and weeks != ''">
+        and weeks = #{weeks}
+    </if>
+    <if test="dutyid != null and dutyid != ''">
+        and dutyid = #{dutyid}
+    </if>
+  </sql>
+  
+  <select id="findDutyList1" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Duty" >
+    select * from duty 
+    <where>
+        <include refid="Base_Column_List" />
+        and status = 1
+    </where>
+  </select>
+  
+  <select id="findDutyList2" resultType="com.ht.popj.dailyWork.Duty">
+      select * from duty where status = 1
+  </select>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from duty where id = #{id}
+  </select>
+  
+  <select id="selectweeks" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT DISTINCT weeks FROM duty WHERE dutyid = #{dutyid} AND STATUS = 1
+  </select>
+  
+  <select id="selectweeks2" resultType="java.lang.String">
+    SELECT DISTINCT weeks FROM duty WHERE STATUS = 1
+  </select>
+  
+  <select id="selectweekends" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT weekends FROM duty WHERE weeks = #{0} AND dutyid = #{1} AND STATUS = 1
+  </select>
+  
+  <select id="selectweekends2" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT weekends FROM duty WHERE weeks = #{weeks} AND STATUS = 1
+  </select>
+  
+  <select id="selectdutyid" parameterType="java.lang.String" resultType="com.ht.popj.dailyWork.Emp">
+    SELECT e.* FROM duty d,emp e WHERE d.dutyid = e.id AND d.weeks = #{0} AND d.weekends = #{1} AND d.STATUS = 1
+  </select>
+  
+  <delete id="deleteDuty" parameterType="java.lang.Integer" >
+    update duty set status = 0 where id = #{id}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Duty" >
+    insert into duty (id, dutyid, weeks, 
+      weekends, dutytime, dutystatus, 
+      reason, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{dutyid,jdbcType=VARCHAR}, #{weeks,jdbcType=VARCHAR}, 
+      #{weekends,jdbcType=VARCHAR}, #{dutytime,jdbcType=TIMESTAMP}, #{dutystatus,jdbcType=INTEGER}, 
+      #{reason,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="addDuty" parameterType="com.ht.popj.dailyWork.Duty" >
+    insert into duty
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dutyid != null" >
+        dutyid,
+      </if>
+      <if test="weeks != null" >
+        weeks,
+      </if>
+      <if test="weekends != null" >
+        weekends,
+      </if>
+      <if test="dutytime != null" >
+        dutytime,
+      </if>
+      <if test="dutystatus != null" >
+        dutystatus,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dutyid != null" >
+        #{dutyid,jdbcType=VARCHAR},
+      </if>
+      <if test="weeks != null" >
+        #{weeks,jdbcType=VARCHAR},
+      </if>
+      <if test="weekends != null" >
+        #{weekends,jdbcType=VARCHAR},
+      </if>
+      <if test="dutytime != null" >
+        #{dutytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dutystatus != null" >
+        #{dutystatus,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateDuty" parameterType="com.ht.popj.dailyWork.Duty" >
+    update duty
+    <set >
+      <if test="dutyid != null" >
+        dutyid = #{dutyid,jdbcType=VARCHAR},
+      </if>
+      <if test="weeks != null" >
+        weeks = #{weeks,jdbcType=VARCHAR},
+      </if>
+      <if test="weekends != null" >
+        weekends = #{weekends,jdbcType=VARCHAR},
+      </if>
+      <if test="dutytime != null" >
+        dutytime = #{dutytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dutystatus != null" >
+        dutystatus = #{dutystatus,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Duty" >
+    update duty
+    set dutyid = #{dutyid,jdbcType=VARCHAR},
+      weeks = #{weeks,jdbcType=VARCHAR},
+      weekends = #{weekends,jdbcType=VARCHAR},
+      dutytime = #{dutytime,jdbcType=TIMESTAMP},
+      dutystatus = #{dutystatus,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

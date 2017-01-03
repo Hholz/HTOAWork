@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduOutlineMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.education.EduOutline" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="outline_name" property="outlineName" jdbcType="VARCHAR" />
+    <result column="outline_content" property="outlineContent" jdbcType="VARCHAR" />
+    <result column="hour" property="hour" jdbcType="INTEGER" />
+    <result column="outline_remark" property="outlineRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, course_id, outline_name, outline_content, hour, outline_remark, create_time, 
+    update_time, status, remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ht.popj.education.EduOutlineExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from edu_outline
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from edu_outline
+    where id = #{id,jdbcType=INTEGER} and status=0
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update edu_outline set status=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByExample" parameterType="com.ht.popj.education.EduOutlineExample" >
+    delete from edu_outline
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.education.EduOutline" >
+    insert into edu_outline (id, course_id, outline_name, 
+      outline_content, hour, outline_remark, 
+      create_time, update_time, status, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{outlineName,jdbcType=VARCHAR}, 
+      #{outlineContent,jdbcType=VARCHAR}, #{hour,jdbcType=INTEGER}, #{outlineRemark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.education.EduOutline" >
+    insert into edu_outline
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="outlineName != null" >
+        outline_name,
+      </if>
+      <if test="outlineContent != null" >
+        outline_content,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+      <if test="outlineRemark != null" >
+        outline_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="outlineName != null" >
+        #{outlineName,jdbcType=VARCHAR},
+      </if>
+      <if test="outlineContent != null" >
+        #{outlineContent,jdbcType=VARCHAR},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="outlineRemark != null" >
+        #{outlineRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ht.popj.education.EduOutlineExample" resultType="java.lang.Integer" >
+    select count(*) from edu_outline
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+ 
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.education.EduOutline" >
+    update edu_outline
+    <set >
+      <if test="courseId != null" >
+        course_id = #{courseId},
+      </if>
+      <if test="outlineName != null" >
+        outline_name = #{outlineName},
+      </if>
+      <if test="outlineContent != null" >
+        outline_content = #{outlineContent},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour},
+      </if>
+      <if test="outlineRemark != null" >
+        outline_remark = #{outlineRemark},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.education.EduOutline" >
+    update edu_outline
+    set course_id = #{courseId,jdbcType=INTEGER},
+      outline_name = #{outlineName,jdbcType=VARCHAR},
+      outline_content = #{outlineContent,jdbcType=VARCHAR},
+      hour = #{hour,jdbcType=INTEGER},
+      outline_remark = #{outlineRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="selectOutlineAll" resultType="com.ht.popj.education.EduOutline">
+		select * from edu_outline where status=0
+	</select>
+	
+	<resultMap type="com.ht.popj.education.EduOutline" id="outline_course" extends="BaseResultMap">
+    <!-- 一对一配置 -->
+    <association property="course" javaType="com.ht.popj.education.EduCourse" column="course_id" select="com.ht.mapper.education.EduCourseMapper.selectByPrimaryKey">
+ 	</association>
+  	</resultMap>
+	<select id="selectByDynamic" resultMap="outline_course" parameterType="com.ht.popj.education.EduOutline">
+		select o.id,o.course_id,o.`hour`,o.outline_content,o.outline_name,o.create_time,
+		c.course_name,c.isobligatory
+		from edu_course c 
+		INNER JOIN edu_outline o ON c.id = o.course_id 
+		<where>
+		    	AND o.status=0
+			<if test="outlineName !=null and outlineName !=''">
+				AND o.outline_name like '%${outlineName}%' 
+			</if>
+			<if test="courseId !=null and courseId !='' ">
+				AND o.course_id = #{courseId}
+			</if>
+			<if test="id !=null and id !='' and id !=0">
+				AND o.id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+	    select count(*) from edu_outline where status=0
+	</select>
+	
+	<select id="getHourSum" resultType="java.lang.Integer" parameterType="com.ht.popj.education.EduOutline">
+	    select sum(hour) from edu_outline 
+	    <where>
+		    	AND status=0
+			<if test="courseId !=null and courseId !='' ">
+				AND course_id = #{courseId}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

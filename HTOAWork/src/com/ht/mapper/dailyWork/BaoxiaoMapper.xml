@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.BaoxiaoMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Baoxiao" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="baoxiaotypeid" property="baoxiaotypeid" jdbcType="INTEGER" />
+    <result column="flowmodeltypeid" property="flowmodeltypeid" jdbcType="INTEGER" />
+    <result column="flowid" property="flowid" jdbcType="INTEGER" />
+    <result column="empid" property="empid" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="flowstatus" property="flowstatus" jdbcType="INTEGER" />
+    <result column="baoxiao_remark" property="baoxiaoRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="applynum" property="applynum" jdbcType="VARCHAR" />
+    <result column="approverman" property="approverman" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, baoxiaotypeid, flowmodeltypeid, flowid, empid, price, flowstatus, baoxiao_remark, 
+    create_time, update_time, status, remark,applynum
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT b.*,e.`empname` as empname,t.`baoxiaotypename` as baoxiaotypename FROM baoxiao b 
+	LEFT JOIN emp e ON b.`empid`=e.`id`
+	LEFT JOIN baoxiaotype t ON b.`baoxiaotypeid`=t.`id`
+    where b.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Baoxiao" >
+    SELECT b.*,e.`empname` AS empname,t.`baoxiaotypename` AS baoxiaotypename,f.`id` as financeid FROM baoxiao b 
+	LEFT JOIN emp e ON b.`empid`=e.`id`
+	LEFT JOIN baoxiaotype t ON b.`baoxiaotypeid`=t.`id`
+	LEFT JOIN finance_balance f ON b.`applynum`=f.`order_id`
+    <where>
+	    AND b.status=1
+		<if test="empid !=null and empid !=''">
+			AND b.empid = #{empid}
+		</if>
+		<if test="baoxiaotypeid !=null and baoxiaotypeid>0">
+			AND b.baoxiaotypeid = #{baoxiaotypeid}
+		</if>
+		<if test="flowstatus !=null and flowstatus">
+			AND b.flowstatus = #{flowstatus}
+		</if>
+		<if test="createTime !=null and createTime !=''">
+			AND b.create_time &gt; #{createTime}
+		</if>
+		<if test="updateTime !=null and updateTime !=''">
+			AND b.create_time &lt; #{updateTime}
+		</if>
+	</where>
+  </select>
+  <select id="selectBaoxiaoTask" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Emp" >
+    SELECT b.*,e.`empname` as empname,f2.man as approverman FROM baoxiao b LEFT JOIN (SELECT f.`id` AS id,f.`flowModelName` AS flowname,a.`approveman` AS man FROM `approvedot` a LEFT JOIN `flowmodel` f ON a.`flowid`=f.`id`) f2 ON b.flowid=f2.id
+	LEFT JOIN emp e ON b.`empid`=e.`id`
+  	<where>
+	    AND b.status=1
+		<if test="id !=null and id =='3d8c8c47-8458-11e6-8600-eaab98fa1ea3'">
+			AND b.flowstatus = 1
+		</if>
+		<if test="id !=null and id =='25251a32-8f48-11e6-903a-dc3b943345c2'">
+			AND b.flowstatus = 2
+		</if>
+		<if test="id !=null and id !='3d8c8c47-8458-11e6-8600-eaab98fa1ea3' and id !='25251a32-8f48-11e6-903a-dc3b943345c2'">
+			AND f2.man= #{id}
+		</if>
+	</where>
+  </select>
+  <select id="selectBaoxiaoOvertask" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT b.*,e.`empname` as empname,f2.man as approverman FROM baoxiao b LEFT JOIN (SELECT f.`id` AS id,f.`flowModelName` AS flowname,a.`approveman` AS man FROM `approvedot` a LEFT JOIN `flowmodel` f ON a.`flowid`=f.`id`) f2 ON b.flowid=f2.id
+	LEFT JOIN emp e ON b.`empid`=e.`id`
+    <where>
+	    AND b.status=1
+		<if test="id !=null and id =='3d8c8c47-8458-11e6-8600-eaab98fa1ea3'">
+			AND b.flowstatus = 2 or b.flowstatus = -2
+		</if>
+		<if test="id !=null and id =='25251a32-8f48-11e6-903a-dc3b943345c2'">
+			AND b.flowstatus = 3 or b.flowstatus = -3
+		</if>
+		<if test="id !=null and id !='3d8c8c47-8458-11e6-8600-eaab98fa1ea3' and id !='25251a32-8f48-11e6-903a-dc3b943345c2'">
+			AND f2.man= #{id}
+		</if>
+	</where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	update baoxiao set status = 0 where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Baoxiao" >
+    insert into baoxiao
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="applynum != null" >
+        applynum,
+      </if>
+      <if test="baoxiaotypeid != null" >
+        baoxiaotypeid,
+      </if>
+      <if test="flowmodeltypeid != null" >
+        flowmodeltypeid,
+      </if>
+      <if test="flowid != null" >
+        flowid,
+      </if>
+      <if test="empid != null" >
+        empid,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="flowstatus != null" >
+        flowstatus,
+      </if>
+      <if test="baoxiaoRemark != null" >
+        baoxiao_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="applynum != null" >
+        #{applynum,jdbcType=VARCHAR},
+      </if>
+      <if test="baoxiaotypeid != null" >
+        #{baoxiaotypeid,jdbcType=INTEGER},
+      </if>
+      <if test="flowmodeltypeid != null" >
+        #{flowmodeltypeid,jdbcType=INTEGER},
+      </if>
+      <if test="flowid != null" >
+        #{flowid,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="flowstatus != null" >
+        #{flowstatus,jdbcType=INTEGER},
+      </if>
+      <if test="baoxiaoRemark != null" >
+        #{baoxiaoRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Baoxiao" >
+    update baoxiao
+    <set >
+      <if test="baoxiaotypeid != null" >
+        baoxiaotypeid = #{baoxiaotypeid,jdbcType=INTEGER},
+      </if>
+      <if test="flowmodeltypeid != null" >
+        flowmodeltypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+      </if>
+      <if test="flowid != null" >
+        flowid = #{flowid,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        empid = #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="flowstatus != null" >
+        flowstatus = #{flowstatus,jdbcType=INTEGER},
+      </if>
+      <if test="baoxiaoRemark != null" >
+        baoxiao_remark = #{baoxiaoRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

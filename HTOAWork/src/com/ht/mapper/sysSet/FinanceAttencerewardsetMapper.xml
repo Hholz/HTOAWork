@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.sysSet.FinanceAttencerewardsetMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.sysSet.FinanceAttencerewardset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="latesalary" property="latesalary" jdbcType="REAL" />
+    <result column="overtimesalary" property="overtimesalary" jdbcType="REAL" />
+    <result column="leavesalary" property="leavesalary" jdbcType="VARCHAR" />
+    <result column="withoutleavesalary" property="withoutleavesalary" jdbcType="VARCHAR" />
+    <result column="dutysalary" property="dutysalary" jdbcType="VARCHAR" />
+    <result column="sickleavesalary" property="sickleavesalary" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, latesalary, overtimesalary, leavesalary, withoutleavesalary, dutysalary, sickleavesalary, 
+    create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_attencerewardset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_attencerewardset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.sysSet.FinanceAttencerewardset" >
+    insert into finance_attencerewardset (id, latesalary, overtimesalary, 
+      leavesalary, withoutleavesalary, dutysalary, 
+      sickleavesalary, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{latesalary,jdbcType=REAL}, #{overtimesalary,jdbcType=REAL}, 
+      #{leavesalary,jdbcType=VARCHAR}, #{withoutleavesalary,jdbcType=VARCHAR}, #{dutysalary,jdbcType=VARCHAR}, 
+      #{sickleavesalary,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.sysSet.FinanceAttencerewardset" >
+    insert into finance_attencerewardset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="latesalary != null" >
+        latesalary,
+      </if>
+      <if test="overtimesalary != null" >
+        overtimesalary,
+      </if>
+      <if test="leavesalary != null" >
+        leavesalary,
+      </if>
+      <if test="withoutleavesalary != null" >
+        withoutleavesalary,
+      </if>
+      <if test="dutysalary != null" >
+        dutysalary,
+      </if>
+      <if test="sickleavesalary != null" >
+        sickleavesalary,
+      </if>
+      
+        create_time,
+      
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="latesalary != null" >
+        #{latesalary,jdbcType=REAL},
+      </if>
+      <if test="overtimesalary != null" >
+        #{overtimesalary,jdbcType=REAL},
+      </if>
+      <if test="leavesalary != null" >
+        #{leavesalary,jdbcType=VARCHAR},
+      </if>
+      <if test="withoutleavesalary != null" >
+        #{withoutleavesalary,jdbcType=VARCHAR},
+      </if>
+      <if test="dutysalary != null" >
+        #{dutysalary,jdbcType=VARCHAR},
+      </if>
+      <if test="sickleavesalary != null" >
+        #{sickleavesalary,jdbcType=VARCHAR},
+      </if>
+     
+       now(),
+      
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.sysSet.FinanceAttencerewardset" >
+    update finance_attencerewardset
+    <set >
+      <if test="latesalary != null" >
+        latesalary = #{latesalary,jdbcType=REAL},
+      </if>
+      <if test="overtimesalary != null" >
+        overtimesalary = #{overtimesalary,jdbcType=REAL},
+      </if>
+      <if test="leavesalary != null" >
+        leavesalary = #{leavesalary,jdbcType=VARCHAR},
+      </if>
+      <if test="withoutleavesalary != null" >
+        withoutleavesalary = #{withoutleavesalary,jdbcType=VARCHAR},
+      </if>
+      <if test="dutysalary != null" >
+        dutysalary = #{dutysalary,jdbcType=VARCHAR},
+      </if>
+      <if test="sickleavesalary != null" >
+        sickleavesalary = #{sickleavesalary,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.sysSet.FinanceAttencerewardset" >
+    update finance_attencerewardset
+    set latesalary = #{latesalary,jdbcType=REAL},
+      overtimesalary = #{overtimesalary,jdbcType=REAL},
+      leavesalary = #{leavesalary,jdbcType=VARCHAR},
+      withoutleavesalary = #{withoutleavesalary,jdbcType=VARCHAR},
+      dutysalary = #{dutysalary,jdbcType=VARCHAR},
+      sickleavesalary = #{sickleavesalary,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="finattenrewardsel" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.FinanceAttencerewardset">
+			SELECT * FROM finance_attencerewardset f
+		<where>
+			f.status = 1
+			<if test="id != null">
+				and f.id = #{id}
+			</if>
+			<if	test="createTime != null and !createTime.isEmpty()">
+				and f.create_Time &gt;= #{createTime} 
+			</if>
+			<if	test="latesalary != null">
+				and f.latesalary like '%${latesalary}%'
+			</if>
+			<if	test="overtimesalary != null">
+				and f.overtimesalary like '%${overtimesalary}%'
+			</if>
+			<if	test="leavesalary != null and !leavesalary.isEmpty()">
+				and f.leavesalary like '%${leavesalary}%' 
+			</if>
+			<if	test="withoutleavesalary != null and !withoutleavesalary.isEmpty()">
+				and f.withoutleavesalary like '%${withoutleavesalary}%' 
+			</if>
+			<if	test="dutysalary != null and !dutysalary.isEmpty()">
+				and f.dutysalary like '%${dutysalary}%' 
+			</if>
+			<if	test="sickleavesalary != null and !sickleavesalary.isEmpty()">
+				and f.sickleavesalary like '%${sickleavesalary}%' 
+			</if>
+			<if	test="remark != null and !remark.isEmpty()">
+				and f.remark like '%${remark}%' 
+			</if>
+		</where>
+  </select>
+  
+</mapper>

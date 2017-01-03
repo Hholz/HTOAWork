@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentScore" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="studentId" property="studentid" jdbcType="INTEGER" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="course" property="course" jdbcType="VARCHAR" />
+    <result column="classId" property="classid" jdbcType="INTEGER" />
+    <result column="term" property="term" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, studentId, score, course, classId, term, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_score
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_score
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentScore" >
+    insert into student_score (studentId, score, 
+      course, classId,
+      create_time)
+    values (#{studentid,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, 
+      #{course,jdbcType=VARCHAR}, #{classid,jdbcType=INTEGER},now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentScore" >
+    insert into student_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="studentid != null" >
+        studentId,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="course != null" >
+        course,
+      </if>
+      <if test="classid != null" >
+        classId,
+      </if>
+      <if test="term != null" >
+        term,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="studentid != null" >
+        #{studentid,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="course != null" >
+        #{course,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentScore" >
+    update student_score
+    <set >
+      <if test="studentid != null" >
+        studentId = #{studentid,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="course != null" >
+        course = #{course,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        classId = #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="term != null" >
+        term = #{term,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentScore" >
+    update student_score
+    set studentId = #{studentid,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      course = #{course,jdbcType=VARCHAR},
+      classId = #{classid,jdbcType=INTEGER},
+      term = #{term,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap type="com.ht.popj.student.StudentScore" id="ScoreMap" extends="BaseResultMap">
+        <!-- 学生信息 -->
+	    <association property="student" javaType="int" column="studentId" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+	    </association>
+	    <!-- 班级信息 -->
+	    <association property="studentClass" javaType="int" column="classId" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	    </association>
+	    <!-- 通过模板明细统计模板总分 -->
+	    <association property="eduCourse" javaType="com.ht.popj.education.EduCourse" column="course" select="com.ht.mapper.education.EduCourseMapper.selectByPrimaryKey">
+	    </association>
+  </resultMap>
+  <select id="selectAll" resultMap="ScoreMap">
+  	select * from student_score
+  </select>
+  <select id="selectDinamic" resultMap="ScoreMap">
+  	select * from student_score
+  	<where>
+  	  <if test="studentid != null" >
+        studentId = #{studentid,jdbcType=INTEGER}
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER}
+      </if>
+      <if test="course != null" >
+        course = #{course,jdbcType=VARCHAR}
+      </if>
+      <if test="classid != null" >
+        classId = #{classid,jdbcType=INTEGER}
+      </if>
+      <if test="term != null" >
+        term = #{term,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+  	</where>
+  </select>
+</mapper>

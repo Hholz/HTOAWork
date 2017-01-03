@@ -1,0 +1,18 @@
+/* CSS Document */
+
+body{background-color:#fff;}
+li{list-style-type:none;}
+.fl{float:left;}
+.fr{float:right;}
+.eoffice_right_bg{background:#f7f7f7; height:33px; line-height:33px; padding-left:10px; border-bottom:1px solid #d9d9d9;}
+.user_list_class{height:300px; border-bottom:1px solid #d9d9d9;}
+.user_list_class ul{margin:0;}
+.user_list_class ul li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; font-size:12px}
+.user_list_class ul li:hover{background:#36A9E1; color:#fff;}
+.selected_tip{color:#36A9E1;}
+.selected_tip.hover{color:#fff;}
+.selected_class{height:200px; margin-left:5px;}
+.selected_class li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; border:1px solid transparent;}
+.selected_class li:hover{border:1px solid #36A9E1;}
+.selected_class li i {margin-left:5px;}
+.selected_class li .shanchu{color:#36A9E1;}

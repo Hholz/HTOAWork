@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceShouldchargeMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceShouldcharge" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stuid" property="stuid" jdbcType="INTEGER" />
+    <result column="classid" property="classid" jdbcType="INTEGER" />
+    <result column="termid" property="termid" jdbcType="INTEGER" />
+    <result column="fallid" property="fallid" jdbcType="INTEGER" />
+    <result column="majorid" property="majorid" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="REAL" />
+    <result column="payment" property="payment" jdbcType="REAL" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="update_time" property="updateTime" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="ispay" property="ispay" jdbcType="INTEGER" />
+    <result column="stu_name" property="stuname" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="term_name" property="termname" jdbcType="VARCHAR" />
+    <result column="majorName" property="majorName" jdbcType="VARCHAR" />
+    <result column="classname" property="classname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stuid, classid, termid, fallid, money, payment, create_time, update_time, status, remark,ispay
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT f.*,s.`stuname` as stu_name,c.`classname` as class_name,e.`term_Name` as term_name FROM finance_shouldcharge f 
+	LEFT JOIN student s ON f.`stuid`=s.`id` 
+	LEFT JOIN student_class c ON f.`classid`=c.`id`
+	LEFT JOIN edu_term e ON f.`termid`=e.`id`
+	where f.status=1 AND f.id = #{id}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceShouldcharge" >
+    SELECT f.*,s.`stuname` as stu_name,c.`classname` as class_name,m.`major_name` as majorName
+    fa.`level` as level,e.`term_Name` as term_name FROM finance_shouldcharge f 
+	LEFT JOIN student s ON f.`stuid`=s.`id` 
+	LEFT JOIN student_class c ON f.`classid`=c.`id`
+	LEFT JOIN edu_term e ON f.`termid`=e.`id`
+	LEFT JOIN edu_major m ON e.`major_id`=m.`id`
+	LEFT JOIN student_fall fa ON fa.`id`=f.`fallid`
+    <where>
+	    	AND f.status=1
+		<if test="id !=null and id >0">
+			AND f.id = #{id}
+		</if>
+		<if test="stuid !=null">
+			AND f.stuid = #{stuid}
+		</if>
+		<if test="termid !=null">
+			AND f.termid = #{termid}
+		</if>
+	</where>
+  </select>
+  <select id="selectAllList" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceShouldcharge" >
+    SELECT f.*,s.`stuname` as stu_name,st.`level` as level,e.`term_Name` as term_name ,
+    em.major_name as majorName ,c.classname as classname FROM finance_shouldcharge f 
+	LEFT JOIN student s ON f.`stuid`=s.`id` 
+	LEFT JOIN student_class c ON f.`classid`=c.`id`
+	LEFT JOIN edu_term e ON f.`termid`=e.`id`
+	LEFT JOIN student_fall st ON f.`fallid`=st.`id`
+	LEFT JOIN edu_major em ON em.`id`=e.`major_id`
+    <where>
+	    	AND f.status=1
+		<if test="stuid !=null and stuid >0">
+			AND f.stuid = #{stuid}
+		</if>
+		<if test="termid !=null and termid >0">
+			AND f.termid = #{termid}
+		</if>
+		<if test="fallid !=null and fallid >0">
+			AND f.fallid = #{fallid}
+		</if>
+		<if test="majorid !=null and majorid >0">
+			AND em.id = #{majorid}
+		</if>
+		<if test="termname !=null and termname != '' and !termname.isEmpty()">
+			AND e.term_Name = #{termname}
+		</if>
+		<if test="classid !=null and classid>0">
+			AND f.classid = #{classid}
+		</if>
+	</where>
+  </select>
+  
+  <select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceShouldcharge">
+		SELECT f.*,s.`stuname` as stu_name,st.`level` as level,e.`term_Name` as term_name ,
+	    em.major_name as majorName ,c.classname as classname FROM finance_shouldcharge f 
+		LEFT JOIN student s ON f.`stuid`=s.`id` 
+		LEFT JOIN student_class c ON f.`classid`=c.`id`
+		LEFT JOIN edu_term e ON f.`termid`=e.`id`
+		LEFT JOIN student_fall st ON f.`fallid`=st.`id`
+		LEFT JOIN edu_major em ON em.`id`=e.`major_id`
+	    <where>
+		    	AND f.status=1
+			<if test="stuid !=null and stuid>0">
+				AND f.stuid = #{stuid}
+			</if>
+			<if test="classid !=null and classid>0">
+				AND f.classid = #{classid}
+			</if>
+			<if test="fallid !=null and fallid >0">
+				AND f.fallid = #{fallid}
+			</if>
+			<if test="termid !=null and termid>0">
+				AND f.termid = #{termid}
+			</if>
+			<if test="majorName !=null and majorName !='' and !majorName.isEmpty()">
+				AND em.major_name = #{majorName}
+			</if>
+			<if test="termname !=null and termname !='' and !termname.isEmpty()">
+				AND e.term_Name = #{termname}
+			</if>
+			<if test="majorid !=null and majorid >0">
+				AND em.id = #{majorid}
+			</if>
+		</where>
+	</select>
+	
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update finance_shouldcharge set status = 0
+	where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.finance.FinanceShouldcharge" >
+    insert into finance_shouldcharge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuid != null" >
+        stuid,
+      </if>
+      <if test="classid != null" >
+        classid,
+      </if>
+      <if test="termid != null" >
+        termid,
+      </if>
+      <if test="fallid != null" >
+        fallid,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="ispay != null" >
+        ispay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuid != null" >
+        #{stuid,jdbcType=INTEGER},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="termid != null" >
+        #{termid,jdbcType=INTEGER},
+      </if>
+      <if test="fallid != null" >
+        #{fallid,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=REAL},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ispay != null" >
+        #{ispay,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.FinanceShouldcharge" >
+    update finance_shouldcharge
+    <set >
+      <if test="stuid != null" >
+        stuid = #{stuid,jdbcType=INTEGER},
+      </if>
+      <if test="classid != null" >
+        classid = #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="termid != null" >
+        termid = #{termid,jdbcType=INTEGER},
+      </if>
+      <if test="fallid != null" >
+        fallid = #{fallid,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ispay != null" >
+        ispay = #{ispay,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.WorklogMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Worklog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="empid" property="empid" jdbcType="VARCHAR" />
+    <result column="workday" property="workday" jdbcType="TIMESTAMP" />
+    <result column="courseid" property="courseid" jdbcType="INTEGER" />
+    <result column="classid" property="classid" jdbcType="INTEGER" />
+    <result column="process" property="process" jdbcType="INTEGER" />
+    <result column="hour" property="hour" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="contents" property="contents" jdbcType="LONGVARCHAR" />
+    <result column="emp_name" property="empname" jdbcType="VARCHAR" />
+    <result column="course_name" property="educoursename" jdbcType="VARCHAR" />
+	<result column="outline_name" property="eduoutlinename" jdbcType="VARCHAR" />
+	<result column="class_name" property="classname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, empid, workday, courseid, classid, process, hour, create_time, update_time, status, remark, contents
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from worklog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectnexthour" resultType="java.lang.String" parameterType="com.ht.popj.dailyWork.Worklog" >
+    select max(hour) from worklog
+    <where>
+		AND status=1
+		<if test="empid !=null and empid !=''">
+			AND empid = #{empid}
+		</if>
+		<if test="courseid !=null and courseid>0">
+			AND courseid = #{courseid}
+		</if>
+		<if test="classid !=null and classid>0">
+			AND classid = #{classid}
+		</if>
+	</where>
+  </select>
+  <select id="selectWorklogList" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Worklog" >
+    SELECT w.*,sc.`classname` as class_name,e.`empname` as emp_name,c.`course_name` as course_name,o.`outline_name` as outline_name FROM worklog w 
+    LEFT JOIN emp e ON w.`empid`=e.`id` 
+	LEFT JOIN edu_course c ON w.`courseid`=c.`id` 
+	LEFT JOIN edu_outline o ON w.`process`=o.`id`
+	LEFT JOIN student_class sc ON w.`classid`=sc.`id`
+    <where>
+		AND w.status=1
+		<if test="empid !=null and empid !=''">
+			AND w.empid = #{empid}
+		</if>
+		<if test="workday !=null and workday !=''">
+			AND w.workday = #{workday}
+		</if>
+		<if test="courseid !=null and courseid >=0">
+			AND w.courseid = #{courseid}
+		</if>
+		<if test="classid !=null and classid >=0">
+			AND w.classid = #{classid}
+		</if>
+		<if test="process !=null and process >=0">
+			AND w.process = #{process}
+		</if>
+		<if test="hour !=null">
+			AND w.hour = #{hour}
+		</if>
+		<if test="contents !=null and contents !=''">
+			AND w.contents = #{contents}
+		</if>
+	</where>
+	order by w.workday desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update worklog set status = 0
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Worklog" >
+    insert into worklog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="empid != null" >
+        empid,
+      </if>
+      <if test="workday != null" >
+        workday,
+      </if>
+      <if test="courseid != null" >
+        courseid,
+      </if>
+      <if test="classid != null" >
+        classid,
+      </if>
+      <if test="process != null" >
+        process,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="contents != null" >
+        contents,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="workday != null" >
+        #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseid != null" >
+        #{courseid,jdbcType=INTEGER},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="process != null" >
+        #{process,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null" >
+        #{contents,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Worklog" >
+    update worklog
+    <set >
+      <if test="empid != null" >
+        empid = #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="workday != null" >
+        workday = #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="courseid != null" >
+        courseid = #{courseid,jdbcType=INTEGER},
+      </if>
+      <if test="classid != null" >
+        classid = #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="process != null" >
+        process = #{process,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null" >
+        contents = #{contents,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

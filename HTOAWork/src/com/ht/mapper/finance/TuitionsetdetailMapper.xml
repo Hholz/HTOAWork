@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.TuitionsetdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.Tuitionsetdetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tuitionid" property="tuitionid" jdbcType="INTEGER" />
+    <result column="tuitionName" property="tuitionname" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="REAL" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, tuitionid, tuitionName, money, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tuitionsetdetail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tuitionsetdetail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.finance.Tuitionsetdetail" >
+    insert into tuitionsetdetail (id, tuitionid, tuitionName, 
+      money, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{tuitionid,jdbcType=INTEGER}, #{tuitionname,jdbcType=VARCHAR}, 
+      #{money,jdbcType=REAL}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.finance.Tuitionsetdetail" >
+    insert into tuitionsetdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tuitionid != null" >
+        tuitionid,
+      </if>
+      <if test="tuitionname != null" >
+        tuitionName,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tuitionid != null" >
+        #{tuitionid,jdbcType=INTEGER},
+      </if>
+      <if test="tuitionname != null" >
+        #{tuitionname,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.Tuitionsetdetail" >
+    update tuitionsetdetail
+    <set >
+      <if test="tuitionid != null" >
+        tuitionid = #{tuitionid,jdbcType=INTEGER},
+      </if>
+      <if test="tuitionname != null" >
+        tuitionName = #{tuitionname,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <update id="updateByTuitionKeySelective" parameterType="com.ht.popj.finance.Tuitionsetdetail" >
+    update tuitionsetdetail
+    <set >
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tuitionid = #{tuitionid,jdbcType=INTEGER} and tuitionName=#{tuitionname,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.Tuitionsetdetail" >
+    update tuitionsetdetail
+    set tuitionid = #{tuitionid,jdbcType=INTEGER},
+      tuitionName = #{tuitionname,jdbcType=VARCHAR},
+      money = #{money,jdbcType=REAL},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.Tuitionsetdetail">
+  	select * from tuitionsetdetail
+  	<where>
+  		<if test="tuitionid != null and tuitionid >0" >
+        and tuitionid = #{tuitionid,jdbcType=INTEGER}
+      	</if>
+      	<if test="tuitionname != null" >
+      	and tuitionName = #{tuitionname,jdbcType=VARCHAR}
+      	</if>
+      	<if test="money != null" >
+       	and money = #{money,jdbcType=REAL}
+      	</if>
+       	and status = 1
+  	</where>
+  </select>
+    <select id="selectAllDetail" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.Tuitionsetdetail">
+  	select * from tuitionsetdetail
+  	<where>
+  		<if test="tuitionid != null and tuitionid >0" >
+        and tuitionid = #{tuitionid,jdbcType=INTEGER}
+      	</if>
+      	<if test="tuitionname != null" >
+      	and tuitionName = #{tuitionname,jdbcType=VARCHAR}
+      	</if>
+      	<if test="money != null" >
+       	and money = #{money,jdbcType=REAL}
+      	</if>
+       	and status = 1 and money &lt;&gt; 0
+  	</where>
+  </select>
+   <!-- 通过明细表的id来统计总金额-->
+  <select id="countsumByid" resultType="int" parameterType="int">
+      SELECT SUM(money) FROM tuitionsetdetail WHERE tuitionid = #{id}
+  </select>
+</mapper>

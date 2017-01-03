@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentRoomMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentRoom" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="hourseid" property="hourseid" jdbcType="INTEGER" />
+    <result column="studentid" property="studentid" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="DATE" />
+    <result column="updateTime" property="updatetime" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="classname" property="classname" jdbcType="VARCHAR" />
+    <association property="hourse" javaType="int" column="hourseid" select="com.ht.mapper.student.StudentHourseMapper.selectByPrimaryKey">
+	</association>
+	
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hourseid, studentid, createTime, updateTime, status, remark, classname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentRoom" >
+    insert into student_room (id, hourseid, studentid, 
+      createTime, updateTime, status, 
+      remark, classname)
+    values (#{id,jdbcType=INTEGER}, #{hourseid,jdbcType=INTEGER}, #{studentid,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=DATE}, #{updatetime,jdbcType=DATE}, #{status,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{classname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentRoom" >
+    insert into student_room
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hourseid != null" >
+        hourseid,
+      </if>
+      <if test="studentid != null" >
+        studentid,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+       <if test="classname != null" >
+        classname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="hourseid != null" >
+        #{hourseid,jdbcType=INTEGER},
+      </if>
+      <if test="studentid != null" >
+        #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="classname != null" >
+        #{classname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentRoom" >
+    update student_room
+    <set >
+      <if test="hourseid != null" >
+        hourseid = #{hourseid,jdbcType=INTEGER},
+      </if>
+      <if test="studentid != null" >
+        studentid = #{studentid,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="classname != null" >
+        classname = #{classname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentRoom" >
+    update student_room
+    set hourseid = #{hourseid,jdbcType=INTEGER},
+      studentid = #{studentid,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=DATE},
+      updateTime = #{updatetime,jdbcType=DATE},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      classname = #{classname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectDynamic" parameterType="com.ht.popj.student.StudentRoom" resultMap="BaseResultMap">
+  	select * from student_room
+  	<where>
+  	  <if test="hourseid != null" >
+        hourseid = #{hourseid,jdbcType=INTEGER}
+      </if>
+      <if test="studentid != null" >
+       and studentid = #{studentid,jdbcType=VARCHAR}
+      </if>
+      <if test="createtime != null" >
+       and createTime = #{createtime,jdbcType=DATE}
+      </if>
+      <if test="updatetime != null" >
+       and updateTime = #{updatetime,jdbcType=DATE}
+      </if>
+      <if test="remark != null" >
+       and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+       <if test="classname != null" >
+       and classname = #{classname,jdbcType=VARCHAR}
+      </if>
+      and status = 1
+  	</where>
+  </select>
+  <select id="countByHourseId" parameterType="java.lang.Integer" resultType="int">
+		SELECT COUNT(*) FROM student_room WHERE hourseid=#{hourseid} AND STATUS=1 
+	</select>
+</mapper>

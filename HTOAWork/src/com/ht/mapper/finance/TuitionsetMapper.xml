@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.TuitionsetMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.Tuitionset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fallid" property="fallid" jdbcType="INTEGER" />
+    <result column="term" property="term" jdbcType="INTEGER" />
+    <result column="edudeptid" property="edudeptid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="term_Name" property="term_Name" jdbcType="VARCHAR" />  
+    
+    <association property="fall" javaType="com.ht.popj.student.StudentFall" column="fallid" select="com.ht.mapper.student.StudentFallMapper.selectByPrimaryKey"></association>
+  	<association property="major" javaType="com.ht.popj.education.EduMajor" column="edudeptid" select="com.ht.mapper.education.EduMajorMapper.selectByPrimaryKey"></association>
+  	<association property="termname" javaType="com.ht.popj.education.EduTerm" column="term" select="com.ht.mapper.education.EduTermMapper.selectByPrimaryKey"></association>
+  	<association property="sum" javaType="com.ht.popj.finance.Tuitionsetdetail" column="id" select="com.ht.mapper.finance.TuitionsetdetailMapper.countsumByid"></association>
+ 	<!---->
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fallid, term, edudeptid, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tuitionset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tuitionset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.finance.Tuitionset" >
+    insert into tuitionset (id, fallid, term, 
+      edudeptid, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{fallid,jdbcType=INTEGER}, #{term,jdbcType=INTEGER}, 
+      #{edudeptid,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective"  useGeneratedKeys="true" keyProperty="id" parameterType="com.ht.popj.finance.Tuitionset" >
+    insert into tuitionset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fallid != null" >
+        fallid,
+      </if>
+      <if test="term != null" >
+        term,
+      </if>
+      <if test="edudeptid != null" >
+        edudeptid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fallid != null" >
+        #{fallid,jdbcType=INTEGER},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=INTEGER},
+      </if>
+      <if test="edudeptid != null" >
+        #{edudeptid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.Tuitionset" >
+    update tuitionset
+    <set >
+      <if test="fallid != null" >
+        fallid = #{fallid,jdbcType=INTEGER},
+      </if>
+      <if test="term != null" >
+        term = #{term,jdbcType=INTEGER},
+      </if>
+      <if test="edudeptid != null" >
+        edudeptid = #{edudeptid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.Tuitionset" >
+    update tuitionset
+    set fallid = #{fallid,jdbcType=INTEGER},
+      term = #{term,jdbcType=INTEGER},
+      edudeptid = #{edudeptid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.Tuitionset">
+   		select * from tuitionset
+   		<where>
+		      <if test="fallid != null and fallid!=''" >
+		       fallid=#{fallid,jdbcType=INTEGER}
+		      </if>
+		      <if test="term != null and term !=''" >
+		       and term=#{term,jdbcType=INTEGER}
+		      </if>
+		      <if test="edudeptid != null and edudeptid !=''" >
+		       and edudeptid=#{edudeptid,jdbcType=INTEGER}
+		      </if>
+		      and status!=0
+   		</where>
+   </select>
+   
+   <select id="selectByDynamicStatus" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.Tuitionset">
+   		SELECT t.id as id,t.fallid as fallid,t.edudeptid as edudeptid,t.`status` as status,e.id as term, e.term_Name AS term_Name
+   		from tuitionset t 
+   		LEFT JOIN edu_term e on t.term = e.id
+   		<where>
+		      <if test="fallid != null and fallid>0" >
+		      and t.fallid=#{fallid,jdbcType=INTEGER}
+		      </if>
+		      <if test="term != null and term>0" >
+		       and t.term=#{term,jdbcType=INTEGER}
+		      </if>
+		      <if test="edudeptid != null and edudeptid>0" >
+		       and t.edudeptid=#{edudeptid,jdbcType=INTEGER}
+		      </if>
+		      <if test="term_Name != null and term_Name !='' and !term_Name.isEmpty()" >
+		       and e.term_Name=#{term_Name}
+		      </if>
+		      and t.status &lt;&gt; 2 and e.term_Name &lt;&gt;'第一学期'
+   		</where>
+   </select>
+   
+     <select id="selectByOnlyTuition" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.Tuitionset">
+   		SELECT * from tuitionset 
+   		<where>
+		      <if test="fallid != null and fallid>0" >
+		      and fallid=#{fallid,jdbcType=INTEGER}
+		      </if>
+		      <if test="term != null and term>0" >
+		       and term=#{term,jdbcType=INTEGER}
+		      </if>
+		      <if test="edudeptid != null and edudeptid>0" >
+		       and edudeptid=#{edudeptid,jdbcType=INTEGER}
+		      </if>
+		      and status &lt;&gt;0 
+   		</where>
+   </select>
+   
+    <!-- 通过termid来统计总金额-->
+  <select id="selCountByTermId" resultType="int" parameterType="int">
+      SELECT SUM(money) FROM tuitionset t, tuitionsetdetail td  WHERE t.id = td.tuitionid and t.term = #{value}
+  </select>
+</mapper>

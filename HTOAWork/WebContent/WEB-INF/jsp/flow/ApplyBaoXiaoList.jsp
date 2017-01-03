@@ -1,0 +1,158 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<jsp:include page="../styleInclude.jsp"></jsp:include>
+<title>办公用品审购</title>
+
+<script type="text/javascript">
+	//全局变量，用来保存选中行的数据
+	var rows = null;
+	$(function() {
+		$('#window_add').modal('show');
+	});
+	//新增学生，ajax提交
+	function addStudent(id) {
+		if (!validateForm($("#commentForm"))) {
+			return;
+		}
+		var url = "${pageContext.request.contextPath }/flow/Reimburse/add";
+		$.post(url, {
+			price : $("#window_add #price").val(),
+			applyremark : $("#window_add #remark").val(),
+			flowmodeltypeid :  $("#window_add #flowmodeltypeid").val(),
+			upset : id
+		}, addStudentHandle, "text");
+
+		//清空新增div中的数据
+		
+	}
+	function addStudentHandle(data) {
+		//从后台返回出来的int类型数据，用来判断是否新增成功
+		if (data > 0) {
+			swal({
+				title : "成功",
+				text : "你已经完成添加操作",
+				type : "success"
+			},function() {
+				window.location.href="${pageContext.request.contextPath }/flow/myFlowList";;
+			});
+			//window.location.href=window.location.href; 
+		} else {
+			swal("添加失败", "请检查你输入的数据！", "error");
+		}
+		
+	}
+</script>
+</head>
+<body>
+	<div class="modal inmodal" id="window_add" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<h4 class="modal-title">报销申请</h4>
+				</div>
+				<div class="ibox-content">
+					<form class="form-horizontal m-t" id="commentForm"
+						novalidate="novalidate">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">申请类型：</label>
+							<div class="col-sm-4">
+								<select id="flowmodeltypeid" class="form-control" required
+									name="flowmodeltypeid">
+									<option value="">-----</option>
+									<c:forEach items="${flowmodeltypelist}" var="cla">
+										<option value="${cla.id}">${cla.flowmodeltype}</option>
+									</c:forEach>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">金额：</label>
+							<div class="col-sm-4">
+								<input id="price" type="number" name="price" required class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">备注：</label>
+							<div class="col-sm-6">
+								<textarea id="remark" name="remark" rows="4"
+									class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-white" onclick="addStudent(0)" id="save">保存</button>
+							<button type="button" onclick="addStudent(1)" id="upset" class="btn btn-primary">提交</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		//已经把文档下到本地，访问地址：http://localhost:8080/HTOAWork/Demo/validateDemo/jQueryValidate.html
+		//详情参考：http://www.runoob.com/jquery/jquery-plugin-validate.html
+		//以下为修改jQuery Validation插件兼容Bootstrap的方法，没有直接写在插件中是为了便于插件升级
+		$.validator.setDefaults({
+			highlight : function(element) {
+				$(element).closest('.form-group').removeClass('has-success')
+						.addClass('has-error');
+			},
+			success : function(element) {
+				element.closest('.form-group').removeClass('has-error')
+						.addClass('has-success');
+			},
+			errorElement : "span",
+			errorPlacement : function(error, element) {
+				if (element.is(":radio") || element.is(":checkbox")) {
+					error.appendTo(element.parent().parent().parent());
+				} else {
+					error.appendTo(element.parent());
+				}
+			},
+			errorClass : "help-block m-b-none",
+			validClass : "help-block m-b-none"
+
+		});
+		//调用表单验证的方法，在addStudent()里调用，出入form对象
+		//***input控件要设置name属性***
+		function validateForm(formdata) {
+			var icon = "<i class='fa fa-times-circle'></i> ";
+			var validator = formdata.validate({
+				rules : {
+					price : {
+						required : true,
+						digits : true
+					},
+
+				},
+				messages : {
+					materialname : icon + "请输入用品名称",
+					unit : icon + "请输入用品单位,如盒,瓶等等",
+					price : {
+						required : icon + "请输入用品价格",
+						digits : icon + "价格只能是数字"
+					},
+					style : {
+						required : icon + "请输入用品规格"
+					},
+					counts : {
+						required : icon + "请输入用品数量"
+					},
+					applymaterialRemark : {
+						required : icon + "请输入申购理由"
+					}
+				},
+			});
+			//返回表单验证是否通过，true false
+			return validator.form();
+		}
+	</script>
+	<script src="${pageContext.request.contextPath}/js/content.js?v=1.0.0"></script>
+	<script
+		src="${pageContext.request.contextPath}/js/plugins/layer/laydate/laydate.js"></script>
+</body>
+</html>

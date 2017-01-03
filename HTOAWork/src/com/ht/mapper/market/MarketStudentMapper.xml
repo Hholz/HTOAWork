@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.market.MarketStudentMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.market.MarketStudent" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="qqCode" property="qqCode" jdbcType="VARCHAR" />
+    <result column="idCard" property="idCard" jdbcType="VARCHAR" />
+    <result column="clsName" property="clsName" jdbcType="VARCHAR" />
+    <result column="applyCost" property="applyCost" jdbcType="VARCHAR" />
+    <result column="isTest" property="isTest" jdbcType="VARCHAR" />
+    <result column="iGrade" property="iGrade" jdbcType="VARCHAR" />
+    <result column="huorid" property="huorid" jdbcType="INTEGER" />
+    <result column="classid" property="classid" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="ms_status" property="msStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	<association property="recruitEmp" javaType="com.ht.popj.dailyWork.Emp" column="emp_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+    </association>
+    <association property="followCount" javaType="int" column="id" select="com.ht.mapper.market.MarketFollowMapper.selectCountbyStuId">
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, age, phone,qqCode,idCard ,clsName,  applyCost, isTest,iGrade,huorid,classid, addr, school, emp_id, ms_status, create_time, update_time, status, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from market_student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from market_student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.market.MarketStudent" >
+    insert into market_student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="qqCode != null" >
+        qqCode,
+      </if>
+      <if test="idCard != null" >
+        idCard,
+      </if>
+      <if test="clsName != null" >
+        clsName,
+      </if>
+      <if test="applyCost != null" >
+        applyCost,
+      </if>
+      <if test="isTest != null" >
+        isTest,
+      </if>
+      <if test="iGrade != null" >
+        iGrade,
+      </if>
+      <if test="huorid != null" >
+        huorid,
+      </if>
+      <if test="classid != null" >
+        classid,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="school != null" >
+        school,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="msStatus != null" >
+        ms_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqCode != null" >
+        #{qqCode,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="clsName != null" >
+        #{clsName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCost != null" >
+        #{applyCost,jdbcType=VARCHAR},
+      </if>
+      <if test="isTest != null" >
+        #{isTest,jdbcType=VARCHAR},
+      </if>
+      <if test="iGrade != null" >
+        #{iGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="huorid != null" >
+        #{huorid},
+      </if>
+      <if test="classid != null" >
+        #{classid},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="school != null" >
+        #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="msStatus != null" >
+        #{msStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.market.MarketStudent" >
+    update market_student
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="qqCode != null" >
+        qqCode = #{qqCode,jdbcType=VARCHAR},
+      </if>
+      <if test="idCard != null" >
+        idCard = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="clsName != null" >
+        clsName = #{clsName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyCost != null" >
+        applyCost = #{applyCost,jdbcType=VARCHAR},
+      </if>
+      <if test="isTest != null" >
+        isTest = #{isTest,jdbcType=VARCHAR},
+      </if>
+      <if test="iGrade != null" >
+        iGrade = #{iGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="huorid != null" >
+        huorid = #{huorid},
+      </if>
+      <if test="classid != null" >
+        classid = #{classid},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="school != null" >
+        school = #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="msStatus != null" >
+        ms_status = #{msStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from market_student where status = 1 ORDER BY id DESC
+  </select>
+  <select id="selectAllByPJ" resultMap="BaseResultMap" parameterType="com.ht.popj.market.MarketStudent">
+		select * from market_student																																									
+		<where>
+		    <if test="id != null">
+				id = #{id}
+			</if>
+			<if test="name != null and !name.isEmpty()">
+				and name like '%${name}%'
+			</if>
+			<if test="sex != null and !sex.isEmpty()">
+				and sex = #{sex,jdbcType=VARCHAR}
+			</if>
+			<if test="age != null">
+				and age = #{age,jdbcType=INTEGER}
+			</if>
+			<if test="phone != null  and !phone.isEmpty()">
+				and phone like '%${phone}%'
+			</if>
+			<if test="phone != null  and !phone.isEmpty()">
+				and phone like '%${phone}%'
+			</if>
+			<if test="applyCost != null  and !applyCost.isEmpty()">
+				and applyCost =  #{applyCost}
+			</if>
+			<if test="isTest != null  and !isTest.isEmpty()">
+				and isTest =  #{isTest}
+			</if>
+			<if test="iGrade != null  and !iGrade.isEmpty()">
+				and iGrade =  #{iGrade}
+			</if>
+			<if test="huorid != null">
+				and huorid =  #{huorid}
+			</if>
+			<if test="classid != null">
+				and classid =  #{classid}
+			</if>
+			<if test="empId != null and !empId.isEmpty()">
+				and emp_id = #{empId,jdbcType=VARCHAR}
+			</if>
+			<if test="addr != null and !addr.isEmpty()">
+				and addr = #{addr,jdbcType=VARCHAR}
+			</if>
+			<if test="school != null and !school.isEmpty()">
+				and school = #{school,jdbcType=VARCHAR}
+			</if>
+			<if test="msStatus != null">
+				and ms_status = #{msStatus,jdbcType=INTEGER}
+			</if>
+			and status =1
+		</where>
+		ORDER BY id DESC
+	</select>
+	<update id="updateMsStatusById" parameterType="map">
+	    update market_student set ms_status = #{msStatus}  where id = #{id}
+	</update>
+	<select id="selectBymsStatusMap" resultMap="BaseResultMap" parameterType="map">
+       select * from market_student																																									
+		<where>
+		    <if test="marketStudent.id != null">
+				id = #{marketStudent.id}
+			</if>
+			<if test="marketStudent.name != null and !marketStudent.name.isEmpty()">
+				and name like '%${marketStudent.name}%'
+			</if>
+			<if test="marketStudent.sex != null and !marketStudent.sex.isEmpty()">
+				and sex = #{marketStudent.sex}
+			</if>
+			<if test="marketStudent.age != null">
+				and age = #{marketStudent.age}
+			</if>
+			<if test="marketStudent.phone != null  and !marketStudent.phone.isEmpty()">
+				and phone like '%${marketStudent.phone}%'
+			</if>
+			<if test="marketStudent.applyCost != null  and !marketStudent.applyCost.isEmpty()">
+				and applyCost =  #{marketStudent.applyCost}
+			</if>
+			<if test="marketStudent.isTest != null  and !marketStudent.isTest.isEmpty()">
+				and isTest =  #{marketStudent.isTest}
+			</if>
+			<if test="marketStudent.iGrade != null  and !marketStudent.iGrade.isEmpty()">
+				and iGrade =  #{marketStudent.iGrade}
+			</if>
+			<if test="marketStudent.huorid != null">
+				and huorid =  #{marketStudent.huorid}
+			</if>
+			<if test="marketStudent.classid != null">
+				and classid =  #{marketStudent.classid}
+			</if>
+			<if test="marketStudent.empId != null and !marketStudent.empId.isEmpty()">
+				and emp_id = #{marketStudent.empId}
+			</if>
+			<if test="marketStudent.addr != null and !marketStudent.addr.isEmpty()">
+				and addr = #{marketStudent.addr}
+			</if>
+			<if test="marketStudent.school != null and !marketStudent.school.isEmpty()">
+				and school = #{marketStudent.school}
+			</if>
+			<if test="marketStudent.msStatus != null">
+				and ms_status = #{marketStudent.msStatus}
+			</if>
+			and status =1
+		</where>
+		and ms_status in
+	    	<foreach collection="msStatus" open="(" close=")" separator="," item="id">
+	           #{id}
+	       </foreach>
+		ORDER BY id DESC
+    </select>
+    <select id="selectPredStudentAllRand" resultMap="BaseResultMap">
+       SELECT * FROM market_student	WHERE  ms_status = 2 and status =1  ORDER BY RAND() , id DESC
+    </select>
+    <select id="selectTestStudentAll" resultMap="BaseResultMap">
+       SELECT * FROM market_student	WHERE  ms_status = 5 and classid =0 and status =1 ORDER BY id DESC
+    </select>
+    <select id="countByclsId" parameterType="int" resultType="int">
+       SELECT count(*) FROM market_student	WHERE  classid = #{classid} and status =1
+    </select>
+    <select id="countByYearStatus" parameterType="map" resultType="com.ht.popj.market.MarketStudentCount">
+       SELECT 
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 1 AND f.`ms_status`=#{msStatus} THEN 1 ELSE 0 END) January,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 2 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) February,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 3 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) March,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 4 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) April,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 5 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) May,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 6 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) June,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 7 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) July,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 8 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) August,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 9 AND f.`ms_status`=#{msStatus}  THEN 1 ELSE 0 END) September,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 10 AND f.`ms_status`=#{msStatus} THEN 1 ELSE 0 END) October,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 11 AND f.`ms_status`=#{msStatus} THEN 1 ELSE 0 END) November,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 12 AND f.`ms_status`=#{msStatus} THEN 1 ELSE 0 END) December
+		 
+		FROM market_student f
+		WHERE YEAR(create_time) = #{year} and status =1
+    </select>
+    <select id="countIntenByYear" parameterType="int" resultType="com.ht.popj.market.MarketStudentCount">
+        SELECT 
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 1  THEN 1 ELSE 0 END) January,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 2   THEN 1 ELSE 0 END) February,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 3   THEN 1 ELSE 0 END) March,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 4   THEN 1 ELSE 0 END) April,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 5   THEN 1 ELSE 0 END) May,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 6   THEN 1 ELSE 0 END) June,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 7   THEN 1 ELSE 0 END) July,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 8   THEN 1 ELSE 0 END) August,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 9   THEN 1 ELSE 0 END) September,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 10  THEN 1 ELSE 0 END) October,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 11  THEN 1 ELSE 0 END) November,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 12  THEN 1 ELSE 0 END) December
+		FROM market_student f
+		WHERE YEAR(create_time) = #{year} and status =1
+    </select>
+    <select id="countTestByYear" parameterType="int" resultType="com.ht.popj.market.MarketStudentCount">
+        SELECT 
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 1 and isTest ='是'  THEN 1 ELSE 0 END) January,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 2 and isTest ='是'  THEN 1 ELSE 0 END) February,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 3 and isTest ='是'  THEN 1 ELSE 0 END) March,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 4 and isTest ='是'  THEN 1 ELSE 0 END) April,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 5 and isTest ='是'  THEN 1 ELSE 0 END) May,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 6 and isTest ='是'  THEN 1 ELSE 0 END) June,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 7 and isTest ='是' THEN 1 ELSE 0 END) July,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 8 and isTest ='是'  THEN 1 ELSE 0 END) August,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 9 and isTest ='是'  THEN 1 ELSE 0 END) September,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 10 and isTest ='是' THEN 1 ELSE 0 END) October,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 11 and isTest ='是' THEN 1 ELSE 0 END) November,
+	       SUM(CASE WHEN DATE_FORMAT(create_time,'%m') = 12 and isTest ='是' THEN 1 ELSE 0 END) December
+		FROM market_student f
+		WHERE YEAR(create_time) = #{year} and status =1
+    </select>
+    <select id="reportIntenYearByYear" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM market_student WHERE YEAR(create_time) = #{year}  and status =1
+    </select>
+    <select id="reportYearByYearStatus" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM market_student WHERE YEAR(create_time) = #{year} and ms_status =#{msStatus}  and status =1
+    </select>
+    <select id="reportTestYearByYear" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM market_student WHERE YEAR(create_time) = #{year} and isTest ='是'  and status =1
+    </select>
+</mapper>

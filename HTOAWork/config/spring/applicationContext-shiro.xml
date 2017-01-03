@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="   
+           http://www.springframework.org/schema/beans   
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+           http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+           http://www.springframework.org/schema/mvc   
+           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
+	<bean id="myRealm" class="com.ht.shiro.MyRealm" />
+
+	<!-- Shiro默认会使用Servlet容器的Session,可通过sessionMode属性来指定使用Shiro原生Session -->
+	<!-- 即<property name="sessionMode" value="native"/>,详细说明见官方文档 -->
+	<!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
+
+	<bean id="loginFormAuthenticationFilter" class="com.ht.shiro.LoginFormAuthenticationFilter"/>
+	
+	<!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->
+	<!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- Shiro的核心安全接口,这个属性是必须的 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
+		<property name="loginUrl" value="/login" />
+		<!-- 登录成功后要跳转的连接(本例中此属性用不到,因为登录成功后的处理逻辑在LoginController里硬编码为main.jsp了) -->
+		<property name="successUrl" value="/index"/>
+		<!-- 用户访问未对其授权的资源时,所显示的连接 -->
+		<!-- 若想更明显的测试此属性可以修改它的值,如unauthor.jsp,然后用[玄玉]登录后访问/admin/listUser.jsp就看见浏览器会显示unauthor.jsp -->
+		<property name="unauthorizedUrl" value="/page/noAuth.html" />
+		<!-- Shiro连接约束配置,即过滤链的定义 -->
+		<!-- 此处可配合我的这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->
+		<!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->
+		<!-- anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种 -->
+		<!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->
+		<property name="filters">
+            <map>
+                <entry key="authc" value-ref="loginFormAuthenticationFilter"/>
+            </map>
+        </property>
+		<property name="filterChainDefinitions">
+			<value>
+				/login=anon
+				/toLogin=anon
+				/student/**=authc
+				/sysSet/**=authc
+				/finance/**=authc
+				/dailyWork/**=authc
+				/education/**=authc
+				/market/**=authc
+				
+				/student/stuList = perms[student:list]
+				/student/info/* = perms[student:info]
+				/student/adjustCls/page = perms[student:adjustCls]
+				/student/stujob/page = perms[student:job]
+				/student/edufam/page/* = perms[student:edufam]
+				/student/reply/page = perms[student:reply]
+				/student/replyScore/page = perms[student:replyScore]
+				
+				/student/fallStu = perms[class:fall]
+				/student/classStu = perms[class:class]
+				/student/stuattenjsp =  perms[student:atten]
+				/student/computerjsp = perms[student:computer]
+				/sreward/srewardStu = perms[student:reward]
+				/stuheart/sheartStu = perms[student:heart]
+				
+				/student/FloorLayer/Floor = perms[floor:floor]
+				/student/applyHourse/studentApplyHourse = perms[floor:apply]
+				/student/studentFeedBack/studentFeedBack = perms[student:feedback]
+				/student/studentHourse/studentHourse = perms[floor:fenpei]
+				/student/studentOption/studentOption = perms[student:option]
+				/student/studentScore/studentScore = perms[student:score]
+				/student/ComputerRepair/tasklist = perms[student:ComputerRepair]
+				/student/scomputer/computerjsp = perms[student:scomputer]
+				/student/BackUpComputer/tasklist = perms[student:BackUpComputer]
+				/student/ReturnBackUpComputer/tasklist = perms[student:ReturnBackUpComputer]
+				/student/NewComputer/tasklist  = perms[student:NewComputer]
+				/dailyWork/AttendanceCount/AttendanceCountList = perms[student:AttendanceCount]
+				
+				/sysSet/student = perms[sysSet:student]
+				/sysSet/frewardjsp = perms[sysSet:ftreward]
+				/sysSet/fattenjsp = perms[sysSet:fatten]
+				/sysSet/finaPolicQuantitySet/finaPolicQuantitySet = perms[sysSet:fpqs]
+				/sysSet/FlowmodelType/FTypeList	 = perms[sysSet:FlowmodelType]
+				/sysSet/FlowModel/FModeList = perms[sysSet:FlowModel]
+				/sysSet/Approvetype/AptypeList	= perms[sysSet:Approvetype]
+				/sysSet/ApprovetDot/ApprovetDotList  = perms[sysSet:ApprovetDot]
+				/sysSet/Approvaltitle/ApprovaltitleList = perms[sysSet:Approvaltitle]
+				
+				
+				/finance/FeedBackSet/feedback = perms[sysSet:feedback]
+				/finance/FinanceTuitionSet/financeTuitionSet = perms[sysSet:fts]
+				
+				/dailyWork/Baoxiao/baoxiaolist = perms[dailyWork:baoxiaoApply]
+				/dailyWork/Baoxiaotype/baoxiaotypelist = perms[dailyWork:baoxiaoType]
+				/dailyWork/dep/deplist = perms[dailyWork:dep]
+				/dailyWork/edu/edulist = perms[dailyWork:empEdu]
+				/dailyWork/emp/emplist = perms[dailyWork:emp]
+				/dailyWork/family/familylist = perms[dailyWork:empFam]
+				/dailyWork/works/workslist = perms[dailyWork:empWork]
+				/dailyWork/Worklog/Workloglist = perms[dailyWork:empWorkLog]
+				/dailyWork/Duty/dutyList = perms[dailyWork:Duty]
+				/dailyWork/Patrol/patrolClassList = perms[dailyWork:PatrolClass]
+				/dailyWork/Patrol/patrolHouseList = perms[dailyWork:PatrolHouse]
+				/dailyWork/Notice/noticeList = perms[dailyWork:Notice]
+				/dailyWork/ApplyMaterial/ApplyMaterialList = perms[dailyWork:ApplyMaterial]
+				/dailyWork/task/tasklist = perms[dailyWork:task]
+				/dailyWork/ReceiveMaterial/ReceiveMaterialList = perms[dailyWork:ReceiveMaterial]
+				/dailyWork/ReceiveMaterialTask/tasklist =  perms[dailyWork:ReceiveMaterialTask]
+				/dailyWork/ReturnMaterial/ReturnMateriallList =  perms[dailyWork:ReturnMaterial]
+				/dailyWork/ReturnMaterialTask/tasklist =  perms[dailyWork:ReturnMaterialTask]
+				/dailyWork/Holiday/ApplyHolidayList = perms[dailyWork:ApplyHoliday]
+				/dailyWork/Holidaytype/HtList =  perms[dailyWork:Holidaytype]
+				/dailyWork/HolidayTask/tasklist	= perms[dailyWork:HolidayTask]
+				/dailyWork/OverWorkTask/tasklist = perms[dailyWork:OverWorkTask]
+				/dailyWork/ChangeHolidayTask/tasklist = perms[dailyWork:ChangeHolidayTask]
+				/dailyWork/MateriaType/MTList = perms[dailyWork:MateriaType]
+				/dailyWork/Material/materiallist = perms[dailyWork:Material]
+				
+				
+				/education/feedbackstart/list = perms[education:feedback]
+				/education/syllabus/list =  perms[education:syllabus]
+				/education/syllabuscompare = perms[education:syllabuscompare]
+				/education/seminar/list = perms[education:seminar]
+				/education/course/courseIndex = perms[education:course]
+				/education/courseteacher/courseIndex = perms[education:courseteacher]
+				/education/coursetype/typeIndex = perms[education:oursetype]
+				/education/dept/deptIndex = perms[education:dept]
+				/education/major/majorIndex = perms[education:major]
+				/education/outline/outlineIndex = perms[education:outline]
+				/education/term/termIndex = perms[education:term] 
+				
+				/finance/financebalance/balanceIndex = perms[finance:balance]
+				/finance/financebalance/tuitionIndex =  perms[finance:tuition]
+				/finance/feeStandard/feeStandardIndex = perms[finance:feeStandard]
+				/finance/financeType/financeTypeIndex  = perms[finance:financeType]
+				/finance/FinanceSalarySet/FinSalarySetList = perms[finance:FinanceSalarySet]
+				
+				/market/student/intentionStudentList  = perms[market:intention] 
+				/market/student/trackStudentList = perms[market:track] 
+				/market/student/prestudentList = perms[market:pre] 
+			</value>
+		</property>
+	</bean>
+
+    
+    
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证 -->
+	<!-- 配置以下两个bean即可实现此功能 -->
+	<!-- Enable Shiro Annotations for Spring-configured beans. Only run after 
+		the lifecycleBeanProcessor has run -->
+	<!-- 由于本例中并未使用Shiro注解,故注释掉这两个bean(个人觉得将权限通过注解的方式硬编码在程序中,查看起来不是很方便,没必要使用) -->
+	<!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" 
+		depends-on="lifecycleBeanPostProcessor"/> <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> 
+		<property name="securityManager" ref="securityManager"/> </bean> -->
+</beans>

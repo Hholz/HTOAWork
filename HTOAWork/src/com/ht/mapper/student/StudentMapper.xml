@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.student.Student">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="stuno" property="stuno" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="stuname" property="stuname" jdbcType="VARCHAR" />
+		<result column="middleschool" property="middleschool" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="addr" property="addr" jdbcType="VARCHAR" />
+		<result column="classid" property="classid" jdbcType="INTEGER" />
+		<result column="huorid" property="huorid" jdbcType="INTEGER" />
+		<result column="entertime" property="entertime" jdbcType="TIMESTAMP" />
+		<result column="introduretech" property="introduretech"
+			jdbcType="VARCHAR" />
+		<result column="stu_status" property="stuStatus" jdbcType="INTEGER" />
+		<result column="nation" property="nation" jdbcType="VARCHAR" />
+		<result column="naplace" property="naplace" jdbcType="VARCHAR" />
+		<result column="residence" property="residence" jdbcType="INTEGER" />
+		<result column="idcard" property="idcard" jdbcType="VARCHAR" />
+		<result column="professional" property="professional" jdbcType="VARCHAR" />
+		<result column="prolevel" property="prolevel" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, stuno, password, stuname, middleschool, sex, age, birthday, phone,
+		addr, classid,
+		huorid, entertime, introduretech, stu_status, nation, naplace, residence,
+		idcard,
+		professional, prolevel, create_time, update_time, status, remark
+	</sql>
+
+	<select id="selectStudentList" resultMap="studentRM"
+		parameterType="java.lang.Integer">
+		SELECT DISTINCT student.`id`,student.`stuname` FROM
+		flow_all,student,student_class
+		WHERE flow_all.`studid`=student.`id` AND
+		student.`classid`=student_class.`id`
+		AND student_class.`id`=#{value}
+		AND student.`status`=1
+	</select>
+	
+	<select id="selectStudListFeedBack" resultMap="studentRM" parameterType="java.lang.Integer">
+	    SELECT DISTINCT student.`id`,student.`stuname`
+		FROM student,student_class,student_fall
+		WHERE student.`classid`=student_class.`id`
+		AND student_class.`Level_id`=student_fall.`id`
+		AND student_class.`id`=#{value}
+		AND student.`status`=1
+	</select>
+
+	<select id="selectStudListComputer" resultMap="studentRM"
+		parameterType="java.lang.Integer">
+		SELECT DISTINCT student.`id`,student.`stuname`
+		FROM flow_computer_apply,student,student_class,student_fall
+		WHERE flow_computer_apply.`studid`=student.`id`
+		AND student.`classid`=student_class.`id`
+		AND student_class.`Level_id`=student_fall.`id`
+		AND student_class.`id`=#{value}
+		AND student.`status`=1
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="studentRM"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from student
+		where id = #{id,jdbcType=INTEGER} and status =1
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from student
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.student.Student">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into student
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="stuno != null">
+				stuno,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="stuname != null">
+				stuname,
+			</if>
+			<if test="middleschool != null">
+				middleschool,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="addr != null">
+				addr,
+			</if>
+			<if test="classid != null">
+				classid,
+			</if>
+			<if test="huorid != null">
+				huorid,
+			</if>
+			<if test="entertime != null">
+				entertime,
+			</if>
+			<if test="introduretech != null">
+				introduretech,
+			</if>
+			<if test="stuStatus != null">
+				stu_status,
+			</if>
+			<if test="nation != null">
+				nation,
+			</if>
+			<if test="naplace != null">
+				naplace,
+			</if>
+			<if test="residence != null">
+				residence,
+			</if>
+			<if test="idcard != null">
+				idcard,
+			</if>
+			<if test="professional != null">
+				professional,
+			</if>
+			<if test="prolevel != null">
+				prolevel,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="stuno != null">
+				#{stuno,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="stuname != null">
+				#{stuname,jdbcType=VARCHAR},
+			</if>
+			<if test="middleschool != null">
+				#{middleschool,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="addr != null">
+				#{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="classid != null">
+				#{classid,jdbcType=INTEGER},
+			</if>
+			<if test="huorid != null">
+				#{huorid,jdbcType=INTEGER},
+			</if>
+			<if test="entertime != null">
+				#{entertime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="introduretech != null">
+				#{introduretech,jdbcType=VARCHAR},
+			</if>
+			<if test="stuStatus != null">
+				#{stuStatus,jdbcType=INTEGER},
+			</if>
+			<if test="nation != null">
+				#{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="naplace != null">
+				#{naplace,jdbcType=VARCHAR},
+			</if>
+			<if test="residence != null">
+				#{residence,jdbcType=INTEGER},
+			</if>
+			<if test="idcard != null">
+				#{idcard,jdbcType=VARCHAR},
+			</if>
+			<if test="professional != null">
+				#{professional,jdbcType=VARCHAR},
+			</if>
+			<if test="prolevel != null">
+				#{prolevel,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.Student">
+		update student
+		<set>
+			id = #{id},
+			<if test="stuno != null">
+				stuno = #{stuno,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="stuname != null">
+				stuname = #{stuname,jdbcType=VARCHAR},
+			</if>
+			<if test="middleschool != null">
+				middleschool = #{middleschool,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="birthday != null and !birthday.isEmpty()">
+				birthday = #{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="addr != null">
+				addr = #{addr,jdbcType=VARCHAR},
+			</if>
+			<if test="classid != null">
+				classid = #{classid,jdbcType=INTEGER},
+			</if>
+			<if test="huorid != null">
+				huorid = #{huorid,jdbcType=INTEGER},
+			</if>
+			<if test="entertime != null and  !entertime.isEmpty()">
+				entertime = #{entertime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="introduretech != null">
+				introduretech = #{introduretech,jdbcType=VARCHAR},
+			</if>
+			<if test="stuStatus != null">
+				stu_status = #{stuStatus,jdbcType=INTEGER},
+			</if>
+			<if test="nation != null">
+				nation = #{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="naplace != null">
+				naplace = #{naplace,jdbcType=VARCHAR},
+			</if>
+			<if test="residence != null">
+				residence = #{residence,jdbcType=INTEGER},
+			</if>
+			<if test="idcard != null">
+				idcard = #{idcard,jdbcType=VARCHAR},
+			</if>
+			<if test="professional != null">
+				professional = #{professional,jdbcType=VARCHAR},
+			</if>
+			<if test="prolevel != null">
+				prolevel = #{prolevel,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 全部查询 -->
+	<!-- 返回全部内容，resultType是list里的对象 -->
+	<select id="selectStudentAll" resultMap="studentRM">
+		select * from Student
+		where status =1
+	</select>
+
+	<resultMap type="com.ht.popj.student.Student" id="studentRM"
+		extends="BaseResultMap">
+		<association property="resPJ" javaType="com.ht.popj.sysSet.Residence"
+			column="residence" select="com.ht.mapper.sysSet.ResidenceMapper.selectByPrimaryKey">
+		</association>
+		<association property="classInfo" javaType="com.ht.popj.student.StudentClass"
+			column="classid" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+		</association>
+		<association property="hourse" javaType="com.ht.popj.student.StudentHourse"
+			column="huorid" select="com.ht.mapper.student.StudentHourseMapper.selectByPrimaryKey">
+		</association>
+		<association property="major" javaType="com.ht.popj.education.EduMajor"
+			column="prolevel" select="com.ht.mapper.education.EduMajorMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+	<select id="selectById" resultMap="studentRM" parameterType="int">
+		select * from student where id = #{id}
+	</select>
+	<select id="selectByDynamic" resultMap="studentRM"
+		parameterType="com.ht.popj.student.Student">
+		select * from student
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="stuno != null and !stuno.isEmpty()">
+				and stuno like '%${stuno}%'
+			</if>
+			<if test="password != null and !password.isEmpty()">
+				and password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="stuname != null and !stuname.isEmpty()">
+				and stuname like '%${stuname}%'
+			</if>
+			<if test="middleschool != null and !middleschool.isEmpty()">
+				and middleschool = #{middleschool,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null and !sex.isEmpty()">
+				and sex = #{sex,jdbcType=VARCHAR}
+			</if>
+			<if test="age != null">
+				and age = #{age,jdbcType=INTEGER}
+			</if>
+			<if test="birthday != null">
+				and birthday = #{birthday,jdbcType=TIMESTAMP}
+			</if>
+			<if test="phone != null  and !phone.isEmpty()">
+				and phone like '%${phone}%'
+			</if>
+			<if test="addr != null and !addr.isEmpty()">
+				and addr = #{addr,jdbcType=VARCHAR}
+			</if>
+			<if test="classid != null">
+				and classid = #{classid,jdbcType=INTEGER}
+			</if>
+			<if test="huorid != null">
+				and huorid = #{huorid,jdbcType=INTEGER}
+			</if>
+			<if test="entertime != null">
+				and entertime = #{entertime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="introduretech != null  and !introduretech.isEmpty()">
+				and introduretech = #{introduretech,jdbcType=VARCHAR}
+			</if>
+			<if test="stuStatus != null">
+				and stu_status = #{stuStatus,jdbcType=INTEGER}
+			</if>
+			<if test="nation != null  and !nation.isEmpty()">
+				and nation = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="naplace != null and !naplace.isEmpty()">
+				and naplace = #{naplace,jdbcType=VARCHAR}
+			</if>
+			<if test="residence != null">
+				and residence = #{residence,jdbcType=INTEGER}
+			</if>
+			<if test="idcard != null and !idcard.isEmpty()">
+				and idcard = #{idcard,jdbcType=VARCHAR}
+			</if>
+			<if test="professional != null and !professional.isEmpty()">
+				and professional = #{professional,jdbcType=VARCHAR}
+			</if>
+			<if test="prolevel != null">
+				and prolevel = #{prolevel,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null and !remark.isEmpty()">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			and status =1
+		</where>
+	</select>
+	<!-- 查没班级的学生 -->
+	<select id="selectByPJnoCls" resultMap="studentRM"
+		parameterType="com.ht.popj.student.Student">
+		select * from student
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="stuno != null and !stuno.isEmpty()">
+				and stuno like '%${stuno}%'
+			</if>
+			<if test="password != null and !password.isEmpty()">
+				and password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="stuname != null and !stuname.isEmpty()">
+				and stuname like '%${stuname}%'
+			</if>
+			<if test="middleschool != null and !middleschool.isEmpty()">
+				and middleschool = #{middleschool,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null and !sex.isEmpty()">
+				and sex = #{sex,jdbcType=VARCHAR}
+			</if>
+			<if test="age != null">
+				and age = #{age,jdbcType=INTEGER}
+			</if>
+			<if test="birthday != null">
+				and birthday = #{birthday,jdbcType=TIMESTAMP}
+			</if>
+			<if test="phone != null  and !phone.isEmpty()">
+				and phone like '%${phone}%'
+			</if>
+			<if test="addr != null and !addr.isEmpty()">
+				and addr = #{addr,jdbcType=VARCHAR}
+			</if>
+			<if test="classid != null">
+				and classid = #{classid,jdbcType=INTEGER}
+			</if>
+			<if test="huorid != null">
+				and huorid = #{huorid,jdbcType=INTEGER}
+			</if>
+			<if test="entertime != null">
+				and entertime = #{entertime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="introduretech != null  and !introduretech.isEmpty()">
+				and introduretech = #{introduretech,jdbcType=VARCHAR}
+			</if>
+			<if test="stuStatus != null">
+				and stu_status = #{stuStatus,jdbcType=INTEGER}
+			</if>
+			<if test="nation != null  and !nation.isEmpty()">
+				and nation = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="naplace != null and !naplace.isEmpty()">
+				and naplace = #{naplace,jdbcType=VARCHAR}
+			</if>
+			<if test="residence != null">
+				and residence = #{residence,jdbcType=INTEGER}
+			</if>
+			<if test="idcard != null and !idcard.isEmpty()">
+				and idcard = #{idcard,jdbcType=VARCHAR}
+			</if>
+			<if test="professional != null and !professional.isEmpty()">
+				and professional = #{professional,jdbcType=VARCHAR}
+			</if>
+			<if test="prolevel != null">
+				and prolevel = #{prolevel,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null and !remark.isEmpty()">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			and status =1 and classid = 0
+		</where>
+	</select>
+	<!-- 查有班级的学生 -->
+	<select id="selectByPJhasCls" resultMap="studentRM"
+		parameterType="com.ht.popj.student.Student">
+		select * from student
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="stuno != null and !stuno.isEmpty()">
+				and stuno like '%${stuno}%'
+			</if>
+			<if test="password != null and !password.isEmpty()">
+				and password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="stuname != null and !stuname.isEmpty()">
+				and stuname like '%${stuname}%'
+			</if>
+			<if test="middleschool != null and !middleschool.isEmpty()">
+				and middleschool = #{middleschool,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null and !sex.isEmpty()">
+				and sex = #{sex,jdbcType=VARCHAR}
+			</if>
+			<if test="age != null">
+				and age = #{age,jdbcType=INTEGER}
+			</if>
+			<if test="birthday != null">
+				and birthday = #{birthday,jdbcType=TIMESTAMP}
+			</if>
+			<if test="phone != null  and !phone.isEmpty()">
+				and phone like '%${phone}%'
+			</if>
+			<if test="addr != null and !addr.isEmpty()">
+				and addr = #{addr,jdbcType=VARCHAR}
+			</if>
+			<if test="classid != null">
+				and classid = #{classid,jdbcType=INTEGER}
+			</if>
+			<if test="huorid != null">
+				and huorid = #{huorid,jdbcType=INTEGER}
+			</if>
+			<if test="entertime != null">
+				and entertime = #{entertime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="introduretech != null  and !introduretech.isEmpty()">
+				and introduretech = #{introduretech,jdbcType=VARCHAR}
+			</if>
+			<if test="stuStatus != null">
+				and stu_status = #{stuStatus,jdbcType=INTEGER}
+			</if>
+			<if test="nation != null  and !nation.isEmpty()">
+				and nation = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="naplace != null and !naplace.isEmpty()">
+				and naplace = #{naplace,jdbcType=VARCHAR}
+			</if>
+			<if test="residence != null">
+				and residence = #{residence,jdbcType=INTEGER}
+			</if>
+			<if test="idcard != null and !idcard.isEmpty()">
+				and idcard = #{idcard,jdbcType=VARCHAR}
+			</if>
+			<if test="professional != null and !professional.isEmpty()">
+				and professional = #{professional,jdbcType=VARCHAR}
+			</if>
+			<if test="prolevel != null">
+				and prolevel = #{prolevel,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null and !remark.isEmpty()">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			and status =1 and classid != 0
+		</where>
+	</select>
+
+	<update id="upStaById" parameterType="int">
+		update student set status = 0 where id = #{id}
+	</update>
+	<update id="upStuClsByIds" parameterType="map">
+		update Student set classid = #{classid} where id in
+		<foreach collection="ids" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</update>
+	<update id="upStuHuorByIds" parameterType="map">
+		update Student set huorid = #{huorid} where id in
+		<foreach collection="ids" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</update>
+
+	<select id="countByHourseId" parameterType="java.lang.Integer"
+		resultType="int">
+		SELECT COUNT(*) FROM student WHERE huorid=#{huorid} AND
+		STATUS=1
+	</select>
+	<!-- 精选分配的sql -->
+	<select id="selectByClsIds" parameterType="map" resultMap="studentRM">
+		select * from student
+		<where>
+			<if test="student.stuname != null and !student.stuname.isEmpty()">
+				and stuname = #{student.stuname,jdbcType=VARCHAR}
+			</if>
+			<if test="student.sex != null and !student.sex.isEmpty()">
+				and sex = #{student.sex,jdbcType=VARCHAR}
+			</if>
+			<if test="student.classid != null">
+				and classid = #{student.classid,jdbcType=INTEGER}
+			</if>
+
+			and huorid is null
+			and status =1
+		</where>
+		and classid in
+		<foreach collection="clsIds" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</select>
+	<!-- 随机分配的sql -->
+	<select id="selectByClsIdsRandom" parameterType="map" resultMap="studentRM">
+		select * from student
+		<where>
+			<if test="student.stuname != null and !student.stuname.isEmpty()">
+				and stuname = #{student.stuname,jdbcType=VARCHAR}
+			</if>
+			<if test="student.sex != null and !student.sex.isEmpty()">
+				and sex = #{student.sex,jdbcType=VARCHAR}
+			</if>
+			<if test="student.classid != null">
+				and classid = #{student.classid,jdbcType=INTEGER}
+			</if>
+			and huorid is null
+			and status =1
+		</where>
+		and classid in
+		<foreach collection="clsIds" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+		ORDER BY RAND() LIMIT #{student.Num}
+	</select>
+	<select id="countstudentseId" parameterType="java.lang.Integer"
+		resultType="int">
+		SELECT COUNT(*) FROM student WHERE classid=#{classid} AND
+		STATUS=1
+	</select>
+	<select id="findBigCode" parameterType="string" resultType="string">
+		select max(stuno) from student where status = 1 and stuno like
+		'%${value}%'
+	</select>
+	<select id="findStuByNo" parameterType="string" resultMap="studentRM">
+		select * from student where status = 1 and stuno = #{value}
+	</select>
+	<select id="selectByclsId" parameterType="int"
+		resultType="com.ht.popj.student.Student">
+		select * from student where status = 1 and classid =
+		#{value} and stu_status = 1
+	</select>
+	<!-- 将学生的在读状态改为空 -->
+	<update id="updateStuStatusById" parameterType="string">
+		update student set huorid = null where stuname = #{stuname,jdbcType=VARCHAR}
+	</update>
+</mapper>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.EmpMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Emp">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="empname" property="empname" jdbcType="VARCHAR" />
+		<result column="depid" property="depid" jdbcType="INTEGER" />
+		<result column="fingerPrint" property="fingerprint" jdbcType="INTEGER" />
+		<result column="sex" property="sex" jdbcType="CHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="cardno" property="cardno" jdbcType="VARCHAR" />
+		<result column="nation" property="nation" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="QQcode" property="qqcode" jdbcType="VARCHAR" />
+		<result column="Weixin" property="weixin" jdbcType="VARCHAR" />
+		<result column="Email" property="email" jdbcType="VARCHAR" />
+		<result column="married" property="married" jdbcType="VARCHAR" />
+		<result column="university" property="university" jdbcType="VARCHAR" />
+		<result column="major" property="major" jdbcType="VARCHAR" />
+		<result column="education" property="education" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="emp_remark" property="empRemark" jdbcType="VARCHAR" />
+		<result column="bank" property="bank" jdbcType="VARCHAR" />
+		<result column="accountName" property="accountname" jdbcType="VARCHAR" />
+		<result column="bankNumber" property="banknumber" jdbcType="VARCHAR" />
+		<result column="alipay" property="alipay" jdbcType="VARCHAR" />
+		<result column="hireDay" property="hireday" jdbcType="TIMESTAMP" />
+		<result column="fireDay" property="fireday" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMap" type="com.ht.popj.dailyWork.Emp"
+		extends="BaseResultMap">
+		<collection property="dep" ofType="com.ht.popj.dailyWork.Dep">
+			<id column="dep_id" property="id" />
+			<result column="dep_name" property="depname" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empname, depid, fingerPrint, sex, birthday, cardno,
+		nation, phone,
+		QQcode, Weixin,Email, married, university, major,
+		education, address, emp_remark, bank,
+		accountName,bankNumber, alipay,
+		hireDay, fireDay, create_time, update_time, status, remark
+	</sql>
+	
+	<select id="selectEmpName" resultMap="BaseResultMap" parameterType="java.lang.Integer"> 
+	    SELECT DISTINCT emp.`id`,emp.`empname` FROM flow_all,emp,dep 
+	    WHERE flow_all.`empid`=emp.`id` AND emp.`depid`=dep.`id` AND depid=#{value}
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from emp
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByDepid" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from emp
+		where depid = #{depid,jdbcType=INTEGER} AND status=1
+	</select>
+	<select id="selectEmp" resultMap="ResultMap" parameterType="com.ht.popj.dailyWork.Emp">
+		select `emp`.*,d.depname as dep_name from emp,dep as d
+		<where>
+			AND `emp`.status=1
+			AND `emp`.depid=d.id
+			<if test="empname !=null and empname !=''">
+				AND `emp`.empname LIKE '%${empname}%'
+			</if>
+			<if test="depid !=null and depid !='' and depid !=0">
+				AND `emp`.depid = #{depid}
+			</if>
+			<if test="nation !=null and nation !=''">
+				AND `emp`.nation LIKE '%${nation}%'
+			</if>
+			<if test="sex !=null and sex !=''">
+				AND `emp`.sex = #{sex}
+			</if>
+			<if test="birthday !=null and birthday !=''">
+				AND `emp`.birthday = #{birthday}
+			</if>
+			<if test="fingerprint != null">
+				AND `emp`.fingerprint = #{fingerprint,jdbcType=INTEGER}
+			</if>
+			<if test="phone !=null and phone !=''">
+				AND `emp`.phone LIKE '%${phone}%'
+			</if>
+			<if test="cardno !=null and cardno !=''">
+				AND `emp`.cardno LIKE '%${cardno}%'
+			</if>
+			<if test="id != null and !id.isEmpty()">
+				AND `emp`.id = #{id}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		update emp set
+		status = 0
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.dailyWork.Emp">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			SELECT UUID()
+		</selectKey>
+		insert into emp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="empname != null">
+				empname,
+			</if>
+			<if test="depid != null">
+				depid,
+			</if>
+			<if test="fingerprint != null">
+				fingerPrint,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="cardno != null">
+				cardno,
+			</if>
+			<if test="nation != null">
+				nation,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="qqcode != null">
+				QQcode,
+			</if>
+			<if test="weixin != null">
+				Weixin,
+			</if>
+			<if test="email != null">
+				Email,
+			</if>
+			<if test="married != null">
+				married,
+			</if>
+			<if test="university != null">
+				university,
+			</if>
+			<if test="major != null">
+				major,
+			</if>
+			<if test="education != null">
+				education,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="empRemark != null">
+				emp_remark,
+			</if>
+			<if test="bank != null">
+				bank,
+			</if>
+			<if test="accountname != null">
+				accountName,
+			</if>
+			<if test="banknumber != null">
+				bankNumber,
+			</if>
+			<if test="alipay != null">
+				alipay,
+			</if>
+			<if test="hireday != null">
+				hireDay,
+			</if>
+			<if test="fireday != null">
+				fireDay,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="empname != null">
+				#{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="depid != null">
+				#{depid,jdbcType=INTEGER},
+			</if>
+			<if test="fingerprint != null">
+				#{fingerprint,jdbcType=INTEGER},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=CHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cardno != null">
+				#{cardno,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				#{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="qqcode != null">
+				#{qqcode,jdbcType=VARCHAR},
+			</if>
+			<if test="weixin != null">
+				#{weixin,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="married != null">
+				#{married,jdbcType=VARCHAR},
+			</if>
+			<if test="university != null">
+				#{university,jdbcType=VARCHAR},
+			</if>
+			<if test="major != null">
+				#{major,jdbcType=VARCHAR},
+			</if>
+			<if test="education != null">
+				#{education,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="empRemark != null">
+				#{empRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				#{bank,jdbcType=VARCHAR},
+			</if>
+			<if test="accountname != null">
+				#{accountname,jdbcType=VARCHAR},
+			</if>
+			<if test="banknumber != null">
+				#{banknumber,jdbcType=VARCHAR},
+			</if>
+			<if test="alipay != null">
+				#{alipay,jdbcType=VARCHAR},
+			</if>
+			<if test="hireday != null">
+				#{hireday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="fireday != null">
+				#{fireday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Emp">
+		update emp
+		<set>
+			<if test="empname != null">
+				empname = #{empname,jdbcType=VARCHAR},
+			</if>
+			<if test="depid != null">
+				depid = #{depid,jdbcType=INTEGER},
+			</if>
+			<if test="fingerprint != null">
+				fingerPrint = #{fingerprint,jdbcType=INTEGER},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=CHAR},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cardno != null">
+				cardno = #{cardno,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				nation = #{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="qqcode != null">
+				QQcode = #{qqcode,jdbcType=VARCHAR},
+			</if>
+			<if test="weixin != null">
+				Weixin = #{weixin,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				Email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="married != null">
+				married = #{married,jdbcType=VARCHAR},
+			</if>
+			<if test="university != null">
+				university = #{university,jdbcType=VARCHAR},
+			</if>
+			<if test="major != null">
+				major = #{major,jdbcType=VARCHAR},
+			</if>
+			<if test="education != null">
+				education = #{education,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="empRemark != null">
+				emp_remark = #{empRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				bank = #{bank,jdbcType=VARCHAR},
+			</if>
+			<if test="accountname != null">
+				accountName = #{accountname,jdbcType=VARCHAR},
+			</if>
+			<if test="banknumber != null">
+				bankNumber = #{banknumber,jdbcType=VARCHAR},
+			</if>
+			<if test="alipay != null">
+				alipay = #{alipay,jdbcType=VARCHAR},
+			</if>
+			<if test="hireday != null">
+				hireDay = #{hireday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="fireday != null">
+				fireDay = #{fireday,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<resultMap id="empRM" type="com.ht.popj.dailyWork.Emp"
+		extends="BaseResultMap">
+		<association property="dep" javaType="com.ht.popj.dailyWork.Dep"
+			column="emp_id" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+	<select id="selectEmpById" resultMap="empRM" parameterType="string">
+		select * from emp where id = #{id}
+	</select>
+</mapper>

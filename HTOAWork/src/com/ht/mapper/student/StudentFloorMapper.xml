@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentFloorMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentFloor" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="floorName" property="floorname" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="floorStatus" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="floor_admin" property="floorAdmin" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <association property="layernum" javaType="com.ht.popj.student.StudentLayer" column="id" select="com.ht.mapper.student.StudentLayerMapper.countLayer"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, floorName, create_time, update_time,status, remark, floor_admin, phone, address
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_floor
+    where id = #{id,jdbcType=INTEGER} and status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_floor
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentFloor" >
+    insert into student_floor (floorName, create_time,floor_admin) values (#{floorname,jdbcType=VARCHAR},now(),#{floorAdmin,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.ht.popj.student.StudentFloor" >
+    insert into student_floor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="floorname != null" >
+        floorName,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="floorStatus != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="floorAdmin != null" >
+        floor_admin,
+      </if>
+       <if test="phone != null" >
+        phone,
+      </if>
+       <if test="address != null" >
+        address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="floorname != null" >
+        #{floorname,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="floorStatus != null" >
+        #{floorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="floorAdmin != null" >
+        #{floorAdmin,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentFloor" >
+    update student_floor
+    <set >
+      <if test="floorname != null" >
+        floorName = #{floorname,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="floorStatus != null" >
+        status = #{floorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="floorAdmin != null" >
+        floor_admin = #{floorAdmin,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentFloor" >
+    update student_floor
+    set floorName = #{floorname,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{floorStatus,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      floor_admin = #{floorAdmin,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectStudentFloorAll" resultMap="BaseResultMap">
+  	select * from student_floor where status =1
+  </select>
+  <select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.student.StudentFloor">
+  	select * from student_floor s
+  	<where>
+			<if test="id != null">
+				s.id = #{id}
+			</if>
+			<if test="floorname != null and !floorname.isEmpty()">
+				and s.floorname like '%${floorname}%'
+			</if>
+			
+			<if test="floorAdmin != null and !floorAdmin.isEmpty()">
+				and s.floorAdmin like '%${floorAdmin}%'
+			</if>
+		</where>
+  </select>
+  <update id="updateStatusPrimaryKey" parameterType="java.lang.Integer">
+  	 update student_floor set status = 0 where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

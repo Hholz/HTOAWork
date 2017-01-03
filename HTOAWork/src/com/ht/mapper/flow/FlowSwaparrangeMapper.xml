@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowSwaparrangeMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowSwaparrange">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="change_one" property="changeOne" jdbcType="VARCHAR" />
+		<result column="change_two" property="changeTwo" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+		<result column="update_time" property="updateTime" jdbcType="DATE" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+		<result column="approvalstatus" property="approvalstatus" jdbcType="INTEGER" />
+		<result column="changeTwoMan" property="changeTwoMan" jdbcType="VARCHAR" />
+		<result column="weekends" property="weekends" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowModelTypeid, change_one, change_two, create_time, update_time,
+		remark, status,
+		upset,applyman,approvalstatus,changeTwoMan,weekends
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_swaparrange where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_swaparrange where status=1 ORDER BY createTime DESC
+	</select>
+	
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_swaparrange 
+		<where>
+		    <if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="changeOne != null">
+				AND change_one = #{changeOne,jdbcType=VARCHAR}
+			</if>
+			<if test="changeTwo != null">
+				AND change_two = #{changeTwo,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=DATE}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER}
+			</if>
+			<if test="applyman != null">
+				AND applyman = #{applyman,jdbcType=VARCHAR}
+			</if>
+			<if test="approvalstatus != null">
+				AND approvalstatus = #{approvalstatus,jdbcType=INTEGER}
+			</if>
+			<if test="changeTwoMan != null">
+				AND changeTwoMan = #{changeTwoMan,jdbcType=VARCHAR}
+			</if>
+			<if test="weekends != null">
+				AND weekends = #{weekends,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_swaparrange set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowSwaparrange">
+		insert into flow_swaparrange
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid,
+			</if>
+			<if test="changeOne != null">
+				change_one,
+			</if>
+			<if test="changeTwo != null">
+				change_two,
+			</if>
+				create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+				status,
+			<if test="upset != null">
+				upset,
+			</if>
+			<if test="applyman != null">
+				applyman,
+			</if>
+			<if test="approvalstatus != null">
+				approvalstatus,
+			</if>
+			<if test="changeTwoMan != null">
+				changeTwoMan,
+			</if>
+			<if test="weekends != null">
+				weekends,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="changeOne != null">
+				#{changeOne,jdbcType=VARCHAR},
+			</if>
+			<if test="changeTwo != null">
+				#{changeTwo,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+				1,
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				#{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				#{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="changeTwoMan != null">
+				#{changeTwoMan,jdbcType=VARCHAR},
+			</if>
+			<if test="weekends != null">
+				#{weekends,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowSwaparrange">
+		update flow_swaparrange
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="changeOne != null">
+				change_one = #{changeOne,jdbcType=VARCHAR},
+			</if>
+			<if test="changeTwo != null">
+				change_two = #{changeTwo,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+			NOW(),
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				applyman = #{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				approvalstatus = #{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="changeTwoMan != null">
+				changeTwoMan = #{changeTwoMan,jdbcType=VARCHAR},
+			</if>
+			<if test="weekends != null">
+				weekends = #{weekends,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

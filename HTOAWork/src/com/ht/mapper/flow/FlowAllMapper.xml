@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowAllMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowAll">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="applyid" property="applyid" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowAll">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="applyid" property="applyid" jdbcType="INTEGER" />
+		
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+		    <id column="id" property="id" jdbcType="VARCHAR" />
+		    <result column="empname" property="empname" jdbcType="VARCHAR" />
+		    
+		    <collection property="dep" ofType="com.ht.popj.dailyWork.Dep">
+		        <id column="id" property="id" jdbcType="INTEGER" />
+		    	<result column="depname" property="depname" jdbcType="VARCHAR" />
+		    </collection>
+		</collection>
+		
+		<collection property="student" ofType="com.ht.popj.student.Student">
+		    <id column="id" property="id" jdbcType="INTEGER" />
+		    <result column="stuname" property="stuname" jdbcType="VARCHAR" />
+		</collection>
+		
+		<collection property="modelType" ofType="com.ht.popj.flow.FlowsModeltype">
+		    <id column="id" property="id" jdbcType="INTEGER" />
+		    <result column="flowModelType" property="flowmodeltype" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	<select id="selectFlowAllStud" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowAll">
+		SELECT
+		flow_all.*,flow_modeltype.`id`,flow_modeltype.`flowModelType`,student.`id`,student.`stuname`
+		FROM flow_all,flow_modeltype,student
+		<where>
+		    flow_all.`flowModelTypeid`=flow_modeltype.`id` 
+		    AND flow_all.`studid`=student.`id`
+		    AND flow_all.`status`&lt;&gt;0
+		    <if test="studid != null">
+				AND flow_all.studid = #{studid,jdbcType=INTEGER}
+			</if>
+		    <if test="flowmodeltypeid != null">
+				AND flow_all.flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+		    <if test="status != null">
+				AND flow_all.status = #{status,jdbcType=INTEGER}
+			</if>
+		</where>
+		ORDER BY flow_all.`create_time` DESC
+	</select>
+
+	
+	<select id="selectFlowAllStud1" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowAll">
+		SELECT flow_all.*,flow_modeltype.`id`,flow_modeltype.`flowModelType`,student.`id`,student.`stuname`
+		FROM flow_all,flow_modeltype,student,student_fall,student_class
+		<where>
+		    flow_all.`flowModelTypeid`=flow_modeltype.`id`
+			AND flow_all.`studid`=student.`id` AND student.`classid`=student_class.`id`
+			AND student_class.`Level_id`=student_fall.`id` AND flow_all.`status`=1
+		    <if test="studid != null and studid != ''">
+				AND flow_all.studid = #{studid,jdbcType=INTEGER}
+			</if>
+		    <if test="flowmodeltypeid != null and flowmodeltypeid != ''">
+				AND flow_all.flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+		    <if test="classid != null and classid != ''">
+				AND student_class.`id` = #{classid}
+			</if>
+			<if test="fallid != null and fallid != ''">
+				AND student_fall.`id` = #{fallid}
+			</if>
+		    <if test="startTime != '' and endTime != ''">
+			    AND flow_all.`create_time` BETWEEN #{startTime} AND #{endTime}
+			</if>
+		</where>
+		ORDER BY flow_all.`create_time` DESC
+	</select>
+	
+	<select id="selectFlowAllEmp" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowAll">
+		SELECT
+		flow_all.*,flow_modeltype.`id`,flow_modeltype.`flowModelType`,emp.`id`,emp.`empname`
+		FROM flow_all,flow_modeltype,emp
+		<where>
+		    flow_all.`flowModelTypeid`=flow_modeltype.`id` 
+			AND flow_all.`empid`=emp.`id`
+			AND flow_all.`status`&lt;&gt;0
+		    <if test="empid != null">
+				AND flow_all.`empid` = #{empid,jdbcType=VARCHAR}
+			</if>
+		    <if test="flowmodeltypeid != null">
+				AND flow_all.flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+		    <if test="status != null">
+				AND flow_all.status = #{status,jdbcType=INTEGER}
+			</if>
+		</where>
+		ORDER BY flow_all.`create_time` DESC
+	</select>
+	
+	<select id="selectFlowAllEmp1" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowAll">
+	    SELECT flow_all.*,flow_modeltype.`id`,flow_modeltype.`flowModelType`,emp.`id`,emp.`empname`,dep.`id`,dep.`depname`
+		FROM flow_all,flow_modeltype,emp,dep
+		<where>
+		    flow_all.`flowModelTypeid`=flow_modeltype.`id` AND flow_all.`empid`=emp.`id`
+			AND emp.`depid`=dep.`id` AND flow_all.`status`=1
+			<if test="empid != null and empid != ''" >
+				AND flow_all.`empid` = #{empid}
+			</if>
+			<if test="flowmodeltypeid != null and flowmodeltypeid != ''">
+				AND flow_all.flowModelTypeid = #{flowmodeltypeid}
+			</if>
+			<if test="depid != null and depid != ''">
+			    AND dep.`id`=#{depid}
+			</if>
+			<if test="startTime != '' and endTime != ''">
+			    AND flow_all.`create_time` BETWEEN #{startTime} AND #{endTime}
+			</if>
+		</where>
+		ORDER BY flow_all.`create_time` DESC
+	</select>
+	
+	<sql id="Base_Column_List">
+		id, flowModelTypeid, create_time, empid, studid, status,
+		remark,applyid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_all
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select * from flow_all
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.FlowAll">
+		select * from flow_all
+		<where>
+			<if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="studid != null">
+				AND studid = #{studid,jdbcType=INTEGER}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="applyid != null">
+				AND applyid = #{applyid,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectBytypeid" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.FlowAll">
+		select * from flow_all
+		<where>
+		    <if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="studid != null">
+				AND studid = #{studid,jdbcType=INTEGER}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="applyid != null">
+				AND applyid = #{applyid,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_all
+		set status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowAll">
+		insert into flow_all
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid,
+			</if>
+			create_time,
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="studid != null">
+				studid,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="applyid != null">
+				applyid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="studid != null">
+				#{studid,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="applyid != null">
+				#{applyid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateFlowAllStatus" parameterType="com.ht.popj.flow.FlowAll">
+		UPDATE flow_all SET flow_all.`status`=#{status}
+		WHERE flow_all.`applyid`=#{applyid} AND
+		flow_all.`flowModelTypeid`=#{flowmodeltypeid}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowAll">
+		update flow_all
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="studid != null">
+				studid = #{studid,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="applyid != null">
+				applyid = #{applyid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

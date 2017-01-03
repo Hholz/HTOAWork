@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceYearReportMapper">
+	<select id="getYearINww" parameterType="map"
+		resultType="com.ht.popj.finance.FinanceYear">
+		SELECT SUM(b.money) as ysumin,DATE_FORMAT(systime,'%y') as sdate FROM
+		finance_balance b
+		<where>
+			<if test="syear!=null and eyear!=null and syear!=0 and eyear!=0">
+				AND year(systime) BETWEEN #{syear} AND #{eyear}
+			</if>
+			<if test="syear!=null and syear!=0 and eyear=0">
+				AND year(systime) = #{syear}
+			</if>
+			<if test="eyear!=null and eyear!=0 and syear=0">
+				AND year(systime) = #{eyear}
+			</if>
+			AND b.status=0 GROUP BY sdate;
+		</where>
+	</select>
+	<select id="getYearOut" parameterType="map"
+		resultType="com.ht.popj.finance.FinanceYear">
+		SELECT SUM(b.money) as ysumout,DATE_FORMAT(systime,'%y') as sdate FROM
+		finance_balance b
+		<where>
+			<if test="syear!=null and eyear!=null and syear!=0 and eyear!=0">
+				AND year(systime) BETWEEN #{syear} AND #{eyear}
+			</if>
+			<if test="syear!=null and syear!=0 and eyear=0">
+				AND year(systime) = #{syear}
+			</if>
+			<if test="eyear!=null and eyear!=0 and syear=0">
+				AND year(systime) = #{eyear}
+			</if>
+			AND b.status=2 GROUP BY sdate;
+		</where>
+	</select>
+	<select id="getYearIN" parameterType="map"
+		resultType="com.ht.popj.finance.FinanceYear">
+		SELECT SUM(b.money) as money,b.`status` as statu,DATE_FORMAT(occurTime,'%Y') as sdate FROM
+		finance_balance b 
+		<where>
+			<if test="syear!=null and eyear!=null and syear!=0 and eyear!=0">
+				AND year(occurTime) BETWEEN #{syear} AND #{eyear}
+			</if>
+			<if test="syear!=null and syear!=0 and eyear==0">
+				AND year(occurTime) = #{syear}
+			</if>
+			<if test="eyear!=null and eyear!=0 and syear==0">
+				AND year(occurTime) = #{eyear}
+			</if>
+			AND b.`status` IN(0,2) GROUP BY sdate,b.`status`;
+		</where>
+	</select>
+	<select id="getMonth" parameterType="map" resultType="com.ht.popj.finance.FinanceMonth">
+	   	select 
+	       sum(case when DATE_FORMAT(systime,'%m') = 1 AND f.`status`=0 then money else 0 end) sjan,
+	       sum(case when DATE_FORMAT(systime,'%m') = 2 AND f.`status`=0  then money else 0 end) sfeb,
+	       sum(case when DATE_FORMAT(systime,'%m') = 3 AND f.`status`=0  then money else 0 end) smar,
+	       sum(case when DATE_FORMAT(systime,'%m') = 4 AND f.`status`=0  then money else 0 end) sapr,
+	       sum(case when DATE_FORMAT(systime,'%m') = 5 AND f.`status`=0  then money else 0 end) smay,
+	       sum(case when DATE_FORMAT(systime,'%m') = 6 AND f.`status`=0  then money else 0 end) sjun,
+	       sum(case when DATE_FORMAT(systime,'%m') = 7 AND f.`status`=0  then money else 0 end) sjul,
+	       sum(case when DATE_FORMAT(systime,'%m') = 8 AND f.`status`=0  then money else 0 end) saug,
+	       sum(case when DATE_FORMAT(systime,'%m') = 9 AND f.`status`=0  then money else 0 end) ssep,
+	       sum(case when DATE_FORMAT(systime,'%m') = 10 AND f.`status`=0 then money else 0 end) soct,
+	       sum(case when DATE_FORMAT(systime,'%m') = 11 AND f.`status`=0 then money else 0 end) snov,
+	       sum(case when DATE_FORMAT(systime,'%m') = 12 AND f.`status`=0 then money else 0 end) sdec,
+		   sum(case when DATE_FORMAT(systime,'%m') = 1 AND f.`status`=2 then money else 0 end) zjan,
+	       sum(case when DATE_FORMAT(systime,'%m') = 2 AND f.`status`=2  then money else 0 end) zfeb,
+	       sum(case when DATE_FORMAT(systime,'%m') = 3 AND f.`status`=2  then money else 0 end) zmar,
+	       sum(case when DATE_FORMAT(systime,'%m') = 4 AND f.`status`=2  then money else 0 end) zapr,
+	       sum(case when DATE_FORMAT(systime,'%m') = 5 AND f.`status`=2  then money else 0 end) zmay,
+	       sum(case when DATE_FORMAT(systime,'%m') = 6 AND f.`status`=2  then money else 0 end) zjun,
+	       sum(case when DATE_FORMAT(systime,'%m') = 7 AND f.`status`=2  then money else 0 end) zjul,
+	       sum(case when DATE_FORMAT(systime,'%m') = 8 AND f.`status`=2  then money else 0 end) zaug,
+	       sum(case when DATE_FORMAT(systime,'%m') = 9 AND f.`status`=2  then money else 0 end) zsep,
+	       sum(case when DATE_FORMAT(systime,'%m') = 10 AND f.`status`=2 then money else 0 end) zoct,
+	       sum(case when DATE_FORMAT(systime,'%m') = 11 AND f.`status`=2 then money else 0 end) znov,
+	       sum(case when DATE_FORMAT(systime,'%m') = 12 AND f.`status`=2 then money else 0 end) zdec
+		from finance_balance f
+		<where>
+		    <if test="syear!=null and syear!=0">
+		        year(systime) = #{syear};
+		    </if>
+		</where>
+	</select>
+</mapper>

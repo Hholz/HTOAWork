@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.AttenstatisMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Attenstatis" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="finger" property="finger" jdbcType="INTEGER" />
+    <result column="empname" property="empname" jdbcType="VARCHAR" />
+    <result column="depid" property="depid" jdbcType="INTEGER" />
+    <result column="workday" property="workday" jdbcType="TIMESTAMP" />
+    <result column="attenstatus" property="attenstatus" jdbcType="INTEGER" />
+    <result column="late" property="late" jdbcType="INTEGER" />
+    <result column="Absent" property="absent" jdbcType="REAL" />
+    <result column="leavetime" property="leave" jdbcType="REAL" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="fclockin" property="fclockin" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, finger, empname, depid, workday, attenstatus, late, Absent, leavetime, updatetime, 
+    remark, status,fclockin
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attenstatis
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attenstatis
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+   
+  <delete id="deleteByPrimaryKey2" parameterType="com.ht.popj.dailyWork.Attenstatis" >
+    delete from attenstatis
+    where workday like '%${workday}%' 
+  </delete>
+  
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Attenstatis" >
+    insert into attenstatis (id, finger, empname, 
+      depid, workday, attenstatus, 
+      late, Absent, leavetime, updatetime, 
+      remark, status,fclockin)
+    values (#{id,jdbcType=INTEGER}, #{finger,jdbcType=INTEGER}, #{empname,jdbcType=VARCHAR}, 
+      #{depid,jdbcType=INTEGER}, #{workday,jdbcType=TIMESTAMP}, #{attenstatus,jdbcType=INTEGER}, 
+      #{late,jdbcType=INTEGER}, #{absent,jdbcType=REAL}, #{leave,jdbcType=REAL}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{fclockin,jdbcType=INTEGER})
+  </insert>
+  
+  <!-- 批量新增 -->
+  <insert id="addinsertlist" parameterType="java.util.List" >
+      insert into attenstatis (finger, empname,attenstatus,depid, workday, late, Absent)
+    	values
+   	  <foreach collection="list"  item="item" index="" separator="," >  
+   		  (#{item.fingerprint}, #{item.empname}, #{item.attenstatus},
+	      #{item.depid}, #{item.workday}, #{item.late},#{item.absent})
+   	  </foreach>
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Attenstatis" >
+    insert into attenstatis
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="finger != null" >
+        finger,
+      </if>
+      <if test="empname != null" >
+        empname,
+      </if>
+      <if test="depid != null" >
+        depid,
+      </if>
+      <if test="workday != null" >
+        workday,
+      </if>
+      <if test="attenstatus != null" >
+        attenstatus,
+      </if>
+      <if test="late != null" >
+        late,
+      </if>
+      <if test="absent != null" >
+        Absent,
+      </if>
+      <if test="leave != null" >
+        leavetime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="finger != null" >
+        #{finger,jdbcType=INTEGER},
+      </if>
+      <if test="empname != null" >
+        #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="depid != null" >
+        #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="workday != null" >
+        #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attenstatus != null" >
+        #{attenstatus,jdbcType=INTEGER},
+      </if>
+      <if test="late != null" >
+        #{late,jdbcType=INTEGER},
+      </if>
+      <if test="absent != null" >
+        #{absent,jdbcType=REAL},
+      </if>
+      <if test="leave != null" >
+        #{leave,jdbcType=REAL},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Attenstatis" >
+    update attenstatis
+    <set >
+      <if test="finger != null" >
+        finger = #{finger,jdbcType=INTEGER},
+      </if>
+      <if test="empname != null" >
+        empname = #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="depid != null" >
+        depid = #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="workday != null" >
+        workday = #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attenstatus != null" >
+        attenstatus = #{attenstatus,jdbcType=INTEGER},
+      </if>
+      <if test="late != null" >
+        late = #{late,jdbcType=INTEGER},
+      </if>
+      <if test="absent != null" >
+        Absent = #{absent,jdbcType=REAL},
+      </if>
+      <if test="leave != null" >
+        leavetime = #{leave,jdbcType=REAL},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fclockin != null" >
+        fclockin = #{fclockin,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Attenstatis" >
+    update attenstatis
+    set finger = #{finger,jdbcType=INTEGER},
+      empname = #{empname,jdbcType=VARCHAR},
+      depid = #{depid,jdbcType=INTEGER},
+      workday = #{workday,jdbcType=TIMESTAMP},
+      attenstatus = #{attenstatus,jdbcType=INTEGER},
+      late = #{late,jdbcType=INTEGER},
+      Absent = #{absent,jdbcType=REAL},
+      leavetime = #{leave,jdbcType=REAL},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 一对一的届别 -->
+  	<resultMap id="attenselect" type="com.ht.popj.dailyWork.Attenstatis" extends="BaseResultMap">
+  		<association property="dep" javaType="com.ht.popj.dailyWork.Dep" column="depid" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey">
+  		</association>
+  	</resultMap>
+  
+  <select id="Attenstatiselect" resultMap="attenselect"
+		parameterType="com.ht.popj.dailyWork.Attenstatis">
+			SELECT * FROM attenstatis s
+		<where>
+			s.status = 1
+			<if test="id != null">
+				and s.id = #{id}
+			</if>
+			<if test="finger != null">
+				and s.finger = #{finger}
+			</if>
+			<if test="empname != null and !empname.isEmpty()">
+				and s.empname like  '%${empname}%'
+			</if>
+			<if test="attenstatus != null">
+				and s.attenstatus = #{attenstatus}
+			</if>
+			<if	test="workday != null and !workday.isEmpty() and endday != null and !endday.isEmpty() ">
+				and s.workday &gt;= #{workday} and s.workday &lt;= #{endday}
+			</if>
+		</where>
+		ORDER BY finger,workday
+	</select>
+  
+  	<select id="Attenstatiselandtoji" resultMap="attenselect"
+		parameterType="com.ht.popj.dailyWork.Attenstatis">
+		SELECT finger,empname,COUNT(CASE WHEN late = 0 THEN NULL WHEN late != 0 THEN late END) late,depid,workday,COUNT(CASE WHEN absent = 0 THEN NULL WHEN absent = 0.5 THEN 1 WHEN absent = 1 THEN 1 END )
+ 			absent,COUNT(CASE WHEN leavetime = 0 THEN NULL WHEN leavetime = 0.5 THEN 1 WHEN leavetime = 1 THEN 1 END ) leavetime,SUM(fclockin) fclockin FROM `attenstatis`
+		<where>
+		    <if test="empname != null and !empname.isEmpty()">
+				empname like  '%${empname}%'
+			</if>
+			<if	test="workday != null and !workday.isEmpty()">
+				and workday like '%${workday}%' 
+			</if>
+			<if test="depid != null">
+				and depid = #{depid}
+			</if>
+		</where>
+		GROUP BY  finger
+  	</select>
+  	
+  	<select id="findattenstatis" parameterType="com.ht.popj.dailyWork.Attenstatis" resultType="com.ht.popj.dailyWork.Attenstatis">
+  		SELECT * from attenstatis where finger=#{finger} AND workday = #{workday}
+  	</select>
+  	
+  	<select id="attenrewardsel" parameterType="com.ht.popj.dailyWork.Attenstatis" resultType="com.ht.popj.dailyWork.Attenstatis">
+  	    SELECT s.finger,s.empname,d.depname,
+		SUM(CASE WHEN s.attenstatus = 0 THEN 1 END) AS absent,
+		SUM(CASE WHEN s.attenstatus = 1 THEN 1 END) AS abshalf,
+		SUM(CASE WHEN s.attenstatus &gt;= 0 AND s.attenstatus &gt; 2 THEN Absent END) AS abs_all,
+		SUM(CASE WHEN s.attenstatus = 2 THEN 1 END) AS leavetime,
+		SUM(CASE WHEN s.attenstatus = 3 THEN 1 END) AS leahalf,
+		SUM(CASE WHEN s.attenstatus &gt;= 2 AND s.attenstatus &gt; 3 THEN leavetime END) AS leave_all,
+		SUM(CASE WHEN s.attenstatus = 4 THEN 1 END) AS late,
+		SUM(CASE WHEN s.attenstatus = 4 THEN late END) AS late_all,
+		SUM(CASE WHEN s.attenstatus = 5 THEN 1 END) AS abnormal,
+		SUM(CASE WHEN s.attenstatus = 6 THEN 1 END) AS normal
+		FROM attenstatis s 
+		LEFT JOIN emp e ON e.empname=s.empname
+		LEFT JOIN dep d ON s.depid = d.id
+		<where>
+		    <if test="empname !=null and !empname.isEmpty()">
+		        s.empname = #{empname}
+		    </if>
+		    <if	test="workday != null and !workday.isEmpty() and endday != null and !endday.isEmpty() ">
+				and s.workday &gt;= #{workday} and s.workday &lt;= #{endday}
+			</if>
+		</where>
+		GROUP BY s.finger
+  	</select>
+  	
+</mapper>

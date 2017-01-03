@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.ReceiveMaterialMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.ReceiveMaterial">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="materialTypeid" property="materialtypeid"
+			jdbcType="INTEGER" />
+		<result column="Empid" property="empid" jdbcType="VARCHAR" />
+		<result column="Counts" property="counts" jdbcType="INTEGER" />
+		<result column="applyMaterial_Remark" property="applymaterialRemark"
+			jdbcType="VARCHAR" />
+		<result column="ApprovalStatus" property="approvalstatus"
+			jdbcType="INTEGER" />
+		<result column="materialid" property="materialid" jdbcType="INTEGER" />
+		<result column="flowid" property="flowid" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		<result column="applynum" property="applynum" jdbcType="VARCHAR" />
+		<result column="unit" property="unit" jdbcType="VARCHAR" />
+		<result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="Status" property="status" jdbcType="INTEGER" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, materialTypeid, Empid, Unit, Counts,
+		applyMaterial_Remark,
+		ApprovalStatus, materialname,
+		flowid, upset,
+		applynum, Create_time, Update_time, Status, Remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.ReceiveMaterial">
+		select * from receivematerial
+		where id =
+		#{id,jdbcType=INTEGER} and Status=1
+	</select>
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.ReceiveMaterial">
+		SELECT r.*,m.`materialName` AS materialname,e.`empname` AS
+		empname,mt.`materialTypeName` AS materialtypename,DATE_FORMAT(r.Update_time,'%Y-%c-%d %h:%i') as updateTime FROM receivematerial
+		r,`material` m,`flowmodel` f,emp e,`materialtype` mt
+		<where>
+			r.`materialid`=m.`id` AND f.`id`=r.`flowid` AND r.`Status`=1 AND
+			e.`id`=r.`Empid` AND mt.`id`=r.`materialTypeid`
+			<if test="materialid !=null">
+				AND r.materialid = #{materialid}
+			</if>
+			<if test="upset !=null">
+				AND r.upset = #{upset}
+			</if>
+			<if test="approvalstatus !=null">
+				AND r.ApprovalStatus = #{approvalstatus}
+			</if>
+			<if test="applynum !=null">
+				AND r.applynum = #{applynum}
+			</if>
+		</where>
+	</select>
+	<select id="selectTask" resultType="java.lang.Integer"
+		parameterType="com.ht.popj.dailyWork.Emp">
+		select count(*) from `receivematerial` am
+		<where>
+			am.Status=1
+			<if test="id !=null and id == '3d8c8c47-8458-11e6-8600-eaab98fa1ea3'">
+				AND am.ApprovalStatus = 1
+			</if>
+			<if test="id !=null and id == 'd39c7088-9413-11e6-903a-dc3b943345c2'">
+				AND am.ApprovalStatus = 4
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		receivematerial set Status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.dailyWork.ReceiveMaterial">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into receivematerial
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="materialtypeid != null">
+				materialTypeid,
+			</if>
+			<if test="empid != null">
+				Empid,
+			</if>
+			<if test="counts != null">
+				Counts,
+			</if>
+			<if test="applymaterialRemark != null">
+				applyMaterial_Remark,
+			</if>
+			<if test="approvalstatus != null">
+				ApprovalStatus,
+			</if>
+			<if test="materialid != null">
+				materialid,
+			</if>
+			<if test="flowid != null">
+				flowid,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+			<if test="applynum != null">
+				applynum,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			Create_time,
+			<if test="updateTime != null">
+				Update_time,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="remark != null">
+				Remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="materialtypeid != null">
+				#{materialtypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				#{counts,jdbcType=INTEGER},
+			</if>
+			<if test="applymaterialRemark != null">
+				#{applymaterialRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				#{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="materialid != null">
+				#{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="flowid != null">
+				#{flowid,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applynum != null">
+				#{applynum,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.ReceiveMaterial">
+		update receivematerial
+		<set>
+			<if test="materialtypeid != null">
+				materialTypeid = #{materialtypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				Empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				Counts = #{counts,jdbcType=INTEGER},
+			</if>
+			<if test="applymaterialRemark != null">
+				applyMaterial_Remark =
+				#{applymaterialRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				ApprovalStatus = #{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="materialname != null">
+				materialid = #{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="flowid != null">
+				flowid = #{flowid,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applynum != null">
+				applynum = #{applynum,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				Create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			Update_time = NOW(),
+			<if test="status != null">
+				Status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				Remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

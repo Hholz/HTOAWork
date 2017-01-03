@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowApplyMaterialMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowApplyMaterial">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="materialid" property="materialid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="counts" property="counts" jdbcType="INTEGER" />
+		<result column="applyMaterial_Remark" property="applymaterialRemark"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="approvalStatus" property="approvalstatus"
+			jdbcType="INTEGER" />
+		<result column="flowModelTypeId" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="rerutnMap" type="com.ht.popj.flow.FlowApplyMaterial">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="materialid" property="materialid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="counts" property="counts" jdbcType="INTEGER" />
+		<result column="applyMaterial_Remark" property="applymaterialRemark"
+			jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="approvalStatus" property="approvalstatus"
+			jdbcType="INTEGER" />
+		<result column="flowModelTypeId" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		<collection property="material" ofType="com.ht.popj.dailyWork.Material">
+			<id column="mmid" property="id" jdbcType="INTEGER" />
+			<result column="materialTypeid" property="materialtypeid"
+				jdbcType="INTEGER" />
+			<result column="materialName" property="materialname"
+				jdbcType="VARCHAR" />
+			<result column="Unit" property="unit" jdbcType="VARCHAR" />
+			<result column="Price" property="price" jdbcType="DECIMAL" />
+			<result column="Style" property="style" jdbcType="VARCHAR" />
+			<result column="Counts" property="counts" jdbcType="INTEGER" />
+			<result column="Meterial_Remark" property="meterialRemark"
+				jdbcType="VARCHAR" />
+			<result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+			<result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+			<result column="Status" property="status" jdbcType="INTEGER" />
+			<result column="Remark" property="remark" jdbcType="VARCHAR" />
+		</collection>
+		
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, materialid, empid, counts, applyMaterial_Remark,
+		create_time,
+		update_time, status,
+		remark, approvalStatus,
+		flowModelTypeId, upset,applyman
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select fam.*,e.empname as empname,m.materialname as materialname,m.unit as unit
+		from flow_apply_material fam,emp e,
+		material m
+		where  e.id=fam.empid and fam.status=1 and m.id=fam.materialid and fam.id
+		= #{value}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from flow_apply_material where status=1 ORDER BY CreateTime
+		DESC
+	</select>
+
+	<select id="selectSelective" resultMap="rerutnMap"
+		parameterType="com.ht.popj.flow.FlowApplyMaterial">
+		select fam.*,e.empname as empname,m.* from flow_apply_material fam,emp e,material m
+		<where>
+			   e.id=fam.empid and fam.status=1 and m.id=fam.materialid
+			<if test="materialid != null">
+				AND fam.materialid = #{materialid,jdbcType=INTEGER}
+			</if>
+			<if test="empid != null">
+				AND fam.empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="counts != null">
+				AND fam.counts = #{counts,jdbcType=INTEGER}
+			</if>
+			<if test="applymaterialRemark != null">
+				AND fam.applyMaterial_Remark =
+				#{applymaterialRemark,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null">
+				AND fam.create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND fam.status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND fam.remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="approvalstatus != null">
+				AND fam.approvalStatus = #{approvalstatus,jdbcType=INTEGER}
+			</if>
+			<if test="flowmodeltypeid != null">
+				AND fam.flowModelTypeId =
+				#{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="upset != null">
+				AND fam.upset = #{upset,jdbcType=INTEGER}
+			</if>
+			ORDER BY fam.create_time DESC
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_apply_material set status=0 where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowApplyMaterial">
+		insert into flow_apply_material
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="materialid != null">
+				materialid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="counts != null">
+				counts,
+			</if>
+			<if test="applymaterialRemark != null">
+				applyMaterial_Remark,
+			</if>
+			create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="approvalstatus != null">
+				approvalStatus,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeId,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+			<if test="applyman != null">
+				applyman,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="materialid != null">
+				#{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				#{counts,jdbcType=INTEGER},
+			</if>
+			<if test="applymaterialRemark != null">
+				#{applymaterialRemark,jdbcType=VARCHAR},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				#{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				#{applyman,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowApplyMaterial">
+		update flow_apply_material
+		<set>
+			<if test="materialid != null">
+				materialid = #{materialid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				counts = #{counts,jdbcType=INTEGER},
+			</if>
+			<if test="applymaterialRemark != null">
+				applyMaterial_Remark =
+				#{applymaterialRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalstatus != null">
+				approvalStatus = #{approvalstatus,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeId = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				applyman = #{applyman,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

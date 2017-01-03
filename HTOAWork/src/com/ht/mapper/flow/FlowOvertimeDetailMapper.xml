@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowOvertimeDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowOvertimeDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="overTimeid" property="overtimeid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, overTimeid, flowModelid, empid, status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime_detail where status=1 and id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime_detail where status=1 ORDER BY id DESC
+	</select>
+	
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_overtime_detail 
+		<where>
+		    status=1 ORDER BY id DESC
+		    <if test="overtimeid != null">
+				AND overTimeid = #{overtimeid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				AND flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_overtime_detail set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowOvertimeDetail">
+		insert into flow_overtime_detail
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="overtimeid != null">
+				overTimeid,
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="overtimeid != null">
+				#{overtimeid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				#{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowOvertimeDetail">
+		update flow_overtime_detail
+		<set>
+			<if test="overtimeid != null">
+				overTimeid = #{overtimeid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

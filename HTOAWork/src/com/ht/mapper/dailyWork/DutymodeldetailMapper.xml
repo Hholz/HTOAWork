@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.DutymodeldetailMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Dutymodeldetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="modelid" property="modelid" jdbcType="INTEGER" />
+    <result column="weekends" property="weekends" jdbcType="VARCHAR" />
+    <result column="emp_type" property="empType" jdbcType="INTEGER" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_Phone" property="empPhone" jdbcType="VARCHAR" />
+    <result column="emp_scope" property="empScope" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="dutymodel" javaType="com.ht.popj.dailyWork.Dutymodeldetail" column="modelid" select="com.ht.mapper.dailyWork.DutymodelMapper.selectByPrimaryKey">
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, modelid, weekends, emp_type, emp_name,emp_Phone,emp_scope, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dutymodeldetail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dutymodeldetail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Dutymodeldetail" >
+    insert into dutymodeldetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="modelid != null" >
+        modelid,
+      </if>
+      <if test="weekends != null" >
+        weekends,
+      </if>
+      <if test="empType != null" >
+        emp_type,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+       <if test="empPhone != null" >
+        emp_phone,
+      </if>
+      <if test="empScope != null" >
+        emp_scope,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="modelid != null" >
+        #{modelid,jdbcType=INTEGER},
+      </if>
+      <if test="weekends != null" >
+        #{weekends,jdbcType=VARCHAR},
+      </if>
+      <if test="empType != null" >
+        #{empType,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empPhone != null" >
+        #{empPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="empScope != null" >
+        #{empScope,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Dutymodeldetail" >
+    update dutymodeldetail
+    <set >
+      <if test="modelid != null" >
+        modelid = #{modelid,jdbcType=INTEGER},
+      </if>
+      <if test="weekends != null" >
+        weekends = #{weekends,jdbcType=VARCHAR},
+      </if>
+      <if test="empType != null" >
+        emp_type = #{empType,jdbcType=INTEGER},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empPhone != null" >
+        emp_phone = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empScope != null" >
+        emp_scope = #{empScope,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from dutymodeldetail where status = 1 ORDER BY weekends,emp_type
+  </select>
+  <select id="selectByDutymodelId" resultMap="BaseResultMap" parameterType="int">
+      select * from dutymodeldetail where status = 1 and modelid = #{modelid} ORDER BY weekends,emp_type
+  </select>
+  <select id="selectDutyMaxBymodelId" resultType="com.ht.popj.dailyWork.DutyMaxTemp" parameterType="int">
+      SELECT emp_type empType,MAX(num) theMax  FROM 
+      	((SELECT weekends ,emp_type,COUNT(*) num FROM dutymodeldetail WHERE modelid = #{modelid} GROUP BY weekends,emp_type)) a  
+      GROUP BY emp_type
+  </select>
+  <select id="selectWeksBymodelId" resultType="string" parameterType="int">
+      SELECT DISTINCT weekends FROM dutymodeldetail WHERE modelid = #{modelid} ORDER BY weekends
+  </select>
+  
+  <select id="selectByPJ" resultMap="BaseResultMap"  parameterType="com.ht.popj.dailyWork.Dutymodeldetail">
+      select * from dutymodeldetail																																									
+		<where>
+		    <if test="id != null">
+				id = #{id}
+			</if>
+			<if test="modelid != null" >
+		        and modelid = #{modelid}
+		      </if>
+		      <if test="weekends != null and !weekends.isEmpty()" >
+		        and weekends = #{weekends}
+		      </if>
+		      <if test="empType != null" >
+		        and emp_type = #{empType}
+		      </if>
+		      <if test="empName != null and !empName.isEmpty()" >
+		        and emp_name like '%${empName}%'
+		      </if>
+		      <if test="empPhone != null and !empPhone.isEmpty()" >
+		        and emp_phone like '%${emp_phone}%'
+		      </if>
+		      <if test="empScope != null and !empScope.isEmpty()" >
+		        and emp_scope = #{empScope}
+		      </if>
+			and status =1
+		</where>
+  </select>
+</mapper>

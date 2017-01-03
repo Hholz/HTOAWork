@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowModeltypeMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowsModeltype">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelType" property="flowmodeltype"
+			jdbcType="VARCHAR" />
+		<result column="invalid" property="invalid" jdbcType="INTEGER" />
+		<result column="modelSelid" property="modelselid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowsModeltype">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelType" property="flowmodeltype"
+			jdbcType="VARCHAR" />
+		<result column="invalid" property="invalid" jdbcType="INTEGER" />
+		<result column="modelSelid" property="modelselid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+
+		<collection property="flowModelsel" ofType="com.ht.popj.flow.FlowModelsel">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="modelSelName" property="modelselname"
+				jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, flowModelType, invalid, modelSelid,
+		create_time,
+		update_time, status,
+		remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_modeltype where status=1 and id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectModelTypeName" resultMap="BaseResultMap">
+		SELECT DISTINCT flow_modeltype.`id`,flow_modeltype.`flowModelType` FROM
+		flow_all,flow_modeltype,student WHERE
+		flow_all.`flowModelTypeid`=flow_modeltype.`id` AND
+		flow_all.`studid`=student.`id`
+	</select>
+	
+	<select id="selectModelTypeName1" resultMap="BaseResultMap">
+	    SELECT DISTINCT flow_modeltype.`id`,flow_modeltype.`flowModelType` FROM
+		flow_all,flow_modeltype,emp WHERE
+		flow_all.`flowModelTypeid`=flow_modeltype.`id` AND
+		flow_all.`empid`=emp.`id`
+	</select>
+
+	<select id="selectModelTypeByModelSelId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT flow_modeltype.* FROM
+		flow_modelsel,flow_modeltype WHERE
+		flow_modelsel.`id`=flow_modeltype.`modelSelid` AND
+		flow_modelsel.`modelSelName`=#{value} AND flow_modeltype.`status`=1
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_modeltype
+		<where>
+			status=1 ORDER BY CreateTime DESC
+			<if test="flowmodeltype != null">
+				AND flowModelType = #{flowmodeltype,jdbcType=VARCHAR},
+			</if>
+			<if test="invalid != null">
+				AND invalid = #{invalid,jdbcType=INTEGER},
+			</if>
+			<if test="modelselid != null">
+				AND modelSelid = #{modelselid,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</where>
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap1" parameterType="java.lang.Integer">
+		SELECT
+		flow_modeltype.*,flow_modelsel.`id`,flow_modelsel.`modelSelName` FROM
+		flow_modeltype,flow_modelsel WHERE flow_modeltype.status=1 AND
+		flow_modeltype.modelSelid=#{value} AND
+		flow_modeltype.`modelSelid`=flow_modelsel.`id` ORDER BY
+		flow_modeltype.invalid DESC
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_modeltype set status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowsModeltype">
+		insert into flow_modeltype
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltype != null">
+				flowModelType,
+			</if>
+			<if test="invalid != null">
+				invalid,
+			</if>
+			<if test="modelselid != null">
+				modelSelid,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltype != null">
+				#{flowmodeltype,jdbcType=VARCHAR},
+			</if>
+			<if test="invalid != null">
+				#{invalid,jdbcType=INTEGER},
+			</if>
+			<if test="modelselid != null">
+				#{modelselid,jdbcType=INTEGER},
+			</if>
+			now(),
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowsModeltype">
+		update flow_modeltype
+		<set>
+			<if test="flowmodeltype != null">
+				flowModelType = #{flowmodeltype,jdbcType=VARCHAR},
+			</if>
+			<if test="invalid != null">
+				invalid = #{invalid,jdbcType=INTEGER},
+			</if>
+			update_time = now(),
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

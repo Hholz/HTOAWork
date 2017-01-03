@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.AttentojiMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Attentoji" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="finger" property="finger" jdbcType="INTEGER" />
+    <result column="empname" property="empname" jdbcType="VARCHAR" />
+    <result column="depid" property="depid" jdbcType="INTEGER" />
+    <result column="worktime" property="worktime" jdbcType="TIMESTAMP" />
+    <result column="lates" property="lates" jdbcType="INTEGER" />
+    <result column="absents" property="absents" jdbcType="INTEGER" />
+    <result column="leavecs" property="leavecs" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, finger, empname, depid, worktime, lates, absents, leavecs, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attentoji
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attentoji
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Attentoji" >
+    insert into attentoji (id, finger, empname, 
+      depid, worktime, lates, 
+      absents, leavecs, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{finger,jdbcType=INTEGER}, #{empname,jdbcType=VARCHAR}, 
+      #{depid,jdbcType=INTEGER}, #{worktime,jdbcType=TIMESTAMP}, #{lates,jdbcType=INTEGER}, 
+      #{absents,jdbcType=INTEGER}, #{leavecs,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Attentoji" >
+    insert into attentoji
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="finger != null" >
+        finger,
+      </if>
+      <if test="empname != null" >
+        empname,
+      </if>
+      <if test="depid != null" >
+        depid,
+      </if>
+      <if test="worktime != null" >
+        worktime,
+      </if>
+      <if test="lates != null" >
+        lates,
+      </if>
+      <if test="absents != null" >
+        absents,
+      </if>
+      <if test="leavecs != null" >
+        leavecs,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="finger != null" >
+        #{finger,jdbcType=INTEGER},
+      </if>
+      <if test="empname != null" >
+        #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="depid != null" >
+        #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="worktime != null" >
+        #{worktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lates != null" >
+        #{lates,jdbcType=INTEGER},
+      </if>
+      <if test="absents != null" >
+        #{absents,jdbcType=INTEGER},
+      </if>
+      <if test="leavecs != null" >
+        #{leavecs,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Attentoji" >
+    update attentoji
+    <set >
+      <if test="finger != null" >
+        finger = #{finger,jdbcType=INTEGER},
+      </if>
+      <if test="empname != null" >
+        empname = #{empname,jdbcType=VARCHAR},
+      </if>
+      <if test="depid != null" >
+        depid = #{depid,jdbcType=INTEGER},
+      </if>
+      <if test="worktime != null" >
+        worktime = #{worktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lates != null" >
+        lates = #{lates,jdbcType=INTEGER},
+      </if>
+      <if test="absents != null" >
+        absents = #{absents,jdbcType=INTEGER},
+      </if>
+      <if test="leavecs != null" >
+        leavecs = #{leavecs,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Attentoji" >
+    update attentoji
+    set finger = #{finger,jdbcType=INTEGER},
+      empname = #{empname,jdbcType=VARCHAR},
+      depid = #{depid,jdbcType=INTEGER},
+      worktime = #{worktime,jdbcType=TIMESTAMP},
+      lates = #{lates,jdbcType=INTEGER},
+      absents = #{absents,jdbcType=INTEGER},
+      leavecs = #{leavecs,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <resultMap id="attenselect" type="com.ht.popj.dailyWork.Attentoji" extends="BaseResultMap">
+ 		<association property="dep" javaType="com.ht.popj.dailyWork.Emp" column="depid" select="com.ht.mapper.dailyWork.DepMapper.selectByPrimaryKey">
+ 		 </association>
+  </resultMap>
+  
+  <select id="Attentojiselect" resultMap="attenselect"
+		parameterType="com.ht.popj.dailyWork.Attentoji">
+ 		select * from  attentoji s 
+ 		<where>
+ 		    s.status = 1
+ 		    <if test="id != null">
+				and s.id = #{id}
+			</if>
+			<if test="finger != null">
+				and s.finger = #{finger}
+			</if>
+			<if test="empname != null and !empname.isEmpty()">
+				and s.empname like  '%${empname}%'
+			</if>
+			<if	test="worktime != null and !worktime.isEmpty() ">
+				and s.worktime like '%${worktime}%' 
+			</if>
+ 		</where>
+  </select>
+  
+</mapper>

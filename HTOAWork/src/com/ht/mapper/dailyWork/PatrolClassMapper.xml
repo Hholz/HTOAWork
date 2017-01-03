@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.PatrolClassMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.PatrolClass" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="classid" property="classid" jdbcType="INTEGER" />
+    <result column="mustarrive" property="mustarrive" jdbcType="INTEGER" />
+    <result column="truearrive" property="truearrive" jdbcType="INTEGER" />
+    <result column="empteachid" property="empteachid" jdbcType="INTEGER" />
+    <result column="inthework" property="inthework" jdbcType="CHAR" />
+    <result column="stubrerule" property="stubrerule" jdbcType="VARCHAR" />
+    <result column="patrolteach" property="patrolteach" jdbcType="INTEGER" />
+    <result column="patroltime" property="patroltime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    
+    <!-- 关联员工表 -->
+    <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="empteachid" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        
+    </association>
+    
+    <association property="emp1" javaType="com.ht.popj.dailyWork.Emp" column="patrolteach" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        
+    </association>
+    
+    <!-- 关联班级表 -->
+    <association property="stuclass" javaType="com.ht.popj.student.StudentClass" column="classid" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+        
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <if test="id != null">
+        id=#{id}
+    </if>
+    <if test="classid != null and classid != ''">
+        and classid=#{classid}
+    </if>
+    <if test="patrolteach != null and patrolteach != ''">
+        and patrolteach=#{patrolteach}
+    </if>
+  </sql>
+  
+  <select id="findPatrolClassList1" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.PatrolClass" >
+    select * from patrol_class
+    <where>
+    	<include refid="Base_Column_List" />
+        and status = 1
+    </where>
+  </select>
+  
+  <select id="findPatrolClassList2" resultType="com.ht.popj.dailyWork.PatrolClass">
+      select * from patrol_class where status = 1
+  </select>
+  
+  <delete id="deletePatrolClassById" parameterType="java.lang.Integer" >
+    update patrol_class set status = 0 where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.PatrolClass" >
+    insert into patrol_class (id, classid, mustarrive, 
+      truearrive, empteachid, inthework, 
+      stubrerule, patrolteach, patroltime, 
+      create_time, update_time, status, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{classid,jdbcType=INTEGER}, #{mustarrive,jdbcType=INTEGER}, 
+      #{truearrive,jdbcType=INTEGER}, #{empteachid,jdbcType=INTEGER}, #{inthework,jdbcType=CHAR}, 
+      #{stubrerule,jdbcType=VARCHAR}, #{patrolteach,jdbcType=INTEGER}, #{patroltime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="addPatrolClass" parameterType="com.ht.popj.dailyWork.PatrolClass" >
+    insert into patrol_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="classid != null" >
+        classid,
+      </if>
+      <if test="mustarrive != null" >
+        mustarrive,
+      </if>
+      <if test="truearrive != null" >
+        truearrive,
+      </if>
+      <if test="empteachid != null" >
+        empteachid,
+      </if>
+      <if test="inthework != null" >
+        inthework,
+      </if>
+      <if test="stubrerule != null" >
+        stubrerule,
+      </if>
+      <if test="patrolteach != null" >
+        patrolteach,
+      </if>
+      <if test="patroltime != null" >
+        patroltime,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="mustarrive != null" >
+        #{mustarrive,jdbcType=INTEGER},
+      </if>
+      <if test="truearrive != null" >
+        #{truearrive,jdbcType=INTEGER},
+      </if>
+      <if test="empteachid != null" >
+        #{empteachid,jdbcType=INTEGER},
+      </if>
+      <if test="inthework != null" >
+        #{inthework,jdbcType=CHAR},
+      </if>
+      <if test="stubrerule != null" >
+        #{stubrerule,jdbcType=VARCHAR},
+      </if>
+      <if test="patrolteach != null" >
+        #{patrolteach,jdbcType=INTEGER},
+      </if>
+      <if test="patroltime != null" >
+        #{patroltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updatePatrolClass" parameterType="com.ht.popj.dailyWork.PatrolClass" >
+    update patrol_class
+    <set >
+      <if test="classid != null" >
+        classid = #{classid,jdbcType=INTEGER},
+      </if>
+      <if test="mustarrive != null" >
+        mustarrive = #{mustarrive,jdbcType=INTEGER},
+      </if>
+      <if test="truearrive != null" >
+        truearrive = #{truearrive,jdbcType=INTEGER},
+      </if>
+      <if test="empteachid != null" >
+        empteachid = #{empteachid,jdbcType=INTEGER},
+      </if>
+      <if test="inthework != null" >
+        inthework = #{inthework,jdbcType=CHAR},
+      </if>
+      <if test="stubrerule != null" >
+        stubrerule = #{stubrerule,jdbcType=VARCHAR},
+      </if>
+      <if test="patrolteach != null" >
+        patrolteach = #{patrolteach,jdbcType=INTEGER},
+      </if>
+      <if test="patroltime != null" >
+        patroltime = #{patroltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.PatrolClass" >
+    update patrol_class
+    set classid = #{classid,jdbcType=INTEGER},
+      mustarrive = #{mustarrive,jdbcType=INTEGER},
+      truearrive = #{truearrive,jdbcType=INTEGER},
+      empteachid = #{empteachid,jdbcType=INTEGER},
+      inthework = #{inthework,jdbcType=CHAR},
+      stubrerule = #{stubrerule,jdbcType=VARCHAR},
+      patrolteach = #{patrolteach,jdbcType=INTEGER},
+      patroltime = #{patroltime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

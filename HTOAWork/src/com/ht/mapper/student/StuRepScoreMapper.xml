@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StuRepScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StuRepScore" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="teac_name" property="teacName" jdbcType="VARCHAR" />
+    <result column="srm_id" property="srmId" jdbcType="INTEGER" />
+    <result column="srs_score" property="srsScore" jdbcType="INTEGER" />
+    <result column="srs_date" property="srsDate" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_id, teac_name, srm_id, srs_score, srs_date, create_time, update_time, status, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_rep_score
+    where id = #{id,jdbcType=INTEGER} and status = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_rep_score
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StuRepScore" >
+     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">  
+                SELECT LAST_INSERT_ID()  
+     </selectKey>
+    insert into stu_rep_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="teacName != null" >
+        teac_name,
+      </if>
+      <if test="srmId != null" >
+        srm_id,
+      </if>
+      <if test="srsScore != null" >
+        srs_score,
+      </if>
+      <if test="srsDate != null" >
+        srs_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="teacName != null" >
+        #{teacName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmId != null" >
+        #{srmId,jdbcType=INTEGER},
+      </if>
+      <if test="srsScore != null" >
+        #{srsScore,jdbcType=INTEGER},
+      </if>
+      <if test="srsDate != null" >
+        #{srsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StuRepScore" >
+    update stu_rep_score
+    <set >
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="teacName != null" >
+        teac_name = #{teacName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmId != null" >
+        srm_id = #{srmId,jdbcType=INTEGER},
+      </if>
+      <if test="srsScore != null" >
+        srs_score = #{srsScore,jdbcType=INTEGER},
+      </if>
+      <if test="srsDate != null" >
+        srs_date = #{srsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delByUpdate" parameterType="int" >
+    update stu_rep_score set status = 0 where id = #{id}
+  </update>
+  <resultMap type="com.ht.popj.student.StuRepScore" id="stuRepScoreRM" extends="BaseResultMap">
+        <!-- 学生信息 -->
+	    <association property="student" javaType="com.ht.popj.student.Student" column="stu_id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+	    </association>
+	    <!-- 模板信息 -->
+	    <association property="stuReplyModel" javaType="com.ht.popj.student.StuReplyModel" column="srm_id" select="com.ht.mapper.student.StuReplyModelMapper.selectByPrimaryKey">
+	    </association>
+	    <!-- 通过模板明细统计模板总分 -->
+	    <association property="allScore" javaType="int" column="srm_id" select="com.ht.mapper.student.StuReplyModelDMapper.countScoreBysrmId">
+	    </association>
+	     <!-- 通过得分明细表统计总得分 -->
+	    <association property="srsScore" javaType="int" column="id" select="com.ht.mapper.student.StuRepScoreDMapper.countScoreBysrmId">
+	    </association>
+  </resultMap>
+  <select id="selectAll" resultMap="stuRepScoreRM">
+      select * from stu_rep_score where status = 1
+  </select>
+  
+  <!-- srs  mbName  clsId  empName  -->
+  <select id="selectByPJ" parameterType="map"  resultMap="stuRepScoreRM">
+    SELECT srs.* FROM stu_rep_score srs,stu_reply_model srm ,emp e
+	<where>
+	      <if test="srs.id != null" >
+	        srs.id = #{srs.id}
+	      </if>
+	      <if test="srs.stuId != null" >
+	        and srs.stu_id = #{srs.stuId}
+	      </if>
+	      <if test="srs.teacName != null and !srs.teacName.isEmpty()" >
+	        and srs.teacName = #{srs.teacName}
+	      </if>
+	      <if test="srs.srmId != null" >
+	        and srs.srm_id =  #{srs.srmId}
+	      </if>
+	      <if test="srs.srsDate != null" >
+	        and srs.srs_date like '%${srs.srsDate}%'
+	      </if>
+	      <if test="mbName != null and !mbName.isEmpty()" >
+	        and srm.srm_name like '%${mbName}%'
+	      </if>
+	      <if test="empName != null and !empName.isEmpty()" >
+	        and e.empname like '%${empName}%'
+	      </if>
+	      <if test="clsId != null and clsId != 0" >
+	        and srm.cls_id = #{clsId}
+	      </if>
+	      AND srs.srm_id = srm.id
+		  AND srm.teac_id = e.id
+	</where>
+	order by srm_id,stu_id desc
+  </select>
+  
+  <select id="selectByStuId" parameterType="int" resultMap="stuRepScoreRM">
+      select * from stu_rep_score where status = 1 and stu_id = #{id}
+  </select>
+  <select id="countBysrmId" parameterType="int" resultType="int">
+      select count(*) from stu_rep_score where srm_id = #{value}
+  </select>
+</mapper>

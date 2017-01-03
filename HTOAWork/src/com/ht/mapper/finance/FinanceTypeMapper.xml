@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="typeName" property="typename" jdbcType="VARCHAR" />
+    <result column="identifying" property="identifying" jdbcType="INTEGER" />
+    <result column="pay_remark" property="payRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, typeName, identifying, pay_remark, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_type
+    where id = #{id,jdbcType=INTEGER} and status=0
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update finance_type set status=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.ht.popj.finance.FinanceType" >
+    insert into finance_type (id, typeName, identifying,
+      pay_remark, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, #{identifying,jdbcType=INTEGER}, 
+      #{payRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceType" >
+    insert into finance_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typename != null" >
+        typeName,
+      </if>
+      <if test="identifying != null" >
+        identifying,
+      </if>
+      <if test="payRemark != null" >
+        pay_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="identifying != null" >
+        #{identifying,jdbcType=INTEGER},
+      </if>
+      <if test="payRemark != null" >
+        #{payRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceType" >
+    update finance_type
+    <set >
+      <if test="typename != null" >
+        typeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="identifying != null" >
+        identifying = #{identifying,jdbcType=INTEGER},
+      </if>
+      <if test="payRemark != null" >
+        pay_remark = #{payRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.FinanceType" >
+    update finance_type
+    set typeName = #{typename,jdbcType=VARCHAR},
+      identifying = #{identifying,jdbcType=INTEGER},
+      pay_remark = #{payRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="selectPayTypeAll" resultMap="BaseResultMap">
+		select * from finance_type where status=0
+	</select>
+	<select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceType">
+		select * from finance_type
+		<where>
+		    	AND status=0
+		    <if test="typename != null and typename !=''">
+		        AND typeName = #{typename}
+		    </if>
+		    <if test="identifying != null">
+		        AND identifying = #{identifying}
+		    </if>
+		</where>
+	</select>
+	
+	<select id="getCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+	    select count(*) from finance_type where status=0
+	</select>
+</mapper>

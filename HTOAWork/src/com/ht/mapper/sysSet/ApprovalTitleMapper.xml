@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.sysSet.ApprovalTitleMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.sysSet.ApprovalTitle">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="ApprovalNum" property="approvalnum" jdbcType="VARCHAR" />
+		<result column="CreateMan" property="createman" jdbcType="VARCHAR" />
+		<result column="ApprovalMan" property="approvalman" jdbcType="VARCHAR" />
+		<result column="DepId" property="depid" jdbcType="INTEGER" />
+		<result column="TitleStutas" property="titlestutas" jdbcType="CHAR" />
+		<result column="FlowId" property="flowid" jdbcType="INTEGER" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="Stutas" property="stutas" jdbcType="INTEGER" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, ApprovalNum, CreateMan, ApprovalMan, DepId,
+		TitleStutas,
+		FlowId, CreateTime,
+		UpdateTime, Stutas, Remark,empid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from approvaltitle
+		where id =
+		#{id,jdbcType=INTEGER} and Stutas=1
+	</select>
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.ApprovalTitle">
+		SELECT a.*,e.`empname` AS appman,em.empname AS
+		creman,f.`flowModelName`,d.`depname` depname,emm.empname semp FROM approvaltitle a,flowmodel
+		f,dep d,emp e,(SELECT id,empname FROM emp) em,(SELECT id,empname FROM emp) emm
+		<where>
+		a.`CreateMan`=e.`id` AND a.`ApprovalMan`=em.id AND f.`id` =
+			a.`FlowId` AND d.`id`=a.`DepId` AND a.`Stutas`=1 AND emm.id=empid
+			<if test="approvalnum !=null and approvalnum !=''">
+				AND a.approvalnum LIKE '%${approvalnum}%'
+			</if>
+			<if test="depid !=null and depid !=''">
+				AND a.depid = ${depid}
+			</if>
+			<if test="titlestutas !=null and titlestutas !=''">
+				AND a.titlestutas LIKE '%${titlestutas}%'
+			</if>
+			<if test="flowid !=null and flowid !=0">
+				AND a.flowid = ${flowid}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		approvaltitle set Stutas=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.sysSet.ApprovalTitle">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into approvaltitle
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="approvalnum != null">
+				ApprovalNum,
+			</if>
+			<if test="createman != null">
+				CreateMan,
+			</if>
+			<if test="approvalman != null">
+				ApprovalMan,
+			</if>
+			<if test="depid != null">
+				DepId,
+			</if>
+			<if test="titlestutas != null">
+				TitleStutas,
+			</if>
+			<if test="flowid != null">
+				FlowId,
+			</if>
+			CreateTime,
+			<if test="updatetime != null">
+				UpdateTime,
+			</if>
+			<if test="stutas != null">
+				Stutas,
+			</if>
+			<if test="remark != null">
+				Remark,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="approvalnum != null">
+				#{approvalnum,jdbcType=VARCHAR},
+			</if>
+			<if test="createman != null">
+				#{createman,jdbcType=INTEGER},
+			</if>
+			<if test="approvalman != null">
+				#{approvalman,jdbcType=INTEGER},
+			</if>
+			<if test="depid != null">
+				#{depid,jdbcType=INTEGER},
+			</if>
+			<if test="titlestutas != null">
+				#{titlestutas,jdbcType=CHAR},
+			</if>
+			<if test="flowid != null">
+				#{flowid,jdbcType=INTEGER},
+			</if>
+			NOW(),
+			<if test="updatetime != null">
+				#{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="stutas != null">
+				#{stutas,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.sysSet.ApprovalTitle">
+		update approvaltitle
+		<set>
+			<if test="approvalnum != null">
+				ApprovalNum = #{approvalnum,jdbcType=VARCHAR},
+			</if>
+			<if test="createman != null">
+				CreateMan = #{createman,jdbcType=INTEGER},
+			</if>
+			<if test="approvalman != null">
+				ApprovalMan = #{approvalman,jdbcType=INTEGER},
+			</if>
+			<if test="depid != null">
+				DepId = #{depid,jdbcType=INTEGER},
+			</if>
+			<if test="jobid != null">
+				JobId = #{jobid,jdbcType=INTEGER},
+			</if>
+			<if test="titlestutas != null">
+				TitleStutas = #{titlestutas,jdbcType=CHAR},
+			</if>
+			<if test="flowid != null">
+				FlowId = #{flowid,jdbcType=INTEGER},
+			</if>
+			<if test="createtime != null">
+				CreateTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			UpdateTime = NOW(),
+			<if test="stutas != null">
+				Stutas = #{stutas,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				Remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

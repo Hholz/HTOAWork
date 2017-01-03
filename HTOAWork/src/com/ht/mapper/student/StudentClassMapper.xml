@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentClassMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentClass" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="classno" property="classno" jdbcType="VARCHAR" />
+    <result column="classname" property="classname" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="VARCHAR" />
+    <result column="leader_id" property="leaderId" jdbcType="VARCHAR" />
+    <result column="clteacher_id" property="clteacherId" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="Level_id" property="levelId" jdbcType="VARCHAR" />
+    <result column="major_id" property="majorId"/>
+    <result column="cls_status" property="clsStatus" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, classno, classname, count, teacher_id, leader_id, clteacher_id, addr, create_time, 
+    update_time, status, remark, Level_id ,major_id ,cls_status
+  </sql>
+  
+	<select id="selectClassList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		SELECT DISTINCT student_class.`id`,student_class.`classname` 
+		FROM flow_all,student,student_class,student_fall WHERE 
+		flow_all.`studid`=student.`id` AND student.`classid`=student_class.`id`
+		AND student_class.`Level_id`=student_fall.`id` AND student_fall.`id`=#{value}
+		AND student_class.`status`=1
+	</select>
+	
+	<select id="selectClassByComputer" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	    SELECT DISTINCT student_class.`id`,student_class.`classname`
+		FROM flow_computer_apply,student,student_class,student_fall
+		WHERE flow_computer_apply.`studid`=student.`id` 
+		AND student.`classid`=student_class.`id` 
+		AND student_class.`Level_id`=student_fall.`id`
+		AND student_fall.`id`=#{value}
+		AND student_class.`status`=1
+	</select>
+  
+  	<select id="selectClassListByFallid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT student_class.`id`,student_class.`classname` FROM student_class,student_fall 
+		WHERE student_class.`Level_id`=student_fall.`id` AND student_fall.`id`=#{value}
+		AND student_class.`status`=1 ORDER BY student_class.`classno` DESC
+  	</select>
+  	
+  	<select id="selectClassListByTercher" resultMap="BaseResultMap" parameterType="com.ht.popj.student.StudentClass">
+  	    SELECT student_class.`id`,student_class.`classname` FROM student_class,student_fall 
+		WHERE student_class.`Level_id`=student_fall.`id` AND student_fall.`id`=#{id}
+		AND student_class.`clteacher_id`=#{clteacherId}
+		AND student_class.`status`=1 ORDER BY student_class.`classno` DESC
+  	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT  * from student_class where  id = #{id} and  status=1
+  </select>
+  
+  <select id="selectallstduentclass" resultMap="BaseResultMap">
+    select * from student_class where status=1 order by id desc
+  </select>
+  <select id="findNameById" resultType="string" parameterType="int">
+    select classname from student_class where status=1 and id = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentClass" >
+    insert into student_class (id, classno, classname, 
+      count, teacher_id, leader_id, 
+      clteacher_id, addr, create_time, 
+      update_time, status, remark, 
+      Level_id)
+    values (#{id,jdbcType=INTEGER}, #{classno,jdbcType=VARCHAR}, #{classname,jdbcType=VARCHAR}, 
+      #{count,jdbcType=INTEGER}, #{teacherId,jdbcType=VARCHAR}, #{leaderId,jdbcType=VARCHAR}, 
+      #{clteacherId,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{levelId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentClass" >
+    insert into student_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="classname != null" >
+        classno,
+  	  </if>
+      <if test="classname != null" >
+        classname,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="leaderId != null" >
+        leader_id,
+      </if>
+      <if test="clteacherId != null" >
+        clteacher_id,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      
+        create_time,
+     
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="levelId != null" >
+        Level_id,
+      </if>
+      <if test="majorId != null" >
+        major_id,
+      </if>
+      <if test="clsStatus != null" >
+        cls_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classno != null" >
+        #{classno,jdbcType=VARCHAR},
+      </if>
+      <if test="classname != null" >
+        #{classname,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        #{leaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="clteacherId != null" >
+        #{clteacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+     	now(),
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="levelId != null" >
+        #{levelId,jdbcType=VARCHAR},
+      </if>
+      <if test="majorId != null" >
+        #{majorId},
+      </if>
+      <if test="clsStatus != null" >
+        #{clsStatus},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentClass" >
+    update student_class
+    <set >
+      <if test="classno != null" >
+        classno = #{classno,jdbcType=VARCHAR},
+      </if>
+      <if test="classname != null" >
+        classname = #{classname,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderId != null" >
+        leader_id = #{leaderId,jdbcType=VARCHAR},
+      </if>
+      <if test="majorId != null" >
+        major_id = #{majorId},
+      </if>
+      <if test="clsStatus != null" >
+        cls_status = #{clsStatus},
+      </if>
+      <if test="clteacherId != null" >
+        clteacher_id = #{clteacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="levelId != null" >
+        Level_id = #{levelId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentClass" >
+    update student_class
+    set classno = #{classno,jdbcType=VARCHAR},
+      classname = #{classname,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      teacher_id = #{teacherId,jdbcType=VARCHAR},
+      leader_id = #{leaderId,jdbcType=VARCHAR},
+      clteacher_id = #{clteacherId,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      Level_id = #{levelId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 一对一的届别 -->
+  	<resultMap id="studentclass" type="com.ht.popj.student.StudentClass" extends="BaseResultMap">
+        <association property="studentfall" javaType="com.ht.popj.student.StudentFall" column="Level_id" select="com.ht.mapper.student.StudentFallMapper.selectByPrimaryKey">
+        </association>
+        <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="teacher_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        </association>
+        <association property="empl" javaType="com.ht.popj.dailyWork.Emp" column="leader_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        </association>
+        <association property="empc" javaType="com.ht.popj.dailyWork.Emp" column="clteacher_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        </association>
+        <association property="countstu" javaType="int" column="id" select="com.ht.mapper.student.StudentMapper.countstudentseId">
+        </association>
+        <association property="counttest" javaType="int" column="id" select="com.ht.mapper.market.MarketStudentMapper.countByclsId">
+        </association>
+        <association property="eduMajor" javaType="int" column="major_id" select="com.ht.mapper.education.EduMajorMapper.selectByPrimaryKey">
+        </association>
+    </resultMap>
+    
+  	<!-- 所有班 -->
+	<select id="selectStudentclass" resultMap="studentclass" parameterType="com.ht.popj.student.StudentClass">
+		SELECT  * FROM student_class
+		<where>
+			<if test="levelId != null and !levelId.isEmpty()">
+				and Level_id like '%${levelId}%' 
+			</if>
+			<if test="majorId != null and majorId>0">
+				and major_id = #{majorId}
+			</if>
+			<if test="clsStatus != null">
+				and cls_status = #{clsStatus}
+			</if>
+			<if test="classname != null and !classname.isEmpty()">
+				and classname like '%${classname}%' 
+			</if>
+			<if test="teacherId != null and !teacherId.isEmpty()">
+				and teacher_id = #{teacherId}
+			</if>
+			<if test="clteacherId != null and !clteacherId.isEmpty()">
+				and clteacher_id = #{clteacherId}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			and  status=1 order by id desc
+		</where>
+	</select>
+   <!-- 所有正常班 -->
+	<select id="selectNormalCls" resultMap="studentclass" parameterType="com.ht.popj.student.StudentClass">
+		SELECT  * FROM student_class
+		<where>
+			<if test="levelId != null and !levelId.isEmpty()">
+				and Level_id like '%${levelId}%' 
+			</if>
+			<if test="majorId != null and majorId>0">
+				and major_id = #{majorId}
+			</if>
+			<if test="clsStatus != null">
+				and cls_status = #{clsStatus}
+			</if>
+			<if test="classname != null and !classname.isEmpty()">
+				and classname like '%${classname}%' 
+			</if>
+			<if test="teacherId != null and !teacherId.isEmpty()">
+				and teacher_id = #{teacherId}
+			</if>
+			<if test="clteacherId != null and !clteacherId.isEmpty()">
+				and clteacher_id = #{clteacherId}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			and  cls_status >= 0
+			and  status=1 order by id desc
+		</where>
+	</select>
+	<!-- 所有试学班 -->
+	<select id="selectTestCls" resultMap="studentclass" parameterType="com.ht.popj.student.StudentClass">
+		SELECT  * FROM student_class
+		<where>
+			<if test="levelId != null and !levelId.isEmpty()">
+				and Level_id like '%${levelId}%' 
+			</if>
+			<if test="majorId != null and majorId>0">
+				and major_id = #{majorId}
+			</if>
+			<if test="clsStatus != null">
+				and cls_status = #{clsStatus}
+			</if>
+			<if test="classname != null and !classname.isEmpty()">
+				and classname like '%${classname}%' 
+			</if>
+			<if test="teacherId != null and !teacherId.isEmpty()">
+				and teacher_id = #{teacherId}
+			</if>
+			<if test="clteacherId != null and !clteacherId.isEmpty()">
+				and clteacher_id = #{clteacherId}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			and  cls_status = -1
+			and  status=1 order by id desc
+		</where>
+	</select>
+	
+	<resultMap id="studentwithCls" type="com.ht.popj.student.StudentClass" extends="BaseResultMap">
+	    <association property="countstu" javaType="int" column="id" select="com.ht.mapper.student.StudentMapper.countstudentseId">
+        </association>
+        <collection property="student" ofType="com.ht.popj.student.Student" column="id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+        </collection>
+    </resultMap>
+	
+	 <!-- 返回届别全部内容，resultType是list里的对象 -->
+	<select id="selectStudentclass2" resultMap="studentwithCls" parameterType="com.ht.popj.student.StudentClass">
+		SELECT  * from student_class where  Level_id = #{levelId} and  status=1
+	</select>
+	
+	<select id="selectByLevelId" resultMap="studentwithCls" parameterType="string">
+		SELECT  * from student_class where  Level_id = #{id} and  status=1
+	</select>
+	<!-- 通过班级id查班级带（stuList） -->
+	<select id="selectById" resultMap="studentwithCls" parameterType="int">
+		SELECT  * from student_class where  id = #{id} and  status=1
+	</select>
+	<select id="countById" resultType="int" parameterType="int">
+		SELECT  count(*) from student where  classid = #{id} and  status=1
+	</select>
+	<select id="selectOnByClteac" resultType="com.ht.popj.student.StudentClass" parameterType="string">
+		SELECT  * from student_class where  clteacher_id = #{value} and  cls_status <![CDATA[<]]> 2 and status = 1
+	</select>
+</mapper>

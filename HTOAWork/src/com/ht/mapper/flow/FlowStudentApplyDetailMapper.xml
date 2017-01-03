@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowStudentApplyDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowStudentApplyDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="studApplyid" property="studapplyid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowStudentApplyDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="studApplyid" property="studapplyid" jdbcType="INTEGER" />
+		<result column="flowModelid" property="flowmodelid" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		
+		<collection property="flowModel" ofType="com.ht.popj.flow.FlowsModel">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="flowModelName" property="flowmodelname" />
+		</collection>
+
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="empname" property="empname" />
+		</collection>
+		
+		<collection property="studentApply" ofType="com.ht.popj.flow.FlowStudentApply">
+		    <id column="id" property="id" />
+			<result column="studid" property="studid" />
+		    <result column="strat_time" property="stratTime" />
+		    <result column="create_time" property="createTime" />
+		    <result column="classid1" property="classid1" />
+		    <result column="studWork" property="studwork" />
+		    <result column="remarks" property="remark" />
+		    
+		    <collection property="studentClass" ofType="com.ht.popj.student.StudentClass">
+		        <id column="id" property="id" />
+				<result column="classname" property="classname" />
+		    </collection>
+		    
+		    <collection property="student" ofType="com.ht.popj.student.Student">
+		        <id column="id" property="id" />
+				<result column="stuname" property="stuname" />
+		    </collection>
+		</collection>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, studApplyid, flowModelid, empid, status, remark
+	</sql>
+	
+	<select id="selectStudentApply" resultMap="BaseResultMap1" parameterType="java.lang.String">
+	    SELECT
+		flow_student_apply_detail.*,
+		flow_student_apply.`id`,
+		flow_student_apply.`studid`,
+		flow_student_apply.`strat_time`,
+		flow_student_apply.`create_time`,
+		flow_student_apply.`classid1`,
+		flow_student_apply.`studWork`,
+		flow_student_apply.`remark` AS remarks,
+		student.`id`,
+		student.`stuname`,
+		student_class.`id`,
+		student_class.`classname`
+		FROM
+		flow_student_apply_detail,flow_student_apply,student,emp,student_class
+		WHERE
+		flow_student_apply.`id`=flow_student_apply_detail.`studApplyid`
+		AND flow_student_apply_detail.`status`=2
+		AND flow_student_apply_detail.`empid`=emp.`id`
+		AND flow_student_apply.`studid`=student.`id`
+		AND flow_student_apply.`classid1`=student_class.`id`
+		AND flow_student_apply_detail.`empid`=#{value}
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap1"
+		parameterType="java.lang.Integer">
+		SELECT flow_student_apply_detail.*,flow_model.`id`,flow_model.`flowModelName`,emp.`id`,emp.`empname` 
+		FROM flow_student_apply_detail,flow_model,emp WHERE flow_student_apply_detail.`flowModelid`=flow_model.`id`
+		AND flow_student_apply_detail.`empid`=emp.`id` AND flow_student_apply_detail.`studApplyid`=#{value}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT * FROM flow_student_apply_detail WHERE 
+		flow_student_apply_detail.`status`=0 AND flow_student_apply_detail.`studApplyid`=#{value}
+	</select>
+	
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_student_apply_detail 
+		<where>
+		    <if test="studapplyid != null">
+				AND studApplyid = #{studapplyid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				AND flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_student_apply_detail set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowStudentApplyDetail">
+		insert into flow_student_apply_detail
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="studapplyid != null">
+				studApplyid,
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="studapplyid != null">
+				#{studapplyid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				#{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowStudentApplyDetail">
+		update flow_student_apply_detail
+		<set>
+			<if test="studapplyid != null">
+				studApplyid = #{studapplyid,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodelid != null">
+				flowModelid = #{flowmodelid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="   
+           http://www.springframework.org/schema/beans   
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+           http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+           http://www.springframework.org/schema/mvc   
+           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+           
+		<bean id="studentService" class="com.ht.serviceImpl.student.StudentServiceImpl"></bean>
+		<bean id="stuStatusService" class="com.ht.serviceImpl.sysSet.StuStatusServiceImpl"></bean>
+		<bean id="residenceService" class="com.ht.serviceImpl.sysSet.ResidenceServiceImpl"></bean>
+		<bean id="salTypeService" class="com.ht.serviceImpl.sysSet.SalTypeServiceImpl"></bean>
+		<bean id="stuEduService" class="com.ht.serviceImpl.student.StudentEduServiceImpl"></bean>
+		<bean id="stuFamService" class="com.ht.serviceImpl.student.StudentFamilyServiceImpl"></bean>
+		<bean id="srmdService" class="com.ht.serviceImpl.student.StuReplyModelDServiceImpl"></bean>
+		<bean id="srmService" class="com.ht.serviceImpl.student.StuReplyModelServiceImpl"></bean>
+		<bean id="shiroUserService" class="com.ht.serviceImpl.login.ShiroUserServiceImpl"></bean>
+		<bean id="shiroUserRoleService" class="com.ht.serviceImpl.login.ShiroUserRoleServiceImpl"></bean>
+		<bean id="stuJobService" class="com.ht.serviceImpl.student.StuJobServiceImpl"></bean>
+		<bean id="srsService" class="com.ht.serviceImpl.student.StuRepScoreServiceImpl"></bean>
+		<bean id="srsdService" class="com.ht.serviceImpl.student.StuRepScoreDServiceImpl"></bean>
+		<bean id="shiroUserInfoService" class="com.ht.serviceImpl.login.ShiroUserInfoServiceImpl"></bean>
+		<bean id="shiroRoleService" class="com.ht.serviceImpl.login.ShiroRoleServiceImpl"></bean>
+		<bean id="shiroAuthService" class="com.ht.serviceImpl.login.ShiroAuthServiceImpl"></bean>
+		<bean id="stuHolidayService" class="com.ht.serviceImpl.student.StuHolidayServiceImpl"></bean>
+		<bean id="adjustClassService" class="com.ht.serviceImpl.student.AdjustClassServiceImpl"></bean>
+		<!-- 市场部 -->
+		<bean id="msService" class="com.ht.serviceImpl.market.MarketStudentServiceImpl"></bean>
+		<bean id="mfService" class="com.ht.serviceImpl.market.MarketFollowServiceImpl"></bean>
+		<!-- 分班管理ClassManagementService -->
+		<bean id="classManagementService" class="com.ht.serviceImpl.student.ClassManagementServiceImpl"></bean>
+		<!-- 值班管理 -->
+		<bean id="dutyModelDService" class="com.ht.serviceImpl.dailyWork.DutyModelDServiceImpl"></bean>
+		<!-- 学生考勤 -->
+		<bean id="stuAttenService" class="com.ht.serviceImpl.student.StudentAttenceServiceImpl"></bean>
+</beans>           

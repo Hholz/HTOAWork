@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.AttendancesMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Attendances" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="empid" property="empid" jdbcType="VARCHAR" />
+    <result column="workday" property="workday" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="attentime" property="attentime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, empid, workday, flag, create_time, update_time, status, remark, attentime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attendances
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attendances
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Attendances" >
+    insert into attendances (id, empid, workday, 
+      flag, create_time, update_time, 
+      status, remark, attentime
+      )
+    values (#{id,jdbcType=INTEGER}, #{empid,jdbcType=VARCHAR}, #{workday,jdbcType=TIMESTAMP}, 
+      #{flag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{attentime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Attendances" >
+    insert into attendances
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="empid != null" >
+        empid,
+      </if>
+      <if test="workday != null and workday!='' " >
+        workday,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      
+        create_time,
+      
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="attentime != null" >
+        attentime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="workday != null and workday!='' " >
+        #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      
+       now(),
+    
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attentime != null" >
+        #{attentime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Attendances" >
+    update attendances
+    <set >
+      <if test="empid != null" >
+        empid = #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="workday != null" >
+        workday = #{workday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      
+        update_time = now(),
+    
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attentime != null" >
+        attentime = #{attentime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Attendances" >
+    update attendances
+    set empid = #{empid,jdbcType=VARCHAR},
+      workday = #{workday,jdbcType=TIMESTAMP},
+      flag = #{flag,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      attentime = #{attentime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 一对一的查询 -->
+  	<resultMap id="attendancesel" type="com.ht.popj.dailyWork.Attendances" extends="BaseResultMap">
+        <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="empid" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        </association>
+        <association property="financeAtten" javaType="com.ht.popj.sysSet.FinanceAttenceset" column="attentime" select="com.ht.mapper.sysSet.FinanceAttencesetMapper.selectByPrimaryKey">
+        </association>
+    </resultMap>
+  
+  <select id="attendanceselect" resultMap="attendancesel"
+		parameterType="com.ht.popj.dailyWork.Attendances">
+			SELECT * FROM attendances s
+		<where>
+			s.status = 1
+			<if test="id != null">
+				and s.id = #{id}
+			</if>
+			<if test="workday != null and !workday.isEmpty() ">
+				and s.workday = #{workday}
+			</if>
+			<if test="empid != null and !empid.isEmpty() ">
+				and s.empid = #{empid}
+			</if>
+			<if test="flag != null  and !flag.isEmpty()">
+				and s.flag = #{flag}
+			</if>
+			<if	test="attentime != null and !attentime.isEmpty() ">
+				and s.attentime = #{attentime}
+			</if>
+		</where>
+	</select> 
+  
+</mapper>

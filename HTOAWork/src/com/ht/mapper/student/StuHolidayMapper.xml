@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StuHolidayMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StuHoliday" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="stDate" property="stdate" jdbcType="TIMESTAMP" />
+    <result column="enDate" property="endate" jdbcType="TIMESTAMP" />
+    <result column="serialNum" property="serialnum" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="student" javaType="com.ht.popj.student.Student" column="stu_id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_id, reason, stDate, enDate, serialNum, create_time, update_time, status, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_holiday
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_holiday
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StuHoliday" >
+    insert into stu_holiday
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="stdate != null" >
+        stDate,
+      </if>
+      <if test="endate != null" >
+        enDate,
+      </if>
+      <if test="serialnum != null" >
+        serialNum,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="stdate != null" >
+        #{stdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endate != null" >
+        #{endate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serialnum != null" >
+        #{serialnum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StuHoliday" >
+    update stu_holiday
+    <set >
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="stdate != null" >
+        stDate = #{stdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endate != null" >
+        enDate = #{endate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serialnum != null" >
+        serialNum = #{serialnum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delByUpdate" parameterType="int" >
+    update stu_holiday set status = 0 where id = #{id}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from stu_holiday
+  </select>
+  <select id="selectByStuId" parameterType="int" resultMap="BaseResultMap">
+      select * from stu_holiday where stu_id = #{id}
+  </select>
+  <!-- 通过学生ids来查分班等待自己处理了的申请记录，原班主任取 -->
+  <select id="selectbyStuIds" parameterType="map" resultMap="BaseResultMap">
+      select * from stu_holiday where stu_id in
+      <foreach collection="ids" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+      and status != 0
+  </select>
+  <!-- 通过学生ids来查分班等待自己处理了的申请记录，原班主任取 -->
+  <select id="selectbyStuIdsNoDel" parameterType="map" resultMap="BaseResultMap">
+      select * from stu_holiday where stu_id in
+      <foreach collection="ids" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+      and status = 0
+  </select>
+</mapper>

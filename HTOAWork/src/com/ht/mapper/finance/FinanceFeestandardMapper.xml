@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceFeestandardMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceFeestandard" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="feeName" property="feeName" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="REAL" />
+    <result column="feeRemark" property="feeremark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, feeName, money, feeRemark, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_feestandard
+    where id = #{id,jdbcType=INTEGER} and status=0
+  </select>
+   <select id="selectByPrimaryTypeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_feestandard
+    where type_id = #{typeId,jdbcType=INTEGER} and status=0
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update finance_feestandard set status=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.ht.popj.finance.FinanceFeestandard" >
+    insert into finance_feestandard (id, feeName, money, 
+      feeRemark, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{feeName,jdbcType=VARCHAR}, #{money,jdbcType=REAL}, 
+      #{feeremark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceFeestandard" >
+    insert into finance_feestandard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeId != null" >
+        feeName,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="feeremark != null" >
+        feeRemark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{feeName,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=REAL},
+      </if>
+      <if test="feeremark != null" >
+        #{feeremark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceFeestandard" >
+    update finance_feestandard
+    <set >
+      <if test="typeId != null" >
+        feeName = #{feeName,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=REAL},
+      </if>
+      <if test="feeremark != null" >
+        feeRemark = #{feeremark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.FinanceFeestandard" >
+    update finance_feestandard
+    set feeName = #{feeName,jdbcType=VARCHAR},
+      money = #{money,jdbcType=REAL},
+      feeRemark = #{feeremark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  	<resultMap type="com.ht.popj.finance.FinanceFeestandard" id="feeStandard" extends="BaseResultMap">
+  	    <association property="type" javaType="com.ht.popj.finance.FinanceType" column="type_id" select="com.ht.mapper.finance.FinanceTypeMapper.selectByPrimaryKey">
+	   </association>
+  	</resultMap>
+    <select id="selectFeeStandardAll" resultMap="feeStandard">
+		select * from finance_feestandard where status=0
+	</select>
+	<select id="selectByDynamic" resultMap="feeStandard" parameterType="com.ht.popj.finance.FinanceFeestandard">
+		select * from finance_feestandard
+		<where>
+		    	AND status=0
+		    <if test="feeName != null and feeName !=''">
+		        AND feeName = #{feeName}
+		    </if>
+		</where>
+	</select>
+	
+	<select id="getCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+	    select count(*) from finance_feestandard where status=0
+	</select>
+	 <select id="selectByTypeId" resultType="java.lang.Integer" parameterType="com.ht.popj.finance.FinanceFeestandard" >
+    	select 
+    	count(*)
+    	from finance_feestandard
+    	where feeName = #{feeName} and status =0
+  </select>
+</mapper>

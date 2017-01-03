@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.sysSet.FinanceAttencesetMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.sysSet.FinanceAttenceset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="time1" property="time1" jdbcType="VARCHAR" />
+    <result column="time2" property="time2" jdbcType="VARCHAR" />
+    <result column="time3" property="time3" jdbcType="VARCHAR" />
+    <result column="time4" property="time4" jdbcType="VARCHAR" />
+    <result column="time5" property="time5" jdbcType="VARCHAR" />
+    <result column="time6" property="time6" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="workfull" property="workfull" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, time1, time2, time3, time4, time5, time6, status, create_time, update_time, remark,workfull
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_attenceset
+    where id = #{id,jdbcType=INTEGER} and status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_attenceset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.sysSet.FinanceAttenceset" >
+    insert into finance_attenceset (id, time1, time2, 
+      time3, time4, time5, 
+      time6, status, create_time, 
+      update_time, remark,workfull)
+    values (#{id,jdbcType=INTEGER}, #{time1,jdbcType=VARCHAR}, #{time2,jdbcType=VARCHAR}, 
+      #{time3,jdbcType=VARCHAR}, #{time4,jdbcType=VARCHAR}, #{time5,jdbcType=VARCHAR}, 
+      #{time6,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{workfull,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.sysSet.FinanceAttenceset" >
+    insert into finance_attenceset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="time1 != null" >
+        time1,
+      </if>
+      <if test="time2 != null" >
+        time2,
+      </if>
+      <if test="time3 != null" >
+        time3,
+      </if>
+      <if test="time4 != null and time4!='' " >
+        time4,
+      </if>
+      <if test="time5 != null and time5!='' " >
+        time5,
+      </if>
+      <if test="time6 != null and time6!='' " >
+        time6,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="workfull != null" >
+        workfull,
+      </if>
+      
+        create_time,
+     
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="time1 != null" >
+        #{time1,jdbcType=VARCHAR},
+      </if>
+      <if test="time2 != null" >
+        #{time2,jdbcType=VARCHAR},
+      </if>
+      <if test="time3 != null" >
+        #{time3,jdbcType=VARCHAR},
+      </if>
+      <if test="time4 != null and time4!=''" >
+        #{time4,jdbcType=VARCHAR},
+      </if>
+      <if test="time5 != null and time5!=''" >
+        #{time5,jdbcType=VARCHAR},
+      </if>
+      <if test="time6 != null and time6!=''" >
+        #{time6,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null " >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="workfull != null " >
+        #{workfull,jdbcType=INTEGER},
+      </if>
+        now(),
+      
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.sysSet.FinanceAttenceset" >
+    update finance_attenceset
+    <set >
+      <if test="time1 != null" >
+        time1 = #{time1,jdbcType=VARCHAR},
+      </if>
+      <if test="time2 != null" >
+        time2 = #{time2,jdbcType=VARCHAR},
+      </if>
+      <if test="time3 != null" >
+        time3 = #{time3,jdbcType=VARCHAR},
+      </if>
+      <if test="time4 != null" >
+        time4 = #{time4,jdbcType=VARCHAR},
+      </if>
+      <if test="time5 != null" >
+        time5 = #{time5,jdbcType=VARCHAR},
+      </if>
+      <if test="time6 != null" >
+        time6 = #{time6,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="workfull != null " >
+        workfull= #{workfull,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.sysSet.FinanceAttenceset" >
+    update finance_attenceset
+    set time1 = #{time1,jdbcType=VARCHAR},
+      time2 = #{time2,jdbcType=VARCHAR},
+      time3 = #{time3,jdbcType=VARCHAR},
+      time4 = #{time4,jdbcType=VARCHAR},
+      time5 = #{time5,jdbcType=VARCHAR},
+      time6 = #{time6,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      workfull= #{workfull,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="financeattensel" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.FinanceAttenceset">
+			SELECT * FROM finance_attenceset f
+		<where>
+			
+			<if test="id != null">
+				 f.id = #{id}
+			</if>
+			<if	test="createTime != null and !createTime.isEmpty()">
+				and f.create_Time &gt;= #{createTime} 
+			</if>
+			<if	test="remark != null and remark!='' ">
+				and f.remark like '%${remark}%' 
+			</if>
+			<if test="status != null">
+				 and f.status = #{status}
+			</if>
+		</where>
+  </select>
+  
+  <select id="selectabjuct" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.FinanceAttenceset">
+			SELECT * FROM finance_attenceset f where f.status = 1
+  </select>
+  
+  <select id="selectidnull" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.sysSet.FinanceAttenceset">
+			SELECT * FROM finance_attenceset f where f.id != #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

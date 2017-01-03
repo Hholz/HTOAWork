@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduSeminarMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.education.EduSeminar">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="seminar_theme" property="seminarTheme"
+			jdbcType="VARCHAR" />
+		<result column="emp_id" property="empId" jdbcType="VARCHAR" />
+		<result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, start_time, end_time, seminar_theme, emp_id,
+		operator_id,
+		create_time, update_time,
+		status, remark
+	</sql>
+	<select id="getSeminar" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from edu_seminar
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteSeminar2" parameterType="java.lang.Integer">
+		delete from
+		edu_seminar
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteSeminar" parameterType="java.lang.Integer">
+		update edu_seminar set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.education.EduSeminar">
+		insert into edu_seminar (id,
+		start_time, end_time,
+		seminar_theme, emp_id, operator_id,
+		create_time,
+		update_time, status,
+		remark)
+		values (#{id,jdbcType=INTEGER},
+		#{startTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP},
+		#{seminarTheme,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR},
+		#{operatorId,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER},
+		#{remark,jdbcType=VARCHAR})
+	</insert>
+	<insert id="addSeminar" parameterType="com.ht.popj.education.EduSeminar">
+		insert into edu_seminar
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="seminarTheme != null">
+				seminar_theme,
+			</if>
+			<if test="empId != null">
+				emp_id,
+			</if>
+			<if test="operatorId != null">
+				operator_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="seminarTheme != null">
+				#{seminarTheme,jdbcType=VARCHAR},
+			</if>
+			<if test="empId != null">
+				#{empId,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorId != null">
+				#{operatorId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateSeminar" parameterType="com.ht.popj.education.EduSeminar">
+		update edu_seminar
+		<set>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="seminarTheme != null">
+				seminar_theme = #{seminarTheme,jdbcType=VARCHAR},
+			</if>
+			<if test="empId != null">
+				emp_id = #{empId,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorId != null">
+				operator_id = #{operatorId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.education.EduSeminar">
+		update edu_seminar
+		set start_time = #{startTime,jdbcType=TIMESTAMP},
+		end_time =
+		#{endTime,jdbcType=TIMESTAMP},
+		seminar_theme =
+		#{seminarTheme,jdbcType=VARCHAR},
+		emp_id = #{empId,jdbcType=VARCHAR},
+		operator_id = #{operatorId,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 获取全部信息 -->
+	<select id="getAllSeminar" resultType="com.ht.popj.education.EduSeminar">
+		select * from
+		edu_seminar
+	</select>
+	<!-- 获取部分信息 -->
+	<resultMap type="com.ht.popj.education.EduSeminar" id="seminarwithemp" extends="BaseResultMap">
+	    <association property="operator" javaType="com.ht.popj.dailyWork.Emp" column="operator_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+	    </association>
+	    <association property="sayMan" javaType="com.ht.popj.dailyWork.Emp" column="emp_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+	    </association>
+	</resultMap>
+	<select id="getSomeSeminar" resultMap="seminarwithemp"
+		parameterType="com.ht.popj.education.EduSeminar">
+		select * from edu_seminar e
+		<where>
+			<if test="id != null">
+				e.id = #{id}
+			</if>
+			<if test="operatorId != null and !operatorId.isEmpty()">
+				and e.operator_id = #{operatorId}
+			</if>
+			<if test="empId != null and !empId.isEmpty()">
+				and e.emp_Id = #{empId}
+			</if>
+			<if test="seminarTheme != null and !seminarTheme.isEmpty()">
+				and e.seminar_theme like '%${seminarTheme}%'
+			</if>
+			<if
+				test="startTime != null and !startTime.isEmpty() and endTime != null and !endTime.isEmpty()">
+				and e.start_time &gt;= #{startTime} and e.end_time &lt;=
+				#{endTime}
+			</if>
+			<if
+				test="startTime != null and !startTime.isEmpty()">
+				and e.start_time &gt; #{startTime}
+			</if>
+			<if test="seminarIds != null">
+				<foreach collection="seminarIds" open="AND  id IN(" close=")" item="ids" separator=",">
+					#{ids}
+				</foreach>
+			</if>
+			and status=1 order by end_time desc
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentSayfaceMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StudentSayface" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sayfaceid" property="sayfaceid" jdbcType="INTEGER" />
+    <result column="teacherid" property="teacherid" jdbcType="VARCHAR" />
+    <result column="sayscon" property="sayscon" jdbcType="VARCHAR" />
+    <result column="sayproblem" property="sayproblem" jdbcType="VARCHAR" />
+    <result column="saytime" property="saytime" jdbcType="TIMESTAMP" />
+    <result column="sayback" property="sayback" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sayfaceid, teacherid, sayscon, sayproblem, saytime, sayback, create_time, update_time, 
+    status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student_sayface
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student_sayface
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StudentSayface" >
+    insert into student_sayface (id, sayfaceid, teacherid, 
+      sayscon, sayproblem, saytime, 
+      sayback, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{sayfaceid,jdbcType=INTEGER}, #{teacherid,jdbcType=VARCHAR}, 
+      #{sayscon,jdbcType=VARCHAR}, #{sayproblem,jdbcType=VARCHAR}, #{saytime,jdbcType=TIMESTAMP}, 
+      #{sayback,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StudentSayface" >
+    insert into student_sayface
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sayfaceid != null" >
+        sayfaceid,
+      </if>
+      <if test="teacherid != null" >
+        teacherid,
+      </if>
+      <if test="sayscon != null" >
+        sayscon,
+      </if>
+      <if test="sayproblem != null" >
+        sayproblem,
+      </if>
+      <if test="saytime != null and saytime!=''" >
+        saytime,
+      </if>
+      <if test="sayback != null" >
+        sayback,
+      </if>
+      <if test="createTime != null and createTime!='' " >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sayfaceid != null" >
+        #{sayfaceid,jdbcType=INTEGER},
+      </if>
+      <if test="teacherid != null" >
+        #{teacherid,jdbcType=VARCHAR},
+      </if>
+      <if test="sayscon != null" >
+        #{sayscon,jdbcType=VARCHAR},
+      </if>
+      <if test="sayproblem != null" >
+        #{sayproblem,jdbcType=VARCHAR},
+      </if>
+      <if test="saytime != null" >
+        #{saytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sayback != null" >
+        #{sayback,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentSayface" >
+    update student_sayface
+    <set >
+      <if test="sayfaceid != null" >
+        sayfaceid = #{sayfaceid,jdbcType=INTEGER},
+      </if>
+      <if test="teacherid != null" >
+        teacherid = #{teacherid,jdbcType=VARCHAR},
+      </if>
+      <if test="sayscon != null" >
+        sayscon = #{sayscon,jdbcType=VARCHAR},
+      </if>
+      <if test="sayproblem != null" >
+        sayproblem = #{sayproblem,jdbcType=VARCHAR},
+      </if>
+      <if test="saytime != null and saytime!=''" >
+        saytime = #{saytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sayback != null" >
+        sayback = #{sayback,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime!=''" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      
+        update_time= now(),
+      
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentSayface" >
+    update student_sayface
+    set sayfaceid = #{sayfaceid,jdbcType=INTEGER},
+      teacherid = #{teacherid,jdbcType=VARCHAR},
+      sayscon = #{sayscon,jdbcType=VARCHAR},
+      sayproblem = #{sayproblem,jdbcType=VARCHAR},
+      saytime = #{saytime,jdbcType=TIMESTAMP},
+      sayback = #{sayback,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 一对一的查询 -->
+  	<resultMap id="studentsayface" type="com.ht.popj.student.StudentSayface" extends="BaseResultMap">
+        <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="teacherid" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        </association>
+        <association property="student" javaType="int" column="sayfaceid" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+        </association>
+    </resultMap>
+  
+  <select id="studentsayheart" resultMap="studentsayface"
+		parameterType="com.ht.popj.student.StudentSayface">
+			SELECT * FROM student_sayface s
+		<where>
+			s.status = 1
+			<if test="id != null">
+				and s.id = #{id}
+			</if>
+			<if test="sayfaceid != null">
+				and s.sayfaceid = #{sayfaceid}
+			</if>
+			<if test="teacherid != null  and !teacherid.isEmpty()">
+				and s.teacherid = #{teacherid}
+			</if>
+			<if	test="createTime != null and !createTime.isEmpty() and saytime != null and !saytime.isEmpty()">
+				and s.create_Time &gt;= #{createTime} and s.saytime &lt;=
+				#{saytime}
+			</if>
+		</where>
+	</select>
+</mapper>

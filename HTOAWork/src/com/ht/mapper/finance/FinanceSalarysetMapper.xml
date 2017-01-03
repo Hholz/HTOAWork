@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceSalarysetMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceSalaryset">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="salaryTypeId" property="salarytypeid" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="REAL" />
+		<result column="SalarySet_remark" property="salarysetRemark"
+			jdbcType="VARCHAR" />
+		<result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="Status" property="status" jdbcType="INTEGER" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empid, salaryTypeId, money, SalarySet_remark,
+		Create_time,
+		Update_time, Status,
+		Remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from finance_salaryset
+		where id =
+		#{id,jdbcType=INTEGER} and Status=1
+	</select>
+	<select id="selectByName" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.finance.FinanceSalaryset">
+		SELECT fs.*,d.id AS depid,d.`depname` AS depname,e.`empname` AS
+		empname,fst.`name` AS salarytypename FROM finance_salaryset fs,dep
+		d,emp e,`finance_salarytypese` fst
+		<where>
+			fs.Status = 1 AND fst.`id`=fs.`salaryTypeId` AND e.`id`=fs.`empid`
+			AND d.id=e.`depid`
+			<if test="empid !=null and empid !='' ">
+				AND fs.empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="salarytypeid != null and salarytypeid !=0">
+				AND salaryTypeId = #{salarytypeid,jdbcType=INTEGER}
+			</if>
+			 ORDER BY fs.id DESC
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		finance_salaryset set Status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceSalaryset">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into finance_salaryset
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="salarytypeid != null">
+				salaryTypeId,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			<if test="salarysetRemark != null">
+				SalarySet_remark,
+			</if>
+			Create_time,
+			<if test="updateTime != null">
+				Update_time,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="remark != null">
+				Remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="salarytypeid != null">
+				#{salarytypeid,jdbcType=INTEGER},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=REAL},
+			</if>
+			<if test="salarysetRemark != null">
+				#{salarysetRemark,jdbcType=VARCHAR},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceSalaryset">
+		update finance_salaryset
+		<set>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="salarytypeid != null">
+				salaryTypeId = #{salarytypeid,jdbcType=INTEGER},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=FLOAT},
+			</if>
+			<if test="salarysetRemark != null">
+				SalarySet_remark = #{salarysetRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				Create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			Update_time = NOW(),
+			<if test="status != null">
+				Status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				Remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

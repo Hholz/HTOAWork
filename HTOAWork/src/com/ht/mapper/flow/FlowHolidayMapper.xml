@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.mapper.flow.FlowHolidayMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowHoliday">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="flowModelTypeid" jdbcType="INTEGER" property="flowmodeltypeid" />
+		<result column="empid" jdbcType="VARCHAR" property="empid" />
+		<result column="studid" jdbcType="INTEGER" property="studid" />
+		<result column="stratTime" jdbcType="TIMESTAMP" property="strattime" />
+		<result column="endTime" jdbcType="TIMESTAMP" property="endtime" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="upset" jdbcType="INTEGER" property="upset" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowHoliday">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="flowModelTypeid" jdbcType="INTEGER" property="flowmodeltypeid" />
+		<result column="empid" jdbcType="VARCHAR" property="empid" />
+		<result column="studid" jdbcType="INTEGER" property="studid" />
+		<result column="stratTime" jdbcType="TIMESTAMP" property="strattime" />
+		<result column="endTime" jdbcType="TIMESTAMP" property="endtime" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="upset" jdbcType="INTEGER" property="upset" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+		
+		<collection property="student" ofType="com.ht.popj.student.Student">
+		    <id column="id" jdbcType="INTEGER" property="id" />
+			<result column="stuname" jdbcType="INTEGER" property="stuname" />
+		</collection>
+		
+		<collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+		    <id column="id" jdbcType="VARCHAR" property="id" />
+			<result column="empname" jdbcType="INTEGER" property="empname" />
+			
+			<collection property="dep" ofType="com.ht.popj.dailyWork.Dep">
+			    <id column="id" jdbcType="VARCHAR" property="id" />
+				<result column="depname" jdbcType="INTEGER" property="depname" />
+			</collection>
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowModelTypeid, empid, studid, stratTime,
+		endTime,
+		create_time,
+		update_time, status, remark, upset,applyman
+	</sql>
+	
+	<select id="selectMyholidayEmp" parameterType="int"  resultMap="BaseResultMap1">
+	     SELECT flow_holiday.*,emp.`id`,emp.`empname`,dep.`id`,dep.`depname` FROM flow_holiday,emp,dep WHERE PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format( stratTime,'%Y%m' ) ) =1 AND
+		flow_holiday.`empid`=emp.`id` AND emp.`depid`=dep.`id` AND flow_holiday.`status`=1 AND flow_holiday.`upset`=3 and emp.id=#{id}
+	</select>
+
+	<select id="selectMyHoliday" parameterType="com.ht.popj.flow.FlowHoliday" resultMap="BaseResultMap1">
+		SELECT flow_holiday.*,student.`id`,student.`stuname` FROM
+		flow_holiday,student WHERE flow_holiday.`studid`=student.`id` AND
+		flow_holiday.`status`=1 AND flow_holiday.`upset`=#{upset} 
+		AND flow_holiday.`studid`=#{studid} ORDER BY flow_holiday.`stratTime` DESC
+	</select>
+	
+	<select id="selectMyEmpHoliday" parameterType="com.ht.popj.flow.FlowHoliday" resultMap="BaseResultMap1">
+		SELECT flow_holiday.*,emp.`id`,emp.`empname` FROM
+		flow_holiday,emp WHERE flow_holiday.`empid`=emp.`id` AND
+		flow_holiday.`status`=1 AND flow_holiday.`upset`=#{upset} 
+		AND flow_holiday.`empid`=#{empid} ORDER BY flow_holiday.`stratTime` DESC
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from flow_holiday
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from flow_holiday
+	</select>
+
+	<select id="selectSelective" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from flow_holiday
+		<where>
+			<if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="studid != null">
+				AND studid = #{studid,jdbcType=INTEGER}
+			</if>
+			<if test="strattime != null">
+				AND stratTime = #{strattime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endtime != null">
+				AND endTime = #{endtime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_holiday set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertEmpHoliday" parameterType="com.ht.popj.flow.FlowHoliday">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+		flow_holiday(flowModelTypeid,empid,stratTime,endTime,create_time,STATUS,remark,upset,applyman)
+		VALUES(#{flowmodeltypeid},#{empid},#{strattime},#{endtime},now(),1,#{remark},#{upset},#{applyman})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowHoliday">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO
+		flow_holiday(flowModelTypeid,studid,stratTime,endTime,create_time,STATUS,remark,upset,applyman)
+		VALUES(#{flowmodeltypeid},#{studid},#{strattime},#{endtime},now(),1,#{remark},#{upset},#{applyman})
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowHoliday">
+		update flow_holiday
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="studid != null">
+				studid = #{studid,jdbcType=INTEGER},
+			</if>
+			<if test="strattime != null">
+				stratTime = #{strattime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				endTime = #{endtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

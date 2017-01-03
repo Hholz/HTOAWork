@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StuReplyModelMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StuReplyModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="srm_name" property="srmName" jdbcType="VARCHAR" />
+    <result column="srm_descr" property="srmDescr" jdbcType="VARCHAR" />
+    <result column="cls_id" property="clsId" jdbcType="INTEGER" />
+    <result column="teac_id" property="teacId" jdbcType="VARCHAR" />
+    <result column="rep_time" property="repTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="cls" javaType="com.ht.popj.student.StudentClass" column="cls_id" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	</association>
+	<association property="teac" javaType="com.ht.popj.dailyWork.Emp" column="teac_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, srm_name, srm_descr, cls_id, teac_id, rep_time, create_time, update_time, status, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_reply_model
+    where id = #{id,jdbcType=INTEGER} and status > 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_reply_model
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StuReplyModel" >
+      <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">  
+           SELECT LAST_INSERT_ID()  
+      </selectKey> 
+    insert into stu_reply_model
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="srmName != null" >
+        srm_name,
+      </if>
+      <if test="srmDescr != null" >
+        srm_descr,
+      </if>
+      <if test="clsId != null" >
+        cls_id,
+      </if>
+      <if test="teacId != null" >
+        teac_id,
+      </if>
+      <if test="repTime != null" >
+        rep_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="srmName != null" >
+        #{srmName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmDescr != null" >
+        #{srmDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="clsId != null" >
+        #{clsId,jdbcType=INTEGER},
+      </if>
+      <if test="teacId != null" >
+        #{teacId,jdbcType=VARCHAR},
+      </if>
+      <if test="repTime != null" >
+        #{repTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StuReplyModel" >
+    update stu_reply_model
+    <set >
+      <if test="srmName != null" >
+        srm_name = #{srmName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmDescr != null" >
+        srm_descr = #{srmDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="clsId != null" >
+        cls_id = #{clsId,jdbcType=INTEGER},
+      </if>
+      <if test="teacId != null" >
+        teac_id = #{teacId,jdbcType=VARCHAR},
+      </if>
+      <if test="repTime != null" >
+        rep_time = #{repTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delByUpdate" parameterType="int" >
+    update stu_reply_model set status = 0 where id = #{id}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from stu_reply_model where status > 0
+  </select>
+  <select id="selectAllUnRep" resultMap="BaseResultMap">
+      select * from stu_reply_model where status = 1
+  </select>
+  <select id="selectByPJ" parameterType="com.ht.popj.student.StuReplyModel"  resultMap="BaseResultMap">
+      select * from stu_reply_model
+	<where>
+	    <if test="id != null">
+			id = #{id}
+		</if>
+		<if test="srmName != null and !srmName.isEmpty()" >
+	        and srm_name like '%${srmName}%'
+	    </if>
+	    <if test="clsId != null" >
+	       and cls_id = #{clsId}
+	    </if>
+	    <if test="teacId != null and !teacId.isEmpty()" >
+	       and teac_id = #{teacId}
+	    </if>
+	    <if test="status != null" >
+	       and status = #{status}
+	    </if>
+	    <if test="status == null" >
+	       and status > 0
+	    </if>
+	</where>
+	order by status,id desc
+  </select>
+</mapper>

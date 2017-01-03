@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowStudentApplyMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowStudentApply">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="classid1" property="classid1" jdbcType="INTEGER" />
+		<result column="classid2" property="classid2" jdbcType="INTEGER" />
+		<result column="strat_time" property="stratTime" jdbcType="TIMESTAMP" />
+		<result column="studWork" property="studwork" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowStudentApply">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="studid" property="studid" jdbcType="INTEGER" />
+		<result column="classid1" property="classid1" jdbcType="INTEGER" />
+		<result column="classid2" property="classid2" jdbcType="INTEGER" />
+		<result column="strat_time" property="stratTime" jdbcType="TIMESTAMP" />
+		<result column="studWork" property="studwork" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		
+		<collection property="student" ofType="com.ht.popj.student.Student">
+		    <id column="id" property="id" jdbcType="INTEGER" />
+			<result column="stuname" property="stuname" jdbcType="VARCHAR" />
+		</collection>
+		
+		<collection property="studentClass" ofType="com.ht.popj.student.StudentClass">
+		    <id column="id" property="id" jdbcType="INTEGER" />
+			<result column="classname" property="classname" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowModelTypeid, studid, classid1, classid2, strat_time, studWork,
+		update_time,
+		create_time, remark, status, upset
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_student_apply
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectStudentApplyList" resultMap="BaseResultMap1" parameterType="java.lang.Integer">
+	    SELECT flow_student_apply.*,student.`id`,student.`stuname`,student_class.`id`,student_class.`classname`
+		FROM flow_student_apply,student,student_class
+		WHERE flow_student_apply.`studid`=student.`id` AND flow_student_apply.`status`=1
+		AND flow_student_apply.`classid1`=student_class.`id`
+		AND flow_student_apply.`upset`=#{upset} AND flow_student_apply.`studid`=#{studid}
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_student_apply
+	</select>
+	
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.flow.FlowStudentApply">
+		select * from flow_student_apply
+		<where>
+		    <if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="studid != null">
+				AND studid = #{studid,jdbcType=INTEGER}
+			</if>
+			<if test="classid1 != null">
+				AND classid1 = #{classid1,jdbcType=INTEGER}
+			</if>
+			<if test="classid2 != null">
+				AND classid2 = #{classid2,jdbcType=INTEGER}
+			</if>
+			<if test="stratTime != null">
+				AND strat_time = #{stratTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="studwork != null">
+				AND studWork = #{studwork,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER}
+			</if>
+		    
+		</where>
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_student_apply set status=0
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowStudentApply">
+		insert into flow_student_apply
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid,
+			</if>
+			<if test="studid != null">
+				studid,
+			</if>
+			<if test="classid1 != null">
+				classid1,
+			</if>
+			<if test="classid2 != null">
+				classid2,
+			</if>
+			<if test="stratTime != null">
+				strat_time,
+			</if>
+			<if test="studwork != null">
+				studWork,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+				create_time,
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="studid != null">
+				#{studid,jdbcType=INTEGER},
+			</if>
+			<if test="classid1 != null">
+				#{classid1,jdbcType=INTEGER},
+			</if>
+			<if test="classid2 != null">
+				#{classid2,jdbcType=INTEGER},
+			</if>
+			<if test="stratTime != null">
+				#{stratTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="studwork != null">
+				#{studwork,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+				NOW(),
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowStudentApply">
+		update flow_student_apply
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="studid != null">
+				studid = #{studid,jdbcType=INTEGER},
+			</if>
+			<if test="classid1 != null">
+				classid1 = #{classid1,jdbcType=INTEGER},
+			</if>
+			<if test="classid2 != null">
+				classid2 = #{classid2,jdbcType=INTEGER},
+			</if>
+			<if test="stratTime != null">
+				strat_time = #{stratTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="studwork != null">
+				studWork = #{studwork,jdbcType=VARCHAR},
+			</if>
+				update_time = NOW(),
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

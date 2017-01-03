@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.FamilyinfoMapper">
+	<resultMap id="ResultMap" type="com.ht.popj.dailyWork.Familyinfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="contactname" property="contactname" jdbcType="VARCHAR" />
+		<result column="relationship" property="relationship" jdbcType="VARCHAR" />
+		<result column="Phone" property="phone" jdbcType="VARCHAR" />
+		<result column="family_remark" property="familyRemark" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Familyinfo" extends="ResultMap">
+	    <collection property="emp" ofType="com.ht.popj.dailyWork.Emp">
+			<id column="emp_id" property="id"/>
+			<result column="emp_name" property="empname"/>
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, empid, contactname, relationship, Phone, family_remark, create_time,
+		update_time,
+		status, remark
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from familyinfo
+		where id = #{id,jdbcType=INTEGER} AND status=1
+	</select>
+	<select id="selectFamilyinfo" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Familyinfo">
+		select `familyinfo`.*,e.empname as emp_name from familyinfo,emp as e 
+		<where>
+			AND `familyinfo`.status=1 
+			AND `familyinfo`.empid=e.id
+			<if test="empid !=null and empid !=''">
+				AND `familyinfo`.empid = #{empid}
+			</if>
+			<if test="contactname !=null and contactname !=''">
+				AND `familyinfo`.contactname LIKE '%${contactname}%'
+			</if>
+			<if test="relationship !=null and relationship !=''">
+				AND `familyinfo`.relationship = #{relationship}
+			</if>
+			<if test="phone !=null and phone !=''">
+				AND `familyinfo`.Phone LIKE '%${phone}%'
+			</if>
+			<if test="familyRemark !=null and familyRemark !=''">
+				AND `familyinfo`.family_remark LIKE '%${familyRemark}%'
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update familyinfo set status = 0
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.dailyWork.Familyinfo">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+	    insert into familyinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				id,
+			</if>
+			<if test="empid != null and empid !=''">
+				empid,
+			</if>
+			<if test="contactname != null and contactname !=''">
+				contactname,
+			</if>
+			<if test="relationship != null and relationship !=''">
+				relationship,
+			</if>
+			<if test="phone != null and phone !=''">
+				Phone,
+			</if>
+			<if test="familyRemark != null and familyRemark !=''">
+				family_remark,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null and empid !=''">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="contactname != null and contactname !=''">
+				#{contactname,jdbcType=VARCHAR},
+			</if>
+			<if test="relationship != null and relationship !=''">
+				#{relationship,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null and phone !=''">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="familyRemark != null and familyRemark !=''">
+				#{familyRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Familyinfo">
+		update familyinfo
+		<set>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="contactname != null">
+				contactname = #{contactname,jdbcType=VARCHAR},
+			</if>
+			<if test="relationship != null">
+				relationship = #{relationship,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				Phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="familyRemark != null">
+				family_remark = #{familyRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

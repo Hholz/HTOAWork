@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.MaterialMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Material">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="materialTypeid" property="materialtypeid"
+			jdbcType="INTEGER" />
+		<result column="materialName" property="materialname" jdbcType="VARCHAR" />
+		<result column="Unit" property="unit" jdbcType="VARCHAR" />
+		<result column="Price" property="price" jdbcType="DECIMAL" />
+		<result column="Style" property="style" jdbcType="VARCHAR" />
+		<result column="Counts" property="counts" jdbcType="INTEGER" />
+		<result column="Meterial_Remark" property="meterialRemark"
+			jdbcType="VARCHAR" />
+		<result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="Status" property="status" jdbcType="INTEGER" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, materialTypeid, materialName, Unit, Price, Style,
+		Counts,
+		Meterial_Remark, Create_time,
+		Update_time, Status, Remark
+	</sql>
+	<select id="selectList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from material
+		where Status=1
+	</select>
+	
+	<select id="selectMaterialByName" resultMap="BaseResultMap">
+	    SELECT material.`id`,material.`materialName` FROM material WHERE material.`materialName` LIKE '%电脑%' and Status=1
+	</select>
+	
+	<select id="selectByName" resultMap="BaseResultMap">
+		SELECT
+		f.*,t.`materialTypeName` as typename FROM material f,materialtype t
+		WHERE f.Status=1 AND f.`materialTypeid` = t.`id`
+	</select>
+	<select id="selectMaterial" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.dailyWork.Material">
+		select f.*,t.`materialTypeName` as typename FROM material
+		f,materialtype t
+		<where>
+			f.Status=1 AND f.`materialTypeid` = t.`id`
+			<if test="materialtypeid !=null and materialtypeid !=''">
+				AND f.materialtypeid = #{materialtypeid}
+			</if>
+			<if test="materialname !=null and materialname !=''">
+				AND f.materialname LIKE '%${materialname}%'
+			</if>
+		</where>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		*
+		from material
+		where id = #{id,jdbcType=INTEGER}
+		and Status=1
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		material
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.dailyWork.Material">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		insert into material
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="materialtypeid != null">
+				materialTypeid,
+			</if>
+			<if test="materialname != null">
+				materialName,
+			</if>
+			<if test="unit != null">
+				Unit,
+			</if>
+			<if test="price != null">
+				Price,
+			</if>
+			<if test="style != null">
+				Style,
+			</if>
+			<if test="counts != null">
+				Counts,
+			</if>
+			<if test="meterialRemark != null">
+				Meterial_Remark,
+			</if>
+			Create_time,
+			<if test="updateTime != null">
+				Update_time,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="remark != null">
+				Remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="materialtypeid != null">
+				#{materialtypeid,jdbcType=INTEGER},
+			</if>
+			<if test="materialname != null">
+				#{materialname,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="style != null">
+				#{style,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				#{counts,jdbcType=INTEGER},
+			</if>
+			<if test="meterialRemark != null">
+				#{meterialRemark,jdbcType=VARCHAR},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.Material">
+		update material
+		<set>
+			<if test="materialtypeid != null">
+				materialTypeid = #{materialtypeid,jdbcType=INTEGER},
+			</if>
+			<if test="materialname != null">
+				materialName = #{materialname,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				Unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				Price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="style != null">
+				Style = #{style,jdbcType=VARCHAR},
+			</if>
+			<if test="counts != null">
+				Counts = #{counts,jdbcType=INTEGER},
+			</if>
+			<if test="meterialRemark != null">
+				Meterial_Remark = #{meterialRemark,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				Create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			Update_time = NOW(),
+			<if test="status != null">
+				Status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				Remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

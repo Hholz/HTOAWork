@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="   
+           http://www.springframework.org/schema/beans   
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+           http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+           http://www.springframework.org/schema/mvc   
+           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<!-- service -->
+
+	<bean id="materialtypeService" class="com.ht.serviceImpl.dailyWork.MaterialTypeServiceImpl"></bean>
+
+	<bean id="floService" class="com.ht.serviceImpl.sysSet.FlowModelTypeServiceImpl"></bean>
+
+	<bean id="fmS" class="com.ht.serviceImpl.sysSet.FlowModelServiceImpl"></bean>
+
+	<bean id="MService" class="com.ht.serviceImpl.dailyWork.MaterialServiceImpl"></bean>
+
+	<bean id="aptypeservice" class="com.ht.serviceImpl.sysSet.ApproveTypeServiceImpl"></bean>
+
+	<bean id="htservice" class="com.ht.serviceImpl.dailyWork.HolidayTypeServiceImpl"></bean>
+
+	<bean id="apdotservice" class="com.ht.serviceImpl.sysSet.ApproveDotServiceImpl"></bean>
+
+	<bean id="aptitleservice" class="com.ht.serviceImpl.sysSet.ApprovalTitleServiceImpl"></bean>
+
+	<bean id="appmaterialservice" class="com.ht.serviceImpl.dailyWork.ApplyMaterialServiceImpl"></bean>
+
+	<bean id="fscheduleservice" class="com.ht.serviceImpl.sysSet.FlowscheduleServiceImpl"></bean>
+
+	<bean id="rematerialservice" class="com.ht.serviceImpl.dailyWork.ReceiveMaterialServiceImpl"></bean>
+
+
+	<bean id="rms" class="com.ht.serviceImpl.dailyWork.ReturnMaterialServiceImpl"></bean>
+
+	<bean id="hservice" class="com.ht.serviceImpl.dailyWork.HolidayServiceImpl"></bean>
+
+	<bean id="fss" class="com.ht.serviceImpl.finance.FinanceSalarySetServiceImpl"></bean>
+
+	<bean id="attcountservice" class="com.ht.serviceImpl.dailyWork.AttendancecountServiceImpl"></bean>
+	
+	<bean id="fsls" class="com.ht.serviceImpl.finance.FinanceSalarylistServiceServiceImpl"></bean>
+	
+	<bean id="finaPolicQuantitySetService" class="com.ht.serviceImpl.sysSet.FinancePolicquantitysetServiceImpl"></bean>
+	
+	<bean id="flowapplymaterialservice" class="com.ht.serviceImpl.flow.FlowApplyMaterialServiceImpl"></bean>
+	
+	<bean id="flowapplymaterialdetailservice" class="com.ht.serviceImpl.flow.FlowApplyMaterialdetailServiceImpl"></bean>
+	
+	<bean id="waitformaterialService" class="com.ht.serviceImpl.flow.WaitformaterialServiceImpl"></bean>
+	
+	<bean id="flowsupplementservice" class="com.ht.serviceImpl.flow.FlowSupplementServiceImpl"></bean>
+	
+	<bean id="flowsupplementdetailservice" class="com.ht.serviceImpl.flow.FlowSupplementDetailServiceImpl"></bean>
+	
+	<bean id="flowreceivematerialservice" class="com.ht.serviceImpl.flow.FlowReceivematerialServiceImpl"></bean>
+	
+	<bean id="flowreceivematerialdetailservice" class="com.ht.serviceImpl.flow.FlowReceivematerialdetailServiceImpl"></bean>
+	
+	<bean id="flowreturnmaterialservice" class="com.ht.serviceImpl.flow.FlowReturnmaterialServiceImpl"></bean>
+	
+	<bean id="flowreturnmaterialdeteailservice" class="com.ht.serviceImpl.flow.FlowReturnmaterialdetailServiceImpl"></bean>
+	
+	<bean id="flowbaoxiaoservice" class="com.ht.serviceImpl.flow.FlowBaoxiaoServiceImpl"></bean>
+	
+	<bean id="flowbaoxiaodetailservice" class="com.ht.serviceImpl.flow.FlowBaoxiaodetailServiceImpl"></bean>
+	
+	<bean id="flowswaparrangeservice" class="com.ht.serviceImpl.flow.FlowSwaparrangeServiceImpl"></bean>
+	
+	<bean id="flowswaparrangedetailservice" class="com.ht.serviceImpl.flow.FlowSwaparrangeDetailServiceImpl"></bean>
+	
+	
+</beans>    

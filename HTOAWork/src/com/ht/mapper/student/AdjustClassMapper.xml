@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.AdjustClassMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.AdjustClass" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="clsId" property="clsid" jdbcType="INTEGER" />
+    <result column="toClsId" property="toclsid" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="ac_status" property="acStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="stuatus" property="stuatus" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="cls" javaType="com.ht.popj.student.StudentClass" column="clsId" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	</association>
+    <association property="tocls" javaType="com.ht.popj.student.StudentClass" column="toclsid" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	</association>
+	<association property="student" javaType="com.ht.popj.student.Student" column="stu_id" select="com.ht.mapper.student.StudentMapper.selectByPrimaryKey">
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_id, clsId, toClsId, reason, ac_status, create_time, update_time, stuatus, 
+    remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from adjust_class
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from adjust_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.AdjustClass" >
+    insert into adjust_class
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="clsid != null" >
+        clsId,
+      </if>
+      <if test="toclsid != null" >
+        toClsId,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="acStatus != null" >
+        ac_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="stuatus != null" >
+        stuatus,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="clsid != null" >
+        #{clsid,jdbcType=INTEGER},
+      </if>
+      <if test="toclsid != null" >
+        #{toclsid,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="acStatus != null" >
+        #{acStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stuatus != null" >
+        #{stuatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.AdjustClass" >
+    update adjust_class
+    <set >
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="clsid != null" >
+        clsId = #{clsid,jdbcType=INTEGER},
+      </if>
+      <if test="toclsid != null" >
+        toClsId = #{toclsid,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="acStatus != null" >
+        ac_status = #{acStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stuatus != null" >
+        stuatus = #{stuatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 通过学生id来查分班申请记录 -->
+  <select id="selectbyStuId" parameterType="int" resultMap="BaseResultMap">
+      select * from adjust_class where stu_id = #{id}
+  </select>
+  <!-- 通过学生ids来查分班等待自己未处理的申请记录 -->
+  <select id="selectbyClsIdsNodel" parameterType="map" resultMap="BaseResultMap">
+      select * from adjust_class where clsId in
+      <foreach collection="clsIds" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+      and ac_status = 0
+  </select>
+  <!-- 通过学生ids来查分班等待自己处理了的申请记录，原班主任取 -->
+  <select id="selectbyStuIds" parameterType="map" resultMap="BaseResultMap">
+      select * from adjust_class where stu_id in
+      <foreach collection="ids" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+      and ac_status != 0
+  </select>
+  
+  <!-- 通过学生原班级id申请记录，原班主任取 -->
+  <select id="selectAllbyClsId" parameterType="map" resultMap="BaseResultMap">
+      select * from adjust_class  where clsId in 
+       <foreach collection="clsIds" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+  </select>
+  <!-- ac_status =1 时表示原班主任同意了 ，新班主任取-->
+  <select id="selectbyToClsIdsNodel" parameterType="map" resultMap="BaseResultMap">
+      select * from adjust_class where toClsId in
+      <foreach collection="clsIds" open="(" close=")" separator="," item="id">
+          #{id}
+      </foreach>
+      and ac_status = 1
+  </select>
+</mapper>

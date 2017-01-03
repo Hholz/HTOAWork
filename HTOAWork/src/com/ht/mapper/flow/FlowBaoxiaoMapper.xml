@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowBaoxiaoMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowBaoxiao">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowmodeltypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		<result column="applyman" property="applyman" jdbcType="VARCHAR" />
+		<result column="applyremark" property="applyremark" jdbcType="VARCHAR" />
+		<result column="approvalStatus" property="approvalStatus" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flowmodeltypeid, empid, price, create_time,
+		update_time, status,
+		remark, upset,applyman,applyremark,approvalStatus
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_baoxiao where status=1 and id =
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from flow_baoxiao where status=1 ORDER BY CreateTime DESC
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_baoxiao
+		<where>
+			status=1
+			<if test="flowmodeltypeid != null">
+				AND flowmodeltypeid = #{flowmodeltypeid,jdbcType=INTEGER}
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=VARCHAR}
+			</if>
+			<if test="price != null">
+				AND price = #{price,jdbcType=DECIMAL}
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=TINYINT}
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER}
+			</if>
+			<if test="applyman != null">
+				AND applyman = #{applyman,jdbcType=VARCHAR}
+			</if>
+			<if test="applyremark != null">
+				AND applyremark = #{applyremark,jdbcType=VARCHAR}
+			</if>
+			<if test="approvalStatus != null">
+				AND approvalStatus = #{approvalStatus,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update
+		flow_baoxiao set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowBaoxiao">
+		insert into flow_baoxiao
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltypeid != null">
+				flowmodeltypeid,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+			<if test="applyman != null">
+				applyman,
+			</if>
+			<if test="applyremark != null">
+				applyremark,
+			</if>
+			<if test="approvalStatus != null">
+				approvalStatus,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				#{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="applyremark != null">
+				#{applyremark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalStatus != null">
+				#{approvalStatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowBaoxiao">
+		update flow_baoxiao
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowmodeltypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = NOW(),
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+			<if test="applyman != null">
+				applyman = #{applyman,jdbcType=VARCHAR},
+			</if>
+			<if test="applyremark != null">
+				applyremark = #{applyremark,jdbcType=VARCHAR},
+			</if>
+			<if test="approvalStatus != null">
+				approvalStatus = #{approvalStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

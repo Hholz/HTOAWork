@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.PatrolHouseMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.PatrolHouse" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="houseid" property="houseid" jdbcType="INTEGER" />
+    <result column="mustarrive" property="mustarrive" jdbcType="INTEGER" />
+    <result column="truearrive" property="truearrive" jdbcType="INTEGER" />
+    <result column="clean" property="clean" jdbcType="VARCHAR" />
+    <result column="patrolteach" property="patrolteach" jdbcType="VARCHAR" />
+    <result column="patroltime" property="patroltime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="DATE" />
+    
+    <!-- 关联员工表 -->
+    <association property="emp" javaType="com.ht.popj.dailyWork.Emp" column="patrolteach" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+        
+    </association>
+    
+    <!-- 关联宿舍表 -->
+    <association property="house" javaType="com.ht.popj.student.StudentHourse" column="houseid" select="com.ht.mapper.student.StudentHourseMapper.selectByPrimaryKey">
+        
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+     <if test="id != null">
+        id=#{id}
+    </if>
+    <if test="houseid != null and houseid != ''">
+        and houseid=#{houseid}
+    </if>
+    <if test="patrolteach != null and patrolteach != ''">
+        and patrolteach=#{patrolteach}
+    </if>
+  </sql>
+  
+  <select id="findPatrolHouseList1" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.PatrolHouse" >
+    select * from patrol_house
+    <where>
+        <include refid="Base_Column_List" />
+        and status = 1
+    </where>
+  </select>
+  
+  <select id="findPatrolHouseList2" resultType="com.ht.popj.dailyWork.PatrolHouse">
+      select * from patrol_house where status = 1
+  </select>
+  
+  <delete id="deletePatrolHouseById" parameterType="java.lang.Integer" >
+    update patrol_house set status = 0 where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.PatrolHouse" >
+    insert into patrol_house (id, houseid, mustarrive, 
+      truearrive, clean, patrolteach, 
+      patroltime, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{houseid,jdbcType=INTEGER}, #{mustarrive,jdbcType=INTEGER}, 
+      #{truearrive,jdbcType=INTEGER}, #{clean,jdbcType=VARCHAR}, #{patrolteach,jdbcType=VARCHAR}, 
+      #{patroltime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{remark,jdbcType=DATE})
+  </insert>
+  <insert id="addPatrolHouse" parameterType="com.ht.popj.dailyWork.PatrolHouse" >
+    insert into patrol_house
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseid != null" >
+        houseid,
+      </if>
+      <if test="mustarrive != null" >
+        mustarrive,
+      </if>
+      <if test="truearrive != null" >
+        truearrive,
+      </if>
+      <if test="clean != null" >
+        clean,
+      </if>
+      <if test="patrolteach != null" >
+        patrolteach,
+      </if>
+      <if test="patroltime != null" >
+        patroltime,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseid != null" >
+        #{houseid,jdbcType=INTEGER},
+      </if>
+      <if test="mustarrive != null" >
+        #{mustarrive,jdbcType=INTEGER},
+      </if>
+      <if test="truearrive != null" >
+        #{truearrive,jdbcType=INTEGER},
+      </if>
+      <if test="clean != null" >
+        #{clean,jdbcType=VARCHAR},
+      </if>
+      <if test="patrolteach != null" >
+        #{patrolteach,jdbcType=VARCHAR},
+      </if>
+      <if test="patroltime != null" >
+        #{patroltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updatePatrolHouse" parameterType="com.ht.popj.dailyWork.PatrolHouse" >
+    update patrol_house
+    <set >
+      <if test="houseid != null" >
+        houseid = #{houseid,jdbcType=INTEGER},
+      </if>
+      <if test="mustarrive != null" >
+        mustarrive = #{mustarrive,jdbcType=INTEGER},
+      </if>
+      <if test="truearrive != null" >
+        truearrive = #{truearrive,jdbcType=INTEGER},
+      </if>
+      <if test="clean != null" >
+        clean = #{clean,jdbcType=VARCHAR},
+      </if>
+      <if test="patrolteach != null" >
+        patrolteach = #{patrolteach,jdbcType=VARCHAR},
+      </if>
+      <if test="patroltime != null" >
+        patroltime = #{patroltime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.PatrolHouse" >
+    update patrol_house
+    set houseid = #{houseid,jdbcType=INTEGER},
+      mustarrive = #{mustarrive,jdbcType=INTEGER},
+      truearrive = #{truearrive,jdbcType=INTEGER},
+      clean = #{clean,jdbcType=VARCHAR},
+      patrolteach = #{patrolteach,jdbcType=VARCHAR},
+      patroltime = #{patroltime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

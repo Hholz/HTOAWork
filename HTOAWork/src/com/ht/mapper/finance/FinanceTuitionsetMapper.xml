@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.finance.FinanceTuitionsetMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.finance.FinanceTuitionset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="termid" property="termid" jdbcType="INTEGER" />
+    <result column="tuition" property="tuition" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="eduterm" javaType="int" column="termid" select="com.ht.mapper.education.EduTermMapper.selectByPrimaryKey">
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, termid, tuition, status, create_time, update_time, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_tuitionset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_tuitionset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.finance.FinanceTuitionset" >
+    insert into finance_tuitionset (termid, tuition,create_time,remark)
+    values (#{termid,jdbcType=INTEGER},#{tuition,jdbcType=INTEGER},now(),#{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.finance.FinanceTuitionset" >
+    insert into finance_tuitionset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="termid != null" >
+        termid,
+      </if>
+      <if test="tuition != null" >
+        tuition,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="termid != null" >
+        #{termid,jdbcType=INTEGER},
+      </if>
+      <if test="tuition != null" >
+        #{tuition,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.finance.FinanceTuitionset" >
+    update finance_tuitionset
+    <set >
+      <if test="termid != null" >
+        termid = #{termid,jdbcType=INTEGER},
+      </if>
+      <if test="tuition != null" >
+        tuition = #{tuition,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      
+        update_time =now(),
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.finance.FinanceTuitionset" >
+    update finance_tuitionset
+    set termid = #{termid,jdbcType=INTEGER},
+      tuition = #{tuition,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from finance_tuitionset
+  </select>
+  <select id="selectDinamic" resultMap="BaseResultMap" parameterType="com.ht.popj.finance.FinanceTuitionset">
+  	select * from finance_tuitionset
+  	<where>
+ 	  <if test="termid != null" >
+       and termid = #{termid,jdbcType=INTEGER}
+      </if>
+      <if test="tuition != null" >
+       and tuition = #{tuition,jdbcType=INTEGER}
+      </if>
+      <if test="status != null" >
+       and status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+       and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+       and update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="remark != null" >
+       and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+  	</where>
+  </select>
+  <select id="selectAllMajor" parameterType="com.ht.popj.education.EduMajor">
+  	select major_name from edu_major
+  </select>
+  <select id="selectAllterm" parameterType="com.ht.popj.education.EduTerm">
+  	select term_Name from edu_term where status=0
+  </select>
+</mapper>

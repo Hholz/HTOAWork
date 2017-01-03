@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.BaoxiaotypeMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.Baoxiaotype" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="baoxiaotypename" property="baoxiaotypename" jdbcType="VARCHAR" />
+    <result column="baoxiaotype_remark" property="baoxiaotypeRemark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, baoxiaotypename, baoxiaotype_remark, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from baoxiaotype
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="Baoxiaotypelist" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.Baoxiaotype" >
+    select * from baoxiaotype
+    	<where>
+		    AND status=1
+			<if test="baoxiaotypename !=null and baoxiaotypename !=''">
+				AND baoxiaotypename LIKE '%${baoxiaotypename}%'
+			</if>
+			<if test="baoxiaotypeRemark !=null and baoxiaotypeRemark !=''">
+				AND baoxiaotype_remark LIKE '%${baoxiaotypeRemark}%'
+			</if>
+		</where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update baoxiaotype set status = 0 where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.dailyWork.Baoxiaotype" >
+    insert into baoxiaotype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="baoxiaotypename != null" >
+        baoxiaotypename,
+      </if>
+      <if test="baoxiaotypeRemark != null" >
+        baoxiaotype_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="baoxiaotypename != null" >
+        #{baoxiaotypename,jdbcType=VARCHAR},
+      </if>
+      <if test="baoxiaotypeRemark != null" >
+        #{baoxiaotypeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.dailyWork.Baoxiaotype" >
+    update baoxiaotype
+    <set >
+      <if test="baoxiaotypename != null" >
+        baoxiaotypename = #{baoxiaotypename,jdbcType=VARCHAR},
+      </if>
+      <if test="baoxiaotypeRemark != null" >
+        baoxiaotype_remark = #{baoxiaotypeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

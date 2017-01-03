@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.dailyWork.MaterialTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.dailyWork.MaterialType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="materialTypeName" property="materialtypename" jdbcType="VARCHAR" />
+    <result column="materType_Remark" property="matertypeRemark" jdbcType="VARCHAR" />
+    <result column="Create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="Update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, materialTypeName, materType_Remark, Create_time, Update_time, Status, Remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from materialtype
+    where id = #{id,jdbcType=INTEGER} and Status=1
+  </select>
+    <select id="selectList" resultMap="BaseResultMap">
+	select 
+    <include refid="Base_Column_List" />
+    from materialtype
+    where Status=1
+  </select>
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="com.ht.popj.dailyWork.MaterialType" >
+    select 
+    <include refid="Base_Column_List" />
+    from materialtype
+    where materType_Remark LIKE '%${matertypeRemark}%' and materialTypeName LIKE '%${materialtypename}%' and Status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update materialtype set Status = 0
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.dailyWork.MaterialType" >
+      <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+	</selectKey>
+    insert into materialtype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="materialtypename != null" >
+        materialTypeName,
+      </if>
+      <if test="matertypeRemark != null" >
+        materType_Remark,
+      </if>
+        Create_time,
+      <if test="remark != null" >
+        Remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="materialtypename != null" >
+        #{materialtypename,jdbcType=VARCHAR},
+      </if>
+      <if test="matertypeRemark != null" >
+        #{matertypeRemark,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.dailyWork.MaterialType" >
+    update materialtype
+    <set >
+      <if test="materialtypename != null" >
+        materialTypeName = #{materialtypename,jdbcType=VARCHAR},
+      </if>
+      <if test="matertypeRemark != null" >
+        materType_Remark = #{matertypeRemark,jdbcType=VARCHAR},
+      </if>
+        Update_time = NOW(),
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

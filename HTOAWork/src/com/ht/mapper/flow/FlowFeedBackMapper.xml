@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.flow.FlowFeedBackMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.flow.FlowFeedBack">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="studid" property="studentid" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="applyMan" property="applyMan" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap1" type="com.ht.popj.flow.FlowFeedBack">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="flowModelTypeid" property="flowmodeltypeid"
+			jdbcType="INTEGER" />
+		<result column="studid" property="studentid" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="empid" property="empid" jdbcType="VARCHAR" />
+		<result column="applyMan" property="applyMan" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="upset" property="upset" jdbcType="INTEGER" />
+		
+		<collection property="student" ofType="com.ht.popj.student.Student">
+		    <id column="id" property="id"/>
+		    <result column="stuname" property="stuname"/>
+		    
+		    <collection property="classInfo" ofType="com.ht.popj.student.StudentClass">
+		        <id column="id" property="id"/>
+		   	 	<result column="classname" property="classname"/>
+		    </collection>
+		</collection>
+		
+	</resultMap>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_feed_back where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from flow_feed_back
+	</select>
+	
+	<select id="selectMyFeedBack" resultMap="BaseResultMap1" parameterType="com.ht.popj.flow.FlowFeedBack">
+	    SELECT flow_feed_back.*,student.`id`,student.`stuname`,student_class.`id`,student_class.`classname` 
+	    FROM flow_feed_back,student,student_class
+		WHERE flow_feed_back.`studid`=student.`id` AND student.`classid`=student_class.`id` 
+		AND flow_feed_back.`empid`=#{empid} AND flow_feed_back.`status`=1 AND flow_feed_back.`upset`=#{upset}
+	</select>
+
+	<select id="selectSelective" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select * from flow_feed_back
+		<where>
+			status=1 ORDER BY createTime DESC
+			<if test="flowmodeltypeid != null">
+				AND flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				AND empid = #{empid,jdbcType=INTEGER},
+			</if>
+			<if test="applyMan != null">
+				AND applyMan = #{applyMan,jdbcType=INTEGER},
+			</if>
+			<if test="money != null">
+				AND money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				AND remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				AND upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update flow_feed_back set status=0 where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.ht.popj.flow.FlowFeedBack">
+		insert into flow_feed_back
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid,
+			</if>
+			<if test="applyMan != null">
+				applyMan,
+			</if>
+			<if test="empid != null">
+				empid,
+			</if>
+			<if test="studentid != null">
+				studid,
+			</if>
+			<if test="money != null">
+				money,
+			</if>
+			create_time,
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="upset != null">
+				upset,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="flowmodeltypeid != null">
+				#{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="applyMan != null">
+				#{applyMan,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=INTEGER},
+			</if>
+			<if test="studentid != null">
+				#{studentid,jdbcType=INTEGER},
+			</if>
+			<if test="money != null">
+				#{money,jdbcType=DECIMAL},
+			</if>
+			NOW(),
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				#{upset,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.flow.FlowFeedBack">
+		update flow_feed_back
+		<set>
+			<if test="flowmodeltypeid != null">
+				flowModelTypeid = #{flowmodeltypeid,jdbcType=INTEGER},
+			</if>
+			<if test="empid != null">
+				empid = #{empid,jdbcType=INTEGER},
+			</if>
+			<if test="applyMan != null">
+				applyMan = #{applyMan,jdbcType=INTEGER},
+			</if>
+			<if test="money != null">
+				money = #{money,jdbcType=DECIMAL},
+			</if>
+			<if test="studentid != null">
+				#{studentid,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			update_time = NOW(),
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="upset != null">
+				upset = #{upset,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

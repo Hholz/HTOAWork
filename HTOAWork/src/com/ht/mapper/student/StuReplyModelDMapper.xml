@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StuReplyModelDMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StuReplyModelD" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="srm_id" property="srmId" jdbcType="INTEGER" />
+    <result column="srmd_name" property="srmdName" jdbcType="VARCHAR" />
+    <result column="srmd_score" property="srmdScore" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <association property="srm" javaType="com.ht.popj.student.StuReplyModel" column="srm_id" select="com.ht.mapper.student.StuReplyModelMapper.selectByPrimaryKey">
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, srm_id, srmd_name, srmd_score, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_reply_model_d
+    where id = #{id,jdbcType=INTEGER} and status = 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_reply_model_d
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StuReplyModelD" >
+    insert into stu_reply_model_d
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="srmId != null" >
+        srm_id,
+      </if>
+      <if test="srmdName != null" >
+        srmd_name,
+      </if>
+      <if test="srmdScore != null" >
+        srmd_score,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="srmId != null" >
+        #{srmId,jdbcType=INTEGER},
+      </if>
+      <if test="srmdName != null" >
+        #{srmdName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmdScore != null" >
+        #{srmdScore,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StuReplyModelD" >
+    update stu_reply_model_d
+    <set >
+      <if test="srmId != null" >
+        srm_id = #{srmId,jdbcType=INTEGER},
+      </if>
+      <if test="srmdName != null" >
+        srmd_name = #{srmdName,jdbcType=VARCHAR},
+      </if>
+      <if test="srmdScore != null" >
+        srmd_score = #{srmdScore,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="delByUpdate" parameterType="int" >
+    update stu_reply_model_d set status = 0 where id = #{id}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+      select * from stu_reply_model_d where status = 1
+  </select>
+  <select id="selectBysrmId" parameterType="int" resultMap="BaseResultMap">
+      select * from stu_reply_model_d where srm_id = #{srmId} and status = 1
+  </select>
+  <select id="selectByPJ" resultMap="BaseResultMap">
+      select * from stu_reply_model_d 
+      <where>
+          	 <if test="id != null" >
+		        id = #{srmId,jdbcType=INTEGER}
+		      </if>
+		    <if test="srmId != null" >
+		        and srm_id = #{srmId,jdbcType=INTEGER}
+		      </if>
+		      <if test="srmdName != null and !srmdName.isEmpty()" >
+		        and srmd_name = #{srmdName,jdbcType=VARCHAR}
+		      </if>
+		      <if test="srmdScore != null" >
+		        and srmd_score = #{srmdScore,jdbcType=INTEGER}
+		      </if>
+		      <if test="createTime != null" >
+		        and create_time = #{createTime,jdbcType=TIMESTAMP}
+		      </if>
+		      <if test="updateTime != null" >
+		        and update_time = #{updateTime,jdbcType=TIMESTAMP}
+		      </if>
+		      <if test="status != null" >
+		        and status = #{status,jdbcType=INTEGER}
+		      </if>
+		      <if test="remark != null" >
+		        and remark = #{remark,jdbcType=VARCHAR}
+		      </if>
+		      and status = 1
+		</where>
+  </select>
+  <!-- 通过模板表id来查该模板的总分 -->
+  <select id="countScoreBysrmId" resultType="int" parameterType="int">
+      SELECT SUM(srmd_score) FROM stu_reply_model_d WHERE srm_id = #{id} GROUP BY srm_id 
+  </select>
+  
+</mapper>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StudentFallMapper">
+	<resultMap id="BaseResultMap" type="com.ht.popj.student.StudentFall">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="level" property="level" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, level, create_time, update_time, status, remark
+	</sql>
+
+	<select id="selectFallList" resultMap="BaseResultMap">
+		SELECT DISTINCT student_fall.`id`,student_fall.`level` FROM flow_all,
+		student,student_class,student_fall WHERE
+		flow_all.`studid`=student.`id`
+		AND student.`classid`=student_class.`id` AND
+		student_class.`Level_id`=student_fall.`id`
+		AND student_fall.`status`=1
+	</select>
+
+	<select id="selectFallByComputer" resultMap="BaseResultMap">
+		SELECT DISTINCT student_fall.`id`,student_fall.`level`
+		FROM flow_computer_apply,student,student_class,student_fall
+		WHERE
+		flow_computer_apply.`studid`=student.`id`
+		AND student.`classid`=student_class.`id`
+		AND student_class.`Level_id`=student_fall.`id`
+		AND student_fall.`status`=1
+	</select>
+
+	<select id="selectFallAllList" resultMap="BaseResultMap">
+		SELECT student_fall.`id`,student_fall.`level` FROM student_fall
+		WHERE student_fall.`status`=1 ORDER BY student_fall.`level` DESC
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from student_fall
+		where id = #{id,jdbcType=INTEGER} and status=1
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from student_fall
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ht.popj.student.StudentFall">
+		insert into student_fall (id, level, create_time,
+		update_time, status, remark
+		)
+		values (#{id,jdbcType=INTEGER}, #{level,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.ht.popj.student.StudentFall">
+		insert into student_fall
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+
+			create_time,
+
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=VARCHAR},
+			</if>
+
+			now(),
+
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StudentFall">
+		update student_fall
+		<set>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StudentFall">
+		update student_fall
+		set level = #{level,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		update_time = #{updateTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByDynamic" resultMap="BaseResultMap"
+		parameterType="com.ht.popj.student.StudentFall">
+		select * from student_fall
+		<where>
+			<if test="level != null and !level.isEmpty()">
+				level like '%${level}%'
+			</if>
+			<if test="remark != null and !remark.isEmpty()">
+				and remark like '%${remark}%'
+			</if>
+			and status=1
+		</where>
+	</select>
+
+	<resultMap id="studentfall" type="com.ht.popj.student.StudentFall"
+		extends="BaseResultMap">
+		<collection property="studentclass" ofType="com.ht.popj.student.StudentClass">
+			<id property="id" column="id" />
+			<result column="classno" property="classno" jdbcType="VARCHAR" />
+			<result column="classname" property="classname" jdbcType="VARCHAR" />
+			<result column="count" property="count" jdbcType="INTEGER" />
+			<result column="teacher_id" property="teacherId" jdbcType="VARCHAR" />
+			<result column="leader_id" property="leaderId" jdbcType="VARCHAR" />
+			<result column="clteacher_id" property="clteacherId" jdbcType="VARCHAR" />
+			<result column="addr" property="addr" jdbcType="VARCHAR" />
+			<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+			<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+			<result column="status" property="status" jdbcType="INTEGER" />
+			<result column="remark" property="remark" jdbcType="VARCHAR" />
+			<result column="Level_id" property="levelId" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<resultMap id="studentfallwithCls" type="com.ht.popj.student.StudentFall"
+		extends="BaseResultMap">
+		<collection property="studentclass" ofType="com.ht.popj.student.StudentClass"
+			column="id" select="com.ht.mapper.student.StudentClassMapper.selectByLevelId">
+		</collection>
+	</resultMap>
+
+	<!-- 返回届别全部内容，resultType是list里的对象 -->
+	<select id="selectStufallclass" resultMap="studentfall">
+		SELECT fall.*,class.* FROM student_class class RIGHT JOIN student_fall
+		fall ON class.`Level_id`=fall.`id`
+		<where>
+			<if test="id != null">
+				fall.`id`= #{id,jdbcType=INTEGER},
+			</if>
+			and fall.`status`=1
+		</where>
+	</select>
+
+	<!-- 返回届别全部内容，resultType是list里的对象 -->
+	<select id="selectStufallclasstwo" resultMap="studentfallwithCls">
+		select * from student_fall where status = 1
+	</select>
+
+	<!-- 返回届别全部内容，resultType是list里的对象 -->
+	<select id="selectStudentFall" resultType="com.ht.popj.student.StudentFall">
+		select * from
+		student_fall where status=1 order by id desc
+	</select>
+</mapper>

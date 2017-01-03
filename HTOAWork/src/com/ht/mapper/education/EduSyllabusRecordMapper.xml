@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduSyllabusRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.education.EduSyllabusRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="outline_id" property="outlineId" jdbcType="INTEGER" />
+    <result column="hour" property="hour" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, course_id, outline_id, hour, class_id, emp_id, create_time, update_time, status, remark
+  </sql>
+  <select id="getSyllabusRecord" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from edu_syllabus_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteSyllabusRecord" parameterType="java.lang.Integer" >
+    delete from edu_syllabus_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="addSyllabusRecord" parameterType="com.ht.popj.education.EduSyllabusRecord" >
+    insert into edu_syllabus_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="outlineId != null" >
+        outline_id,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="outlineId != null" >
+        #{outlineId,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSyllabusRecord" parameterType="com.ht.popj.education.EduSyllabusRecord" >
+    update edu_syllabus_record
+    <set >
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="outlineId != null" >
+        outline_id = #{outlineId,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 获取部分信息 -->
+	<resultMap type="com.ht.popj.education.EduSyllabusRecord" id="syllabuswithemp" extends="BaseResultMap">
+	    <association property="empTeacher" javaType="com.ht.popj.dailyWork.Emp" column="emp_id" select="com.ht.mapper.dailyWork.EmpMapper.selectByPrimaryKey">
+	    </association>
+	    <!-- <association property="outline" javaType="com.ht.popj.education.EduOutline" column="outline_id" select="com.ht.mapper.education.EduOutlineMapper.selectByPrimaryKey">
+	    </association> -->
+	    <association property="stuClass" javaType="com.ht.popj.student.StudentClass" column="class_id" select="com.ht.mapper.student.StudentClassMapper.selectByPrimaryKey">
+	    </association>
+	</resultMap>
+	<select id="getSyllabusRecordBySyllabusRecord" resultMap="syllabuswithemp"
+		parameterType="com.ht.popj.education.EduSyllabusRecord">
+		select * from edu_syllabus_record e
+		<where>
+			<if test="id != null">
+				e.id = #{id}
+			</if>
+			<if test="courseId != null" >
+		      course_id = #{courseId,jdbcType=INTEGER},
+		    </if>
+			<if test="empId != null and !empId.isEmpty()">
+				and e.emp_id = #{empId}
+			</if>
+			<if test="outlineId != null">
+				and e.outline_id = #{outlineId}
+			</if>
+			<if test="classId != null">
+				and e.class_id = #{classId}
+			</if>
+			and status=1 order by end_time desc
+		</where>
+	</select>
+</mapper>

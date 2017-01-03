@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.student.StuApplyHourseMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.student.StuApplyHourse" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="applyHourse" property="applyhourse" jdbcType="VARCHAR" />
+    <result column="apply_name" property="applyName" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, applyHourse, apply_name, reason, status, create_time, update_time, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stu_apply_hourse
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_apply_hourse
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ht.popj.student.StuApplyHourse" >
+    insert into stu_apply_hourse (applyHourse, apply_name,reason,create_time, remark) values (#{applyhourse,jdbcType=VARCHAR}, #{applyName,jdbcType=VARCHAR},#{reason,jdbcType=VARCHAR},now(),#{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.student.StuApplyHourse" >
+    insert into stu_apply_hourse
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="applyhourse != null" >
+        applyHourse,
+      </if>
+      <if test="applyName != null" >
+        apply_name,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="applyhourse != null" >
+        #{applyhourse,jdbcType=VARCHAR},
+      </if>
+      <if test="applyName != null" >
+        #{applyName,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.student.StuApplyHourse" >
+    update stu_apply_hourse
+    <set >
+      <if test="applyhourse != null" >
+        applyHourse = #{applyhourse,jdbcType=VARCHAR},
+      </if>
+      <if test="applyName != null" >
+        apply_name = #{applyName,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+        update_time = now(),
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.student.StuApplyHourse" >
+    update stu_apply_hourse
+    set applyHourse = #{applyhourse,jdbcType=VARCHAR},
+      apply_name = #{applyName,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectStuApplyHourseAll" resultMap="BaseResultMap">
+  	select * from stu_apply_hourse
+  </select>
+  <select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.student.StuApplyHourse">
+  	select * from stu_apply_hourse
+  	<where>
+      <if test="applyhourse != null and !applyhourse.isEmpty()" >
+        and applyHourse = #{applyhourse}
+      </if>
+      <if test="applyName != null and !applyName.isEmpty()" >
+         and apply_name = #{applyName}
+      </if>
+      <if test="reason != null" >
+         and reason = #{reason}
+      </if>
+      <if test="status != null" >
+         and status = #{status}
+      </if>
+      <if test="createTime != null and !createTime.isEmpty()" >
+         and create_time = #{createTime}
+      </if>
+      <if test="updateTime != null" >
+         and update_time = #{updateTime}
+      </if>
+      <if test="remark != null" >
+         and remark = #{remark}
+      </if>
+    </where>
+  </select>
+</mapper>

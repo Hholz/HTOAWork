@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.mapper.education.EduMajorMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.popj.education.EduMajor" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="major_name" property="majorName" jdbcType="VARCHAR" />
+    <result column="major_remark" property="majorRemark" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    
+    <!-- 一对一配置 -->
+    <association property="dept" javaType="com.ht.popj.education.EduDept">
+        <id column="dept_id" property="id" jdbcType="INTEGER" />
+	    <result column="dept_Name" property="deptName" jdbcType="VARCHAR" />
+	    <result column="dept_Remark" property="deptRemark" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="TINYINT" />
+ 	</association>
+    
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, dept_id, major_name, code, major_remark, create_time, update_time, status, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select  <include refid="Base_Column_List"></include>
+     from edu_major
+    where id = #{id,jdbcType=INTEGER} and status=0
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update edu_major set status = 1  
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 先查询这个系下面有没有专业，有专业的系不能删除 -->
+  <select id="findInfoById" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+      select count(*) from edu_major where dept_id=#{id}
+  </select>
+  
+  <insert id="insert" parameterType="com.ht.popj.education.EduMajor" >
+    insert into edu_major (id, dept_id, major_name, code,
+      major_remark, create_time, update_time, 
+      status, remark)
+    values (#{id,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER}, #{majorName,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{majorRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.popj.education.EduMajor" >
+    insert into edu_major
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+      <if test="majorName != null" >
+        major_name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="majorRemark != null" >
+        major_remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="majorName != null" >
+        #{majorName,jdbcType=VARCHAR},
+      </if>
+       <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="majorRemark != null" >
+        #{majorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.popj.education.EduMajor" >
+    update edu_major
+    <set >
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="majorName != null" >
+        major_name = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="majorRemark != null" >
+        major_remark = #{majorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.popj.education.EduMajor" >
+    update edu_major
+    set dept_id = #{deptId,jdbcType=INTEGER},
+      major_name = #{majorName,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      major_remark = #{majorRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectMajorAll" resultMap="BaseResultMap">
+		select * from edu_major where status=0
+	</select>
+	
+  <select id="selectByDynamic" resultMap="BaseResultMap" parameterType="com.ht.popj.education.EduMajor">
+		select m.id, m.dept_id,d.dept_Name,d.status, m.code, d.remark, m.major_name, m.major_remark, m.create_time, m.update_time, m.status, m.remark,d.remark
+    	from edu_major m inner join edu_dept d on m.dept_id=d.id 
+    	<where>
+    	    	AND  m.status = 0
+    	    <if test="deptId != null and !deptId.isEmpty()">
+				AND  m.dept_id = #{deptId}
+			</if>
+			<if test="id != null and id >0">
+				AND  m.id = #{id}
+			</if>
+			<if test="majorName != null and majorName !=''">
+				AND  m.major_name like '%${majorName}%' 
+			</if>
+    	</where>
+	</select>
+</mapper>
